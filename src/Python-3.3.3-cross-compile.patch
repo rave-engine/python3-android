@@ -27,7 +27,7 @@ diff -ru Python-3.3.3/Modules/_decimal/libmpdec/io.c Python-3.3.3-android/Module
          spec->type = (spec->type == 'N') ? 'G' : 'g';
 +#ifdef __ANDROID__
 +        spec->dot = ".";
-+        spec->sep = ",':
++        spec->sep = ",";
 +        spec->grouping = "\3";
 +#else
          lc = localeconv();
