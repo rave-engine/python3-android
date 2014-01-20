@@ -5,7 +5,7 @@ pushd "${BASE}" >/dev/null
 prepare_ndk() {
    [[ ! -d "${ANDROID_TOOL_PREFIX}" ]] && (mkdir "${ANDROID_TOOL_PREFIX}" || exit 1)
    if [[ ! -f "${BASE}/.built/_ndk" ]]; then
-       "${BASE}/sdk/${NDK_REL}/build/tools/make-standalone-toolchain.sh" --platform="android-${SDK_REV}" --install-dir="${ANDROID_TOOL_PREFIX}" && touch "${BASE}/.built/_ndk"
+       ("${BASE}/sdk/${NDK_REL}/build/tools/make-standalone-toolchain.sh" --platform="android-${SDK_REV}" --install-dir="${ANDROID_TOOL_PREFIX}" && touch "${BASE}/.built/_ndk") || exit 1
    fi
 }
 
@@ -13,7 +13,7 @@ build() {
    what=$1
 
    if [[ ! -f "${BASE}/.built/${what}" ]]; then
-       /usr/bin/env bash --noprofile "${BASE}/_build_single.sh" "src/${what}.sh" && touch "${BASE}/.built/${what}"
+       (/usr/bin/env bash --noprofile "${BASE}/_build_single.sh" "src/${what}.sh" && touch "${BASE}/.built/${what}") || exit 1
    fi
 }
 
