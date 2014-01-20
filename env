@@ -1,0 +1,12 @@
+pushd $(dirname "$0") >/dev/null
+export BASE=$(pwd)
+popd >/dev/null
+
+export ANDROID_PREFIX="${BASE}/build"
+export ANDROID_TOOL_PREFIX="${BASE}/build-tools"
+export NDK_REL=android-ndk-r9c
+export SDK_REL=android-sdk-r22.3
+export NDK_REV=9c
+export SDK_REV=19
+export ANDROID_HOST=x86_64-pc-linux-gnu
+export ANDROID_TARGET=arm-linux-androideabi

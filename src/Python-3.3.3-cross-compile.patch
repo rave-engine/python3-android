@@ -1,0 +1,154 @@
+diff -ru Python-3.3.3/Makefile.pre.in Python-3.3.3-android/Makefile.pre.in
+--- Python-3.3.3/Makefile.pre.in	2013-11-17 07:22:55.000000000 +0000
++++ Python-3.3.3-android/Makefile.pre.in	2014-01-19 13:47:05.093593955 +0000
+@@ -674,7 +674,7 @@
+ $(GRAMMAR_H): $(GRAMMAR_INPUT) $(PGENSRCS)
+ 		@$(MKDIR_P) Include
+ 		$(MAKE) $(PGEN)
+-		$(PGEN) $(GRAMMAR_INPUT) $(GRAMMAR_H) $(GRAMMAR_C)
++		$(HOSTPGEN) $(GRAMMAR_INPUT) $(GRAMMAR_H) $(GRAMMAR_C)
+ $(GRAMMAR_C): $(GRAMMAR_H) $(GRAMMAR_INPUT) $(PGENSRCS)
+ 		$(MAKE) $(GRAMMAR_H)
+ 		touch $(GRAMMAR_C)
+@@ -1240,6 +1240,7 @@
+ # Install the dynamically loadable modules
+ # This goes into $(exec_prefix)
+ sharedinstall: sharedmods
++	CC='$(CC)' LDSHARED='$(BLDSHARED)' LDFLAGS='$(LDFLAGS)' OPT='$(OPT)' CROSS_COMPILE='$(CROSS_COMPILE)' \
+ 	$(RUNSHARED) $(PYTHON_FOR_BUILD) $(srcdir)/setup.py install \
+ 	   	--prefix=$(prefix) \
+ 		--install-scripts=$(BINDIR) \
+diff -ru Python-3.3.3/Modules/_decimal/libmpdec/io.c Python-3.3.3-android/Modules/_decimal/libmpdec/io.c
+--- Python-3.3.3/Modules/_decimal/libmpdec/io.c	2013-11-17 07:22:59.000000000 +0000
++++ Python-3.3.3-android/Modules/_decimal/libmpdec/io.c	2014-01-19 13:57:42.845608288 +0000
+@@ -868,10 +868,17 @@
+         }
+         spec->type = *cp++;
+         spec->type = (spec->type == 'N') ? 'G' : 'g';
++#ifdef __ANDROID__
++        spec->dot = ".";
++        spec->sep = ",':
++        spec->grouping = "\3";
++#else
+         lc = localeconv();
+         spec->dot = lc->decimal_point;
+         spec->sep = lc->thousands_sep;
+         spec->grouping = lc->grouping;
++#endif
++
+         if (mpd_validate_lconv(spec) < 0) {
+             return 0; /* GCOV_NOT_REACHED */
+         }
+diff -ru Python-3.3.3/Modules/_localemodule.c Python-3.3.3-android/Modules/_localemodule.c
+--- Python-3.3.3/Modules/_localemodule.c	2013-11-17 07:23:00.000000000 +0000
++++ Python-3.3.3-android/Modules/_localemodule.c	2014-01-19 13:56:11.445606234 +0000
+@@ -141,6 +141,11 @@
+     if (!result)
+         return NULL;
+ 
++#ifdef __ANDROID__
++    /* Don't even try on Android's broken locale.h. */
++    goto failed;
++#else
++
+     /* if LC_NUMERIC is different in the C library, use saved value */
+     l = localeconv();
+ 
+@@ -189,6 +194,7 @@
+     RESULT_INT(p_sign_posn);
+     RESULT_INT(n_sign_posn);
+     return result;
++#endif // __ANDROID__
+ 
+   failed:
+     Py_XDECREF(result);
+diff -ru Python-3.3.3/Modules/pwdmodule.c Python-3.3.3-android/Modules/pwdmodule.c
+--- Python-3.3.3/Modules/pwdmodule.c	2013-11-17 07:23:01.000000000 +0000
++++ Python-3.3.3-android/Modules/pwdmodule.c	2014-01-19 13:47:05.093593955 +0000
+@@ -76,7 +76,7 @@
+ #endif
+     PyStructSequence_SET_ITEM(v, setIndex++, _PyLong_FromUid(p->pw_uid));
+     PyStructSequence_SET_ITEM(v, setIndex++, _PyLong_FromGid(p->pw_gid));
+-#ifdef __VMS
++#if defined(__VMS) || defined(__ANDROID__)
+     SETS(setIndex++, "");
+ #else
+     SETS(setIndex++, p->pw_gecos);
+diff -ru Python-3.3.3/Python/fileutils.c Python-3.3.3-android/Python/fileutils.c
+--- Python-3.3.3/Python/fileutils.c	2013-11-17 07:23:07.000000000 +0000
++++ Python-3.3.3-android/Python/fileutils.c	2014-01-19 13:47:05.093593955 +0000
+@@ -4,8 +4,8 @@
+ #  include <windows.h>
+ #endif
+ 
+-#ifdef HAVE_LANGINFO_H
+ #include <locale.h>
++#ifdef HAVE_LANGINFO_H
+ #include <langinfo.h>
+ #endif
+ 
+diff -ru Python-3.3.3/Python/formatter_unicode.c Python-3.3.3-android/Python/formatter_unicode.c
+--- Python-3.3.3/Python/formatter_unicode.c	2013-11-17 07:23:07.000000000 +0000
++++ Python-3.3.3-android/Python/formatter_unicode.c	2014-01-19 13:55:06.177604767 +0000
+@@ -665,6 +665,7 @@
+ {
+     switch (type) {
+     case LT_CURRENT_LOCALE: {
++#ifndef __ANDROID__
+         struct lconv *locale_data = localeconv();
+         locale_info->decimal_point = PyUnicode_DecodeLocale(
+                                          locale_data->decimal_point,
+@@ -680,6 +681,7 @@
+         }
+         locale_info->grouping = locale_data->grouping;
+         break;
++#endif // __ANDROID__
+     }
+     case LT_DEFAULT_LOCALE:
+         locale_info->decimal_point = PyUnicode_FromOrdinal('.');
+diff -ru Python-3.3.3/Python/pystrtod.c Python-3.3.3-android/Python/pystrtod.c
+--- Python-3.3.3/Python/pystrtod.c	2013-11-17 07:23:07.000000000 +0000
++++ Python-3.3.3-android/Python/pystrtod.c	2014-01-19 13:53:46.805602983 +0000
+@@ -177,8 +177,12 @@
+ 
+     fail_pos = NULL;
+ 
++#ifdef __ANDROID__
++    decimal_point = "."; 
++#else
+     locale_data = localeconv();
+     decimal_point = locale_data->decimal_point;
++#endif
+     decimal_point_len = strlen(decimal_point);
+ 
+     assert(decimal_point_len != 0);
+@@ -378,8 +382,12 @@
+ Py_LOCAL_INLINE(void)
+ change_decimal_from_locale_to_dot(char* buffer)
+ {
++#ifdef __ANDROID__
++    const char *decimal_point = ".";
++#else
+     struct lconv *locale_data = localeconv();
+     const char *decimal_point = locale_data->decimal_point;
++#endif
+ 
+     if (decimal_point[0] != '.' || decimal_point[1] != 0) {
+         size_t decimal_point_len = strlen(decimal_point);
+diff -ru Python-3.3.3/Modules/_posixsubprocess.c Python-3.3.3-android/Modules/_posixsubprocess.c
+--- Python-3.3.3/Modules/_posixsubprocess.c	2013-11-17 07:23:00.000000000 +0000
++++ Python-3.3.3-android/Modules/_posixsubprocess.c	2014-01-19 15:44:12.881751904 +0000
+@@ -18,6 +18,12 @@
+ #include <dirent.h>
+ #endif
+ 
++#if defined(__ANDROID__)
++/* Android doesn't expose syscalls. Let's add the definition manually. */
++# include <sys/linux-syscalls.h>
++# define SYS_getdents64  __NR_getdents64
++#endif
++
+ #if defined(sun)
+ /* readdir64 is used to work around Solaris 9 bug 6395699. */
+ # define readdir readdir64
+
