@@ -18,6 +18,7 @@ cat > config.site <<-SITE
 SITE
 patch -p1 < ../Python-3.3.3-cross-compile.patch 
 
+export PYTHON_FOR_BUILD='_PYTHON_PROJECT_BASE=$(abs_builddir) _PYTHON_HOST_PLATFORM=$(_PYTHON_HOST_PLATFORM) PYTHONPATH=$(shell test -f pybuilddir.txt && echo $(abs_builddir)/`cat pybuilddir.txt`:)$(srcdir)/Lib:$(srcdir)/Lib/$(PLATDIR) ./hostpython'
 ./configure CROSS_COMPILE_TARGET=yes CONFIG_SITE=config.site --prefix="${PREFIX}" --host="${TARGET}" --build="${HOST}" --disable-ipv6 || exit 1
 make CROSS_COMPILE_TARGET=yes HOSTPYTHON=./hostpython HOSTPGEN=Parser/hostpgen || exit 1
 make CROSS_COMPILE_TARGET=yes HOSTPYTHON=./hostpython HOSTPGEN=Parser/hostpgen install || exit 1
