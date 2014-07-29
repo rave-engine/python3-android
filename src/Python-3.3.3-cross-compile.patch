@@ -151,4 +151,28 @@ diff -ru Python-3.3.3/Modules/_posixsubprocess.c Python-3.3.3-android/Modules/_p
  #if defined(sun)
  /* readdir64 is used to work around Solaris 9 bug 6395699. */
  # define readdir readdir64
+diff -ru Python-3.3.3/configure Python-3.3.3-android/configure
+--- Python-3.3.3/configure	2014-07-29 15:07:36.902634371 +0000
++++ Python-3.3.3-android/configure	2014-07-29 15:09:44.430634089 +0000
+@@ -2943,7 +2943,7 @@
+     { $as_echo "$as_me:${as_lineno-$LINENO}: checking for python interpreter for cross build" >&5
+ $as_echo_n "checking for python interpreter for cross build... " >&6; }
+     if test -z "$PYTHON_FOR_BUILD"; then
+-        for interp in python$PACKAGE_VERSION python3 python; do
++        for interp in "$HOSTPYTHON" python$PACKAGE_VERSION python3 python; do
+ 	    which $interp >/dev/null 2>&1 || continue
+ 	    if $interp -c 'import sys;sys.exit(not sys.version_info[:2] >= (3,3))'; then
+ 	        break
+diff -ru Python-3.3.3/configure.ac Python-3.3.3-android/configure.ac
+--- Python-3.3.3/configure.ac	2014-07-29 15:07:37.038634371 +0000
++++ Python-3.3.3-android/configure.ac	2014-07-29 15:10:03.054634048 +0000
+@@ -56,7 +56,7 @@
+ if test "$cross_compiling" = yes; then
+     AC_MSG_CHECKING([for python interpreter for cross build])
+     if test -z "$PYTHON_FOR_BUILD"; then
+-        for interp in python$PACKAGE_VERSION python3 python; do
++        for interp in "$HOSTPYTHON" python$PACKAGE_VERSION python3 python; do
+ 	    which $interp >/dev/null 2>&1 || continue
+ 	    if $interp -c 'import sys;sys.exit(not sys.version_info@<:@:2@:>@ >= (3,3))'; then
+ 	        break
 
