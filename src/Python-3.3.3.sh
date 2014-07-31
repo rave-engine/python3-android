@@ -18,7 +18,7 @@ cat > config.site <<-SITE
 SITE
 patch -p1 < ../Python-3.3.3-cross-compile.patch 
 
-./configure CROSS_COMPILE_TARGET=yes CONFIG_SITE=config.site --prefix="${PREFIX}" --host="${TARGET}" --build="${HOST}" --disable-ipv6 || exit 1
+./configure CROSS_COMPILE_TARGET=yes HOSTPYTHON=./hostpython CONFIG_SITE=config.site --prefix="${PREFIX}" --host="${TARGET}" --build="${HOST}" --disable-ipv6 || exit 1
 make CROSS_COMPILE_TARGET=yes HOSTPYTHON=./hostpython HOSTPGEN=Parser/hostpgen || exit 1
 make CROSS_COMPILE_TARGET=yes HOSTPYTHON=./hostpython HOSTPGEN=Parser/hostpgen install || exit 1
 
