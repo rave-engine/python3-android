@@ -10,4 +10,4 @@ export NDK_REV=9c
 export SDK_REV=19
 export ANDROID_HOST=x86_64-pc-linux-gnu
 export ANDROID_TARGET=arm-linux-androideabi
-export ANDROID_TOOLCHAIN=arm-linux-androideabi-4.6
+export ANDROID_TOOLCHAIN=arm-linux-androideabi-4.8
