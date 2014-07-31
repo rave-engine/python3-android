@@ -261,4 +261,37 @@ diff -ru Python-3.3.3/setup.py Python-3.3.3-android/setup.py
          lib = sysconfig.get_config_var('TIMEMODULE_LIB')
          if lib:
              time_libs.append(lib)
+diff -ru Python-3.3.3/setup.py Python-3.3.3-android/setup.py
+--- Python-3.3.3/setup.py      2013-11-17 07:23:09.000000000 +0000
++++ Python-3.3.3-android/setup.py      2014-07-31 16:34:13.470875893 +0000
+@@ -562,7 +562,7 @@
+                                libraries=math_libs) )
+ 
+         # time libraries: librt may be needed for clock_gettime()
+-        time_libs = []
++        time_libs = ['m']
+         lib = sysconfig.get_config_var('TIMEMODULE_LIB')
+         if lib:
+             time_libs.append(lib)
+diff -ru Python-3.3.3/Modules/socketmodule.c Python-3.3.3-android/Modules/socketmodule.c
+--- Python-3.3.3/Modules/socketmodule.c        2013-11-17 07:23:02.000000000 +0000
++++ Python-3.3.3-android/Modules/socketmodule.c        2014-07-31 16:53:59.482873274 +0000
+@@ -150,7 +150,7 @@
+    On the other hand, not all Linux versions agree, so there the settings
+    computed by the configure script are needed! */
+ 
+-#ifndef linux
++#if !defined(linux) || __ANDROID__
+ # undef HAVE_GETHOSTBYNAME_R_3_ARG
+ # undef HAVE_GETHOSTBYNAME_R_5_ARG
+ # undef HAVE_GETHOSTBYNAME_R_6_ARG
+@@ -169,7 +169,7 @@
+ #  define HAVE_GETHOSTBYNAME_R_3_ARG
+ # elif defined(__sun) || defined(__sgi)
+ #  define HAVE_GETHOSTBYNAME_R_5_ARG
+-# elif defined(linux)
++# elif defined(linux) && !__ANDROID__
+ /* Rely on the configure script */
+ # else
+ #  undef HAVE_GETHOSTBYNAME_R
 
