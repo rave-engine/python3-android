@@ -261,18 +261,6 @@ diff -ru Python-3.3.3/setup.py Python-3.3.3-android/setup.py
          lib = sysconfig.get_config_var('TIMEMODULE_LIB')
          if lib:
              time_libs.append(lib)
-diff -ru Python-3.3.3/setup.py Python-3.3.3-android/setup.py
---- Python-3.3.3/setup.py      2013-11-17 07:23:09.000000000 +0000
-+++ Python-3.3.3-android/setup.py      2014-07-31 16:34:13.470875893 +0000
-@@ -562,7 +562,7 @@
-                                libraries=math_libs) )
- 
-         # time libraries: librt may be needed for clock_gettime()
--        time_libs = []
-+        time_libs = ['m']
-         lib = sysconfig.get_config_var('TIMEMODULE_LIB')
-         if lib:
-             time_libs.append(lib)
 diff -ru Python-3.3.3/Modules/socketmodule.c Python-3.3.3-android/Modules/socketmodule.c
 --- Python-3.3.3/Modules/socketmodule.c        2013-11-17 07:23:02.000000000 +0000
 +++ Python-3.3.3-android/Modules/socketmodule.c        2014-07-31 16:53:59.482873274 +0000
