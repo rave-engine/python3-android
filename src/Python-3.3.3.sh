@@ -11,12 +11,14 @@ mv python hostpython || exit 1
 mv Parser/pgen Parser/hostpgen || exit 1
 make distclean || exit 1
 
-# Apply patches and build slave Python.
+# Apply patches and build target Python.
 cat > config.site <<-SITE
 	ac_cv_file__dev_ptmx=no
 	ac_cv_file__dev_ptc=no
 SITE
-patch -p1 < ../Python-3.3.3-cross-compile.patch 
+patch -p1 < ../Python-3.3.3-cross-compile.patch || exit 1
+patch -p1 < ../Python-3.3.3-android-locale.patch || exit 1
+patch -p1 < ../Python-3.3.3-android-misc.patch || exit 1
 
 ./configure CROSS_COMPILE_TARGET=yes HOSTPYTHON=./hostpython CONFIG_SITE=config.site --prefix="${PREFIX}" --host="${TARGET}" --build="${HOST}" --disable-ipv6 || exit 1
 make CROSS_COMPILE_TARGET=yes HOSTPYTHON=./hostpython HOSTPGEN=Parser/hostpgen || exit 1
