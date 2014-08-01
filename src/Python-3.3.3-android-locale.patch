@@ -240,3 +240,33 @@ diff -ru Python-3.3.3/Python/pythonrun.c Python-3.3.3-android/Python/pythonrun.c
  #else
      PyErr_SetNone(PyExc_NotImplementedError);
      return NULL;
+diff -ru Python-3.3.3-android/Modules/_localemodule.c Python-3.3.3/Modules/_localemodule.c
+--- Python-3.3.3-android/Modules/_localemodule.c       2014-08-01 14:50:47.875804606 +0000
++++ Python-3.3.3/Modules/_localemodule.c       2014-08-01 14:52:28.367804384 +0000
+@@ -38,6 +38,13 @@
+ #include <windows.h>
+ #endif
+ 
++#if __ANDROID__
++/* Android's locale support is pretty much unusable, it's better to have the
++   higher-level module fall back to C locale emulation. */
++#error "Android's locale support is too incomplete to create a usable module."
++#endif
++
++
+ PyDoc_STRVAR(locale__doc__, "Support for POSIX locales.");
+ 
+ static PyObject *Error;
+diff -ru Python-3.3.3/Modules/Setup.dist Python-3.3.3-android/Modules/Setup.dist
+--- Python-3.3.3/Modules/Setup.dist    2014-08-01 14:56:24.075803863 +0000
++++ Python-3.3.3-android/Modules/Setup.dist    2014-08-01 15:10:21.963802012 +0000
+@@ -118,7 +118,7 @@
+ itertools itertoolsmodule.c    # Functions creating iterators for efficient looping 
+ 
+ # access to ISO C locale support
+-_locale _localemodule.c  # -lintl
++#_locale _localemodule.c  # -lintl
+ 
+ # Standard I/O baseline
+ _io -I$(srcdir)/Modules/_io _io/_iomodule.c _io/iobase.c _io/fileio.c _io/bytesio.c _io/bufferedio.c _io/textio.c _io/stringio.c
+
