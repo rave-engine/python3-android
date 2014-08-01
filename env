@@ -11,3 +11,7 @@ export SDK_REV=19
 export ANDROID_HOST=x86_64-pc-linux-gnu
 export ANDROID_TARGET=arm-linux-androideabi
 export ANDROID_TOOLCHAIN=arm-linux-androideabi-4.8
+export CFLAGS_EXTRA=""
+export CPPFLAGS_EXTRA=""
+export CXXFLAGS_EXTRA=""
+export LDFLAGS_EXTRA=""
