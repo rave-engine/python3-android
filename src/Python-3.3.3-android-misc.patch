@@ -151,4 +151,28 @@ diff -ru Python-3.3.3/Lib/platform.py Python-3.3.3-android/Lib/platform.py
      return distname,version,id
  
  _release_filename = re.compile(r'(\w+)[-_](release|version)', re.ASCII)
+diff -ru Python-3.3.3/Lib/subprocess.py Python-3.3.3-android/Lib/subprocess.py
+--- Python-3.3.3/Lib/subprocess.py	2013-11-17 07:22:39.000000000 +0000
++++ Python-3.3.3-android/Lib/subprocess.py	2014-08-01 23:31:05.711735647 +0000
+@@ -1343,9 +1343,18 @@
+                 args = list(args)
+ 
+             if shell:
+-                args = ["/bin/sh", "-c"] + args
+                 if executable:
+-                    args[0] = executable
++                    main = executable
++                elif os.path.isfile('/bin/sh'):
++                    main = '/bin/sh'
++                else:
++                    import platform
++                    if platform.linux_distribution()[0] == 'Android':
++                        main = '/system/bin/sh'
++                    else:
++                        raise RuntimeError('Could not find shell binary to execute command with.')
++
++                args = [main, "-c"] + args
+ 
+             if executable is None:
+                 executable = args[0]
 
