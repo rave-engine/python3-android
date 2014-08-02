@@ -66,3 +66,30 @@ diff -ru Python-3.3.3/Lib/subprocess.py Python-3.3.3-android/Lib/subprocess.py
  
              if executable is None:
                  executable = args[0]
+diff -ru Python-3.3.3/Lib/test/test_subprocess.py Python-3.3.3-android/Lib/test/test_subprocess.py
+--- Python-3.3.3/Lib/test/test_subprocess.py    2013-11-17 07:22:48.000000000 +0000
++++ Python-3.3.3-android/Lib/test/test_subprocess.py    2014-08-02 15:14:59.406139394 +0000
+@@ -1356,7 +1356,10 @@
+         fd, fname = mkstemp()
+         # reopen in text mode
+         with open(fd, "w", errors="surrogateescape") as fobj:
+-            fobj.write("#!/bin/sh\n")
++            if sys.platform == 'linux-android':
++                fobj.write('#!/system/bin/sh\n')
++            else:
++                fobj.write("#!/bin/sh\n")
+             fobj.write("exec '%s' -c 'import sys; sys.exit(47)'\n" %
+                        sys.executable)
+         os.chmod(fname, 0o700)
+@@ -1401,7 +1404,10 @@
+         fd, fname = mkstemp()
+         # reopen in text mode
+         with open(fd, "w", errors="surrogateescape") as fobj:
+-            fobj.write("#!/bin/sh\n")
++            if sys.platform == 'linux-android':
++                fobj.write('#!/system/bin/sh\n')
++            else:
++                fobj.write("#!/bin/sh\n")
+             fobj.write("exec '%s' -c 'import sys; sys.exit(47)'\n" %
+                        sys.executable)
+         os.chmod(fname, 0o700)
