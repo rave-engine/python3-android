@@ -1,3 +1,32 @@
+diff -ru Python-3.3.3/Modules/python.c Python-3.3.3-android/Modules/python.c
+--- Python-3.3.3/Modules/python.c	2013-11-17 07:23:01.000000000 +0000
++++ Python-3.3.3-android/Modules/python.c	2014-07-31 13:19:07.042901752 +0000
+@@ -42,7 +42,11 @@
+     m = fpgetmask();
+     fpsetmask(m & ~FP_X_OFL);
+ #endif
+-    oldloc = strdup(setlocale(LC_ALL, NULL));
++    oldloc = setlocale(LC_ALL, NULL);
++    if (oldloc != NULL) {
++        oldloc = strdup(oldloc);
++    }
++
+     setlocale(LC_ALL, "");
+     for (i = 0; i < argc; i++) {
+         argv_copy[i] = _Py_char2wchar(argv[i], NULL);
+@@ -57,8 +61,10 @@
+     }
+     argv_copy2[argc] = argv_copy[argc] = NULL;
+ 
+-    setlocale(LC_ALL, oldloc);
+-    free(oldloc);
++    if (oldloc != NULL) {
++        setlocale(LC_ALL, oldloc);
++        free(oldloc);
++    }
+     res = Py_Main(argc, argv_copy);
+     for (i = 0; i < argc; i++) {
+         PyMem_Free(argv_copy2[i]);
 diff -ru Python-3.3.3/Modules/pwdmodule.c Python-3.3.3-android/Modules/pwdmodule.c
 --- Python-3.3.3/Modules/pwdmodule.c    2013-11-17 07:23:01.000000000 +0000
 +++ Python-3.3.3-android/Modules/pwdmodule.c    2014-01-19 13:47:05.093593955 +0000

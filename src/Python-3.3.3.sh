@@ -17,7 +17,6 @@ cat > config.site <<-SITE
 	ac_cv_file__dev_ptc=no
 SITE
 patch -p1 < ../Python-3.3.3-cross-compile.patch || exit 1
-patch -p1 < ../Python-3.3.3-python-misc.patch || exit 1
 patch -p1 < ../Python-3.3.3-android-locale.patch || exit 1
 patch -p1 < ../Python-3.3.3-android-misc.patch || exit 1
 
