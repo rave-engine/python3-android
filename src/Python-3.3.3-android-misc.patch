@@ -48,9 +48,9 @@ diff -ru Python-3.3.3/Modules/socketmodule.c Python-3.3.3-android/Modules/socket
  # else
  #  undef HAVE_GETHOSTBYNAME_R
 diff -ru Python-3.3.3/Lib/subprocess.py Python-3.3.3-android/Lib/subprocess.py
---- Python-3.3.3/Lib/subprocess.py	2013-11-17 07:22:39.000000000 +0000
-+++ Python-3.3.3-android/Lib/subprocess.py	2014-08-01 23:31:05.711735647 +0000
-@@ -1343,9 +1343,18 @@
+--- Python-3.3.3/Lib/subprocess.py  2013-11-17 07:22:39.000000000 +0000
++++ Python-3.3.3-android/Lib/subprocess.py  2014-08-02 14:46:23.498143185 +0000
+@@ -1343,9 +1343,13 @@
                  args = list(args)
  
              if shell:
@@ -58,17 +58,11 @@ diff -ru Python-3.3.3/Lib/subprocess.py Python-3.3.3-android/Lib/subprocess.py
                  if executable:
 -                    args[0] = executable
 +                    main = executable
-+                elif os.path.isfile('/bin/sh'):
-+                    main = '/bin/sh'
++                elif sys.platform == 'linux-android':
++                    main = '/system/bin/sh'
 +                else:
-+                    import platform
-+                    if platform.linux_distribution()[0] == 'Android':
-+                        main = '/system/bin/sh'
-+                    else:
-+                        raise RuntimeError('Could not find shell binary to execute command with.')
-+
++                    main = '/bin/sh'
 +                args = [main, "-c"] + args
  
              if executable is None:
                  executable = args[0]
-
