@@ -101,7 +101,7 @@ diff -ru Python-3.3.3/Lib/test/test_logging.py Python-3.3.3-android/Lib/test/tes
          # We can't actually *use* too many handlers in the tests,
          # but we can try instantiating them with various options
 -        if sys.platform in ('linux', 'darwin'):
-+        if sys.platform.starswith('linux') or sys.platform == 'darwin':
++        if sys.platform.startswith('linux') or sys.platform == 'darwin':
              for existing in (True, False):
                  fd, fn = tempfile.mkstemp()
                  os.close(fd)
