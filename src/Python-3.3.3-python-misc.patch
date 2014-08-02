@@ -1,0 +1,19 @@
+diff -ru Python-3.3.3/Lib/test/test_pwd.py Python-3.3.3-android/Lib/test/test_pwd.py
+--- Python-3.3.3/Lib/test/test_pwd.py 2013-11-17 07:22:47.000000000 +0000
++++ Python-3.3.3-android/Lib/test/test_pwd.py 2014-08-02 00:38:56.106255504 +0000
+@@ -6,6 +6,7 @@
+ 
+ class PwdTest(unittest.TestCase):
+ 
++ @unittest.skipUnless(hasattr(pwd, 'getpwall'), 'pwd module does not expose getpwall()')
+     def test_values(self):
+         entries = pwd.getpwall()
+         entriesbyname = {}
+@@ -47,6 +48,7 @@
+             self.assertIn(pwd.getpwnam(e.pw_name), entriesbyname[e.pw_name])
+             self.assertIn(pwd.getpwuid(e.pw_uid), entriesbyuid[e.pw_uid])
+ 
++ @unittest.skipUnless(hasattr(pwd, 'getpwall'), 'pwd module does not expose getpwall()')
+     def test_errors(self):
+         self.assertRaises(TypeError, pwd.getpwuid)
+         self.assertRaises(TypeError, pwd.getpwuid, 3.14)
