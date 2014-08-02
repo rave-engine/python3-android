@@ -19,6 +19,7 @@ SITE
 patch -p1 < ../Python-3.3.3-cross-compile.patch || exit 1
 patch -p1 < ../Python-3.3.3-python-misc.patch || exit 1
 patch -p1 < ../Python-3.3.3-android-locale.patch || exit 1
+patch -p1 < ../Python-3.3.3-android-platform.patch || exit 1
 patch -p1 < ../Python-3.3.3-android-misc.patch || exit 1
 
 ./configure CROSS_COMPILE_TARGET=yes HOSTPYTHON="$(pwd)/hostpython" CONFIG_SITE=config.site --prefix="${PREFIX}" --host="${TARGET}" --build="${HOST}" --disable-ipv6 || exit 1
