@@ -77,8 +77,8 @@ diff -ru Python-3.3.3/Modules/socketmodule.c Python-3.3.3-android/Modules/socket
  # else
  #  undef HAVE_GETHOSTBYNAME_R
 diff -ru Python-3.3.3/Lib/platform.py Python-3.3.3-android/Lib/platform.py
---- Python-3.3.3/Lib/platform.py        2013-11-17 07:22:38.000000000 +0000
-+++ Python-3.3.3-android/Lib/platform.py        2014-08-01 22:55:42.387740337 +0000
+--- Python-3.3.3/Lib/platform.py    2014-08-02 01:06:27.270251856 +0000
++++ Python-3.3.3-android/Lib/platform.py    2014-08-02 01:08:46.374251549 +0000
 @@ -195,13 +195,19 @@
      f.close()
      return lib,version
@@ -100,7 +100,7 @@ diff -ru Python-3.3.3/Lib/platform.py Python-3.3.3-android/Lib/platform.py
  
      """
      if os.path.exists('/var/adm/inst-log/info'):
-@@ -241,6 +247,48 @@
+@@ -241,6 +247,49 @@
              version = verfiles[-1][14:]
              return distname,version,id
  
@@ -130,9 +130,8 @@ diff -ru Python-3.3.3/Lib/platform.py Python-3.3.3-android/Lib/platform.py
 +                                                  _android_id_property])
 +                id = output.decode('ascii').strip()
 +            except (subprocess.CalledProcessError, UnicodeDecodeError):
-+                id = output.decode('ascii').strip()
-+            except (subprocess.CalledProcessError, UnicodeDecodeError):
 +                pass
++
 +        # Fall back to parsing /system/build.prop manually.
 +        elif os.path.isfile('/system/build.prop'):
 +            for line in open('/system/build.prop'):
