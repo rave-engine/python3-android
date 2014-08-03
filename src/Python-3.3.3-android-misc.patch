@@ -48,79 +48,68 @@ diff -ru Python-3.3.3/Modules/socketmodule.c Python-3.3.3-android/Modules/socket
  # else
  #  undef HAVE_GETHOSTBYNAME_R
 diff -ru Python-3.3.3/Lib/platform.py Python-3.3.3-android/Lib/platform.py
---- Python-3.3.3/Lib/platform.py    2014-08-02 01:06:27.270251856 +0000
-+++ Python-3.3.3-android/Lib/platform.py    2014-08-02 01:08:46.374251549 +0000
-@@ -195,13 +195,19 @@
-     f.close()
-     return lib,version
- 
+--- Python-3.3.3/Lib/platform.py	2013-11-17 07:22:38.000000000 +0000
++++ Python-3.3.3-android/Lib/platform.py	2014-08-03 17:07:13.377376523 +0000
+@@ -363,6 +363,59 @@
+                               supported_dists=supported_dists,
+                               full_distribution_name=0)
+
 +_android_environment_vars = (
 +    'ANDROID_ROOT', 'ANDROID_ASSETS', 'ANDROID_STORAGE', 'ANDROID_DATA',
 +    'ANDROID_PROPERTY_WORKSPACE', 'ANDROID_BOOTLOGO')
 +_android_version_property = 'ro.build.version.release'
-+_android_id_property = 'ro.build.version.full'
++_android_buildstr_property = 'ro.build.version.full'
 +
- def _dist_try_harder(distname,version,id):
- 
-     """ Tries some special tricks to get the distribution
-         information in case the default method fails.
- 
-         Currently supports older SuSE Linux, Caldera OpenLinux and
--        Slackware Linux distributions.
-+        Slackware Linux distributions, as well as Android.
- 
-     """
-     if os.path.exists('/var/adm/inst-log/info'):
-@@ -241,6 +247,49 @@
-             version = verfiles[-1][14:]
-             return distname,version,id
- 
-+    # Android exposes a bunch of environment variables, if at least one of
-+    # them is present, we can safely assume we're on an Android device.
-+    is_android = False
-+    for envvar in _android_environment_vars:
-+        if os.getenv(envvar) is not None:
-+            is_android = True
-+            break
++def android_version(version='', buildstr=''):
++    """ Attempt to get the Android version number and build string.
 +
-+    if is_android:
-+        distname = 'Android'
-+        
-+        # Try the 'official' API tool first, since /system/build.prop might
-+        # not be the only source.
-+        if os.access('/system/bin/getprop', os.X_OK):
-+            try:
-+                output = subprocess.check_output(['/system/bin/getprop',
-+                                                  _android_version_property])
-+                version = output.decode('ascii').strip()
-+            except (subprocess.CalledProcessError, UnicodeDecodeError):
-+                pass
++        The function checks
++    """
++    if not any(os.getvar(e) for e in _android_environment_vars):
++        # Probably not on Android...
++        return version, buildstr
 +
-+            try:
-+                output = subprocess.check_output(['/system/bin/getprop',
-+                                                  _android_id_property])
-+                id = output.decode('ascii').strip()
-+            except (subprocess.CalledProcessError, UnicodeDecodeError):
-+                pass
++    version_obtained = False
++    buildstr_obtained = False
 +
-+        # Fall back to parsing /system/build.prop manually.
-+        elif os.path.isfile('/system/build.prop'):
-+            for line in open('/system/build.prop'):
-+                if '=' not in line:
-+                    continue
-+                key, val = line.split('=')
-+                key = key.strip()
++    # Try the 'official' API tool first, since /system/build.prop might
++    # not be the only source for properties.
++    if os.access('/system/bin/getprop', os.X_OK):
++        try:
++            output = subprocess.check_output(['/system/bin/getprop',
++                                              _android_version_property])
++            version = output.decode('ascii').strip()
++            version_obtained = True
++        except (subprocess.CalledProcessError, UnicodeDecodeError):
++            pass
 +
-+                if key == _android_version_property:
-+                    version = val.strip()
-+                elif key == _android_id_property:
-+                    id = val.strip()
++        try:
++            output = subprocess.check_output(['/system/bin/getprop',
++                                              _android_buildstr_property])
++            buildstr = output.decode('ascii').strip()
++            buildstr_obtained = True
++        except (subprocess.CalledProcessError, UnicodeDecodeError):
++            pass
++    done = version_obtained and buildstr_obtained
 +
-+        return distname,version,id
++    # Fall back to parsing /system/build.prop manually.
++    if not done and os.path.isfile('/system/build.prop'):
++        for line in open('/system/build.prop'):
++            if '=' not in line:
++                continue
++            key, val = line.split('=')
++            key = key.strip()
 +
-     return distname,version,id
- 
- _release_filename = re.compile(r'(\w+)[-_](release|version)', re.ASCII)
++            if not version_obtained and key == _android_version_property:
++                version = val.strip()
++            elif not buildstr_obtained and key == _android_buildstr_property:
++                buildstr = val.strip()
++
++     return version, buildstr
++
+ def popen(cmd, mode='r', bufsize=-1):
+
+     """ Portable popen() interface.
 diff -ru Python-3.3.3/Lib/subprocess.py Python-3.3.3-android/Lib/subprocess.py
 --- Python-3.3.3/Lib/subprocess.py	2013-11-17 07:22:39.000000000 +0000
 +++ Python-3.3.3-android/Lib/subprocess.py	2014-08-01 23:31:05.711735647 +0000
