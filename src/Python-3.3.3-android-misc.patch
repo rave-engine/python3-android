@@ -69,7 +69,7 @@ diff -ru Python-3.3.3/Lib/platform.py Python-3.3.3-android/Lib/platform.py
 +        Returns a (version, buildstr) tuple which defaults to the args given
 +        as parameters.
 +    """
-+    if not any(os.getvar(e) for e in _android_environment_vars):
++    if not any(os.getenv(e) for e in _android_environment_vars):
 +        # Probably not on Android...
 +        return version, buildstr
 +
@@ -129,13 +129,47 @@ diff -ru Python-3.3.3/Lib/subprocess.py Python-3.3.3-android/Lib/subprocess.py
 +                    main = '/bin/sh'
 +                else:
 +                    import platform
-+                    if platform.linux_distribution()[0] == 'Android':
++                    if platform.android_version()[0]:
 +                        main = '/system/bin/sh'
 +                    else:
-+                        raise RuntimeError('Could not find shell binary to execute command with.')
++                        raise RuntimeError('Could not find system shell')
 +
 +                args = [main, "-c"] + args
  
              if executable is None:
                  executable = args[0]
+diff -ru Python-3.3.3/Lib/test/test_subprocess.py Python-3.3.3-android/Lib/test/test_subprocess.py
+--- Python-3.3.3/Lib/test/test_subprocess.py	2013-11-17 07:22:48.000000000 +0000
++++ Python-3.3.3-android/Lib/test/test_subprocess.py	2014-08-03 17:47:16.977371214 +0000
+@@ -17,6 +17,7 @@
+ import shutil
+ import gc
+ import textwrap
++import platform
 
+ try:
+     import resource
+@@ -1356,7 +1357,10 @@
+         fd, fname = mkstemp()
+         # reopen in text mode
+         with open(fd, "w", errors="surrogateescape") as fobj:
+-            fobj.write("#!/bin/sh\n")
++            if platform.android_version()[0]:
++                fobj.write('#!/system/bin/sh\n')
++            else:
++                fobj.write("#!/bin/sh\n")
+             fobj.write("exec '%s' -c 'import sys; sys.exit(47)'\n" %
+                        sys.executable)
+         os.chmod(fname, 0o700)
+@@ -1401,7 +1405,10 @@
+         fd, fname = mkstemp()
+         # reopen in text mode
+         with open(fd, "w", errors="surrogateescape") as fobj:
+-            fobj.write("#!/bin/sh\n")
++            if platform.android_version()[0]:
++                fobj.write('#!/system/bin/sh\n')
++            else:
++                fobj.write("#!/bin/sh\n")
+             fobj.write("exec '%s' -c 'import sys; sys.exit(47)'\n" %
+                        sys.executable)
+         os.chmod(fname, 0o700)
