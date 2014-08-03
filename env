@@ -4,14 +4,37 @@ popd >/dev/null
 
 export ANDROID_PREFIX="${BASE}/build"
 export ANDROID_TOOL_PREFIX="${BASE}/build-tools"
+export ANDROID_TEST_PREFIX="${BASE}/build-vm"
 export NDK_REL=android-ndk-r9d
 export SDK_REL=android-sdk-r22.3
 export NDK_REV=9d
-export SDK_REV=19
-export ANDROID_HOST=x86_64-pc-linux-gnu
-export ANDROID_TARGET=arm-linux-androideabi
-export ANDROID_TOOLCHAIN=arm-linux-androideabi-4.8
+export SDK_REV=22.3
+
+export ANDROID_API_LEVEL=19
+export ANDROID_PLATFORM=arm
+export ANDROID_COMPILER=4.8
+export ANDROID_HOST=x86_64-apple-darwin13.3.0
+export ANDROID_VM_NAME=PythonTesting
+export ANDROID_EMULATOR_TESTDIR="/data/py3"
+export ANDROID_EMULATOR_OPTIONS=""
+#-no-window -no-skin -no-boot-anim"
 export CFLAGS_EXTRA=""
 export CPPFLAGS_EXTRA=""
 export CXXFLAGS_EXTRA=""
 export LDFLAGS_EXTRA=""
+
+# Do no touch unless you know what you are doing.
+case "${ANDROID_PLATFORM}" in
+  arm)
+      export ANDROID_TARGET=arm-linux-androideabi
+      export ANDROID_TOOLCHAIN="arm-linux-androideabi-${ANDROID_COMPILER}"
+      ;;
+  x86)
+      export ANDROID_TARGET=i686-linux-android
+      export ANDROID_TOOLCHAIN="x86-${ANDROID_COMPILER}"
+      ;;
+  *)
+      echo "Unknown Android platform: ${ANDROID_PLATFORM}"
+      exit 1
+      ;;
+esac
