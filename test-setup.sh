@@ -67,8 +67,8 @@ echo y | ./tools/android -s update sdk --no-ui -a --filter "${ABI_IMG_ID}" || ex
 [[ ! -d "${ANDROID_TEST_PREFIX}" ]] && (mkdir "${ANDROID_TEST_PREFIX}" || exit 1)
 echo n | ./tools/android -s create avd -f                                 \
     -t "android-${ANDROID_API_LEVEL}"                                     \
-    -n "${ANDROID_VM_NAME}-${SDK_REV}-${NDK_REV}-${ANDROID_PLATFORM}"     \
-    -p "${ANDROID_TEST_PREFIX}/${SDK_REV}-${NDK_REV}-${ANDROID_PLATFORM}" \
+    -n "${ANDROID_VM_NAME}-${SDK_REV}-${BUILD_IDENTIFIER}"                \
+    -p "${ANDROID_TEST_PREFIX}/${SDK_REV}-${BUILD_IDENTIFIER}"            \
     -b "${ABI_OPT}"                                                       \
 || exit 1
 
