@@ -49,8 +49,8 @@ diff -ru Python-3.3.3/Modules/socketmodule.c Python-3.3.3-android/Modules/socket
  #  undef HAVE_GETHOSTBYNAME_R
 diff -ru Python-3.3.3/Lib/platform.py Python-3.3.3-android/Lib/platform.py
 --- Python-3.3.3/Lib/platform.py	2013-11-17 07:22:38.000000000 +0000
-+++ Python-3.3.3-android/Lib/platform.py	2014-08-03 17:07:13.377376523 +0000
-@@ -363,6 +363,59 @@
++++ Python-3.3.3-android/Lib/platform.py	2014-08-03 17:11:46.705375919 +0000
+@@ -363,6 +363,63 @@
                                supported_dists=supported_dists,
                                full_distribution_name=0)
 
@@ -63,7 +63,11 @@ diff -ru Python-3.3.3/Lib/platform.py Python-3.3.3-android/Lib/platform.py
 +def android_version(version='', buildstr=''):
 +    """ Attempt to get the Android version number and build string.
 +
-+        The function checks
++        The function checks for the getprop binary to retrieve build info,
++        and falls back to manually reading /system/build.prop if available.
++
++        Returns a (version, buildstr) tuple which defaults to the args given
++        as parameters.
 +    """
 +    if not any(os.getvar(e) for e in _android_environment_vars):
 +        # Probably not on Android...
