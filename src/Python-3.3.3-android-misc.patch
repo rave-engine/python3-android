@@ -109,7 +109,7 @@ diff -ru Python-3.3.3/Lib/platform.py Python-3.3.3-android/Lib/platform.py
 +            elif not buildstr_obtained and key == _android_buildstr_property:
 +                buildstr = val.strip()
 +
-+     return version, buildstr
++    return version, buildstr
 +
  def popen(cmd, mode='r', bufsize=-1):
 
