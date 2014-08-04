@@ -1,56 +1,7 @@
-diff -ru Python-3.3.3/Modules/pwdmodule.c Python-3.3.3-android/Modules/pwdmodule.c
---- Python-3.3.3/Modules/pwdmodule.c    2013-11-17 07:23:01.000000000 +0000
-+++ Python-3.3.3-android/Modules/pwdmodule.c    2014-01-19 13:47:05.093593955 +0000
-@@ -76,7 +76,7 @@
- #endif
-     PyStructSequence_SET_ITEM(v, setIndex++, _PyLong_FromUid(p->pw_uid));
-     PyStructSequence_SET_ITEM(v, setIndex++, _PyLong_FromGid(p->pw_gid));
--#ifdef __VMS
-+#if defined(__VMS) || defined(__ANDROID__)
-     SETS(setIndex++, "");
- #else
-     SETS(setIndex++, p->pw_gecos);
-diff -ru Python-3.3.3/Modules/_posixsubprocess.c Python-3.3.3-android/Modules/_posixsubprocess.c
---- Python-3.3.3/Modules/_posixsubprocess.c 2013-11-17 07:23:00.000000000 +0000
-+++ Python-3.3.3-android/Modules/_posixsubprocess.c 2014-01-19 15:44:12.881751904 +0000
-@@ -18,6 +18,12 @@
- #include <dirent.h>
- #endif
- 
-+#if defined(__ANDROID__)
-+/* Android doesn't expose syscalls. Let's add the definition manually. */
-+# include <sys/linux-syscalls.h>
-+# define SYS_getdents64  __NR_getdents64
-+#endif
-+
- #if defined(sun)
- /* readdir64 is used to work around Solaris 9 bug 6395699. */
- # define readdir readdir64
-diff -ru Python-3.3.3/Modules/socketmodule.c Python-3.3.3-android/Modules/socketmodule.c
---- Python-3.3.3/Modules/socketmodule.c        2013-11-17 07:23:02.000000000 +0000
-+++ Python-3.3.3-android/Modules/socketmodule.c        2014-07-31 16:53:59.482873274 +0000
-@@ -150,7 +150,7 @@
-    On the other hand, not all Linux versions agree, so there the settings
-    computed by the configure script are needed! */
- 
--#ifndef linux
-+#if !defined(linux) || __ANDROID__
- # undef HAVE_GETHOSTBYNAME_R_3_ARG
- # undef HAVE_GETHOSTBYNAME_R_5_ARG
- # undef HAVE_GETHOSTBYNAME_R_6_ARG
-@@ -169,7 +169,7 @@
- #  define HAVE_GETHOSTBYNAME_R_3_ARG
- # elif defined(__sun) || defined(__sgi)
- #  define HAVE_GETHOSTBYNAME_R_5_ARG
--# elif defined(linux)
-+# elif defined(linux) && !__ANDROID__
- /* Rely on the configure script */
- # else
- #  undef HAVE_GETHOSTBYNAME_R
-diff -ru Python-3.3.3/Lib/platform.py Python-3.3.3-android/Lib/platform.py
---- Python-3.3.3/Lib/platform.py	2013-11-17 07:22:38.000000000 +0000
-+++ Python-3.3.3-android/Lib/platform.py	2014-08-03 17:11:46.705375919 +0000
-@@ -363,6 +363,63 @@
+diff -ru Python-3.3.5/Lib/platform.py Python-3.3.5-android/Lib/platform.py
+--- Python-3.3.5/Lib/platform.py	2014-03-09 09:40:13.000000000 +0100
++++ Python-3.3.5-android/Lib/platform.py	2014-08-04 22:19:36.000000000 +0200
+@@ -368,6 +368,63 @@
                                supported_dists=supported_dists,
                                full_distribution_name=0)
 
@@ -114,12 +65,12 @@ diff -ru Python-3.3.3/Lib/platform.py Python-3.3.3-android/Lib/platform.py
  def popen(cmd, mode='r', bufsize=-1):
 
      """ Portable popen() interface.
-diff -ru Python-3.3.3/Lib/subprocess.py Python-3.3.3-android/Lib/subprocess.py
---- Python-3.3.3/Lib/subprocess.py	2013-11-17 07:22:39.000000000 +0000
-+++ Python-3.3.3-android/Lib/subprocess.py	2014-08-01 23:31:05.711735647 +0000
+diff -ru Python-3.3.5/Lib/subprocess.py Python-3.3.5-android/Lib/subprocess.py
+--- Python-3.3.5/Lib/subprocess.py	2014-03-09 09:40:13.000000000 +0100
++++ Python-3.3.5-android/Lib/subprocess.py	2014-08-04 22:19:36.000000000 +0200
 @@ -1343,9 +1343,18 @@
                  args = list(args)
- 
+
              if shell:
 -                args = ["/bin/sh", "-c"] + args
                  if executable:
@@ -135,12 +86,12 @@ diff -ru Python-3.3.3/Lib/subprocess.py Python-3.3.3-android/Lib/subprocess.py
 +                        raise RuntimeError('Could not find system shell')
 +
 +                args = [main, "-c"] + args
- 
+
              if executable is None:
                  executable = args[0]
-diff -ru Python-3.3.3/Lib/test/test_subprocess.py Python-3.3.3-android/Lib/test/test_subprocess.py
---- Python-3.3.3/Lib/test/test_subprocess.py	2013-11-17 07:22:48.000000000 +0000
-+++ Python-3.3.3-android/Lib/test/test_subprocess.py	2014-08-03 17:47:16.977371214 +0000
+diff -ru Python-3.3.5/Lib/test/test_subprocess.py Python-3.3.5-android/Lib/test/test_subprocess.py
+--- Python-3.3.5/Lib/test/test_subprocess.py	2014-03-09 09:40:19.000000000 +0100
++++ Python-3.3.5-android/Lib/test/test_subprocess.py	2014-08-04 22:19:36.000000000 +0200
 @@ -17,6 +17,7 @@
  import shutil
  import gc
@@ -173,3 +124,52 @@ diff -ru Python-3.3.3/Lib/test/test_subprocess.py Python-3.3.3-android/Lib/test/
              fobj.write("exec '%s' -c 'import sys; sys.exit(47)'\n" %
                         sys.executable)
          os.chmod(fname, 0o700)
+diff -ru Python-3.3.5/Modules/_posixsubprocess.c Python-3.3.5-android/Modules/_posixsubprocess.c
+--- Python-3.3.5/Modules/_posixsubprocess.c	2014-03-09 09:40:26.000000000 +0100
++++ Python-3.3.5-android/Modules/_posixsubprocess.c	2014-08-04 22:19:36.000000000 +0200
+@@ -18,6 +18,12 @@
+ #include <dirent.h>
+ #endif
+
++#if defined(__ANDROID__)
++/* Android doesn't expose syscalls. Let's add the definition manually. */
++# include <sys/linux-syscalls.h>
++# define SYS_getdents64  __NR_getdents64
++#endif
++
+ #if defined(sun)
+ /* readdir64 is used to work around Solaris 9 bug 6395699. */
+ # define readdir readdir64
+diff -ru Python-3.3.5/Modules/pwdmodule.c Python-3.3.5-android/Modules/pwdmodule.c
+--- Python-3.3.5/Modules/pwdmodule.c	2014-03-09 09:40:28.000000000 +0100
++++ Python-3.3.5-android/Modules/pwdmodule.c	2014-08-04 22:19:36.000000000 +0200
+@@ -76,7 +76,7 @@
+ #endif
+     PyStructSequence_SET_ITEM(v, setIndex++, _PyLong_FromUid(p->pw_uid));
+     PyStructSequence_SET_ITEM(v, setIndex++, _PyLong_FromGid(p->pw_gid));
+-#ifdef __VMS
++#if defined(__VMS) || defined(__ANDROID__)
+     SETS(setIndex++, "");
+ #else
+     SETS(setIndex++, p->pw_gecos);
+diff -ru Python-3.3.5/Modules/socketmodule.c Python-3.3.5-android/Modules/socketmodule.c
+--- Python-3.3.5/Modules/socketmodule.c	2014-03-09 09:40:28.000000000 +0100
++++ Python-3.3.5-android/Modules/socketmodule.c	2014-08-04 22:19:36.000000000 +0200
+@@ -150,7 +150,7 @@
+    On the other hand, not all Linux versions agree, so there the settings
+    computed by the configure script are needed! */
+
+-#ifndef linux
++#if !defined(linux) || __ANDROID__
+ # undef HAVE_GETHOSTBYNAME_R_3_ARG
+ # undef HAVE_GETHOSTBYNAME_R_5_ARG
+ # undef HAVE_GETHOSTBYNAME_R_6_ARG
+@@ -169,7 +169,7 @@
+ #  define HAVE_GETHOSTBYNAME_R_3_ARG
+ # elif defined(__sun) || defined(__sgi)
+ #  define HAVE_GETHOSTBYNAME_R_5_ARG
+-# elif defined(linux)
++# elif defined(linux) && !__ANDROID__
+ /* Rely on the configure script */
+ # else
+ #  undef HAVE_GETHOSTBYNAME_R

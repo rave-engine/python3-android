@@ -24,10 +24,10 @@ endef
 
 ## Building.
 
-build: python_modules python-3.3.3
+build: python_modules python
 
 # Main Python.
-$(eval $(call formula,python,3.3.3))
+$(eval $(call formula,python,3.3.5))
 
 # Optional Python modules.
 python_modules: $(foreach mod,$(subst ',,$(PYTHON_OPTIONAL_MODULES)),python_$(mod))
