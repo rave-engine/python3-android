@@ -1,9 +1,10 @@
-# Target.
+## Setup.
+
 all: build
 
 # Get configuration.
 mk/env.mk: env
-	@bash --noprofile --norc -c 'source ./env; set -o posix; set' | egrep '^(ANDROID|SDK|NDK|BUILD|TEST)_' > $@
+	@bash --noprofile --norc -c 'source ./env; set -o posix; set' | egrep '^(ANDROID|SDK|NDK|BUILD|TEST|PYTHON)_' > $@
 -include mk/env.mk
 
 # A formula.
@@ -20,15 +21,31 @@ ifeq ("$$(wildcard build/.built-$(BUILD_IDENTIFIER)/$1-$2)","")
 endif
 endef
 
+
 ## Building.
 
-build: Python-3.3.3
+build: python_modules python-3.3.3
 
-$(eval $(call formula,Python,3.3.3,xz bzip2 openssl))
+# Main Python.
+$(eval $(call formula,python,3.3.3))
+
+# Optional Python modules.
+python_modules: $(foreach mod,$(subst ',,$(PYTHON_OPTIONAL_MODULES)),python_$(mod))
+
+# Python lzma support.
 $(eval $(call formula,xz,5.0.5))
-$(eval $(call formula,bzip2,1.0.6))
-$(eval $(call formula,openssl,1.0.1h))
+python_lzma: xz
 
+# Python bzip2 support.
+$(eval $(call formula,bzip2,1.0.6))
+python_bz2: bzip2
+
+# Python SSL support.
+$(eval $(call formula,openssl,1.0.1h))
+python_ssl: openssl
+
+
+# Android NDK.
 ndk:
 	$(info Checking NDK sources...)
 	@wget -nv -N -P "sdk/" $(shell bash mk/ndk_source.sh)
@@ -37,6 +54,7 @@ ifeq ("$(wildcard build/.built-ndk-$(BUILD_IDENTIFIER))","")
 	@bash --noprofile --norc mk/build_ndk.sh
 	@touch build/.built-ndk-$(BUILD_IDENTIFIER)
 endif
+
 
 ## Cleaning.
 
@@ -49,6 +67,7 @@ clean_generated:
 
 clean_builds:
 	@rm -rf "$(ANDROID_PREFIX)"
+
 
 ## Testing.
 
