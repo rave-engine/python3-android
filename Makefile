@@ -1,7 +1,5 @@
-SHELL=/usr/bin/env bash
-
 # Target.
-all: build clean_generated
+all: build
 
 # Get configuration.
 mk/env.mk: env
@@ -55,9 +53,9 @@ clean_builds:
 ## Testing.
 
 test: test_setup
-	@bash mk/test.sh
+	@bash --noprofile --norc mk/test.sh
 
 test_setup:
 ifeq ("$(wildcard build-vm/$(TEST_IDENTIFIER))","")
-	@bash mk/test_setup.sh
+	@bash --noprofile --norc mk/test_setup.sh
 endif
