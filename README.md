@@ -6,7 +6,7 @@ This is an experimental set of build scripts that will crosscompile Python 3 for
 Usage
 ------
 
-1. Run `./clean.sh` for good measure.
+1. `make clean` for good measure.
 2. For every NDK/API Level/Toolchain combination you wish to build for:
    * Edit `env` to match your (desired) configuration.
    * `make` to build everything!
