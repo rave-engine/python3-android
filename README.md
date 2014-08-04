@@ -35,3 +35,10 @@ Both require:
 1. A working `bash` and basic *nix utilities like `cp` and `touch`.
 2. `wget` to fetch files.
 2. `tar` to extract files.
+
+FAQ
+---
+
+*The build is failing with something about license terms!*
+
+Read the license terms, edit `env` and set `ANDROID_AGREE_LICENSE_TERMS=y` if you agree with them, and re-run.
