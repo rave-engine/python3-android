@@ -30,7 +30,7 @@ export LDFLAGS_EXTRA=""
 export MAKEOPTS_EXTRA=""
 
 # Python options.
-export PYTHON_OPTIONAL_MODULES="bz2 lzma ssl"
+export PYTHON_OPTIONAL_MODULES="bz2 lzma readline ssl"
 
 # Do no touch unless you know what you are doing.
 case "${ANDROID_PLATFORM}" in

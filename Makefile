@@ -40,6 +40,10 @@ python_lzma: xz
 $(eval $(call formula,bzip2,1.0.6))
 python_bz2: bzip2
 
+# Python readline support.
+$(eval $(call formula,readline,6.3))
+python_readline: readline
+
 # Python SSL support.
 $(eval $(call formula,openssl,1.0.1h))
 python_ssl: openssl
