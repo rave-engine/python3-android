@@ -52,6 +52,10 @@ python_ssl: openssl
 $(eval $(call formula,ncurses,5.9))
 python_curses: ncurses
 
+# Python SQLite support.
+$(eval $(call formula,sqlite,3.8.5))
+python_sqlite3: sqlite
+
 
 # Android NDK.
 ndk:

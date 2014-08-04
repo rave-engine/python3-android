@@ -36,6 +36,7 @@ export MAKEOPTS_EXTRA=""
 #  ssl - enable the ssl module and SSL/TLS support for sockets (builds openssl).
 #  readline - enable the readline module and command history/the like in the REPL (builds readline).
 #  curses - enable the curses module (builds ncursesw).
+#  sqlite3 - enable the sqlite3 module (builds SQLite).
 export PYTHON_OPTIONAL_MODULES="bz2 lzma ssl"
 
 # Do no touch unless you know what you are doing.
