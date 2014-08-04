@@ -9,5 +9,8 @@ pushd openssl-1.0.1h >/dev/null
 make || exit 1
 make install_sw || exit 1
 
+# Remove binaries from premises.
+rm -f "${PREFIX}/bin/"{openssl,c_rehash}
+
 popd >/dev/null
 popd >/dev/null
