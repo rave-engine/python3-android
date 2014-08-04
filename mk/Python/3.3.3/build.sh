@@ -16,10 +16,10 @@ cat > config.site <<-SITE
 	ac_cv_file__dev_ptmx=no
 	ac_cv_file__dev_ptc=no
 SITE
-patch -p1 < ../Python-3.3.3-cross-compile.patch || exit 1
-patch -p1 < ../Python-3.3.3-python-misc.patch || exit 1
-patch -p1 < ../Python-3.3.3-android-locale.patch || exit 1
-patch -p1 < ../Python-3.3.3-android-misc.patch || exit 1
+patch -p1 < "$BASE/mk/Python/3.3.3/Python-3.3.3-cross-compile.patch" || exit 1
+patch -p1 < "$BASE/mk/Python/3.3.3/Python-3.3.3-python-misc.patch" || exit 1
+patch -p1 < "$BASE/mk/Python/3.3.3/Python-3.3.3-android-locale.patch" || exit 1
+patch -p1 < "$BASE/mk/Python/3.3.3/Python-3.3.3-android-misc.patch" || exit 1
 
 ./configure CROSS_COMPILE_TARGET=yes HOSTPYTHON="$(pwd)/hostpython" CONFIG_SITE=config.site --prefix="${PREFIX}" --host="${TARGET}" --build="${HOST}" --disable-ipv6 || exit 1
 make CROSS_COMPILE_TARGET=yes HOSTPYTHON="$(pwd)/hostpython" HOSTPGEN="$(pwd)/Parser/hostpgen" || exit 1

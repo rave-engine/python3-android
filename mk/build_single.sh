@@ -1,4 +1,6 @@
 source ./env
+[[ ! -d "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}" ]] && (mkdir -p "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}" || exit 1)
+[[ ! -d "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}/include" ]] && (mkdir "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}/include" || exit 1)
 
 export PATH="${ANDROID_TOOL_PREFIX}/${BUILD_IDENTIFIER}/bin:${PATH}"
 export PREFIX="${ANDROID_PREFIX}/${BUILD_IDENTIFIER}"
@@ -6,8 +8,8 @@ export TOOL_PREFIX="${ANDROID_TOOL_PREFIX}/${BUILD_IDENTIFIER}"
 export HOST="${ANDROID_HOST}"
 export TARGET="${ANDROID_TARGET}"
 
-export NDK_ROOT="$(dirname "$0")/sdk/${NDK_REL}"
-export SDK_ROOT="$(dirname "$0")/sdk/${SDK_REL}"
+export NDK_ROOT="${BASE}/sdk/${NDK_REL}"
+export SDK_ROOT="${BASE}/sdk/${SDK_REL}"
 export NDK_PLATFORM="android-${NDK_REV}"
 export SDK_PLATFORM="android-${SDK_REV}"
 export cross="${ANDROID_TARGET}-"
@@ -28,4 +30,6 @@ export OBJDUMP="${ANDROID_TARGET}-objdump"
 export RANLIB="${ANDROID_TARGET}-ranlib"
 export STRIP="${ANDROID_TARGET}-strip"
 
-. "${BASE}/$1"
+pushd "${BASE}" > /dev/null
+. "${BASE}/mk/$1/$2/build.sh" || exit 1
+popd > /dev/null

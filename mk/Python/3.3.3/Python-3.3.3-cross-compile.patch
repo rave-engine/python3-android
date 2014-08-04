@@ -32,7 +32,7 @@ diff -ru Python-3.3.3/configure Python-3.3.3-android/configure
 -	    fi
 -            interp=
 -	done
-+        if test ! -z "$HOSTPYTHON" && PYTHONPATH=$ac_abs_confdir/Lib "$HOSTPYTHON" -S -c 'import sys;sys.exit(not sys.version_info[:2] >= (3,3))'; then
++        if test ! -z "$HOSTPYTHON" && PYTHONPATH="$ac_abs_confdir/Lib" "$HOSTPYTHON" -S -c 'import sys;sys.exit(not sys.version_info[:2] >= (3,3))'; then
 +            interp="$HOSTPYTHON"
 +        else
 +            for interp in python$PACKAGE_VERSION python3 python; do
@@ -61,7 +61,7 @@ diff -ru Python-3.3.3/configure.ac Python-3.3.3-android/configure.ac
 -	    fi
 -            interp=
 -	done
-+        if test ! -z "$HOSTPYTHON" && PYTHONPATH=$ac_abs_confdir/Lib "$HOSTPYTHON" -S -c 'import sys;sys.exit(not sys.version_info@<:@:2@:>@ >= (3,3))'; then
++        if test ! -z "$HOSTPYTHON" && PYTHONPATH="$ac_abs_confdir/Lib" "$HOSTPYTHON" -S -c 'import sys;sys.exit(not sys.version_info@<:@:2@:>@ >= (3,3))'; then
 +            interp="$HOSTPYTHON"
 +        else
 +            for interp in python$PACKAGE_VERSION python3 python; do

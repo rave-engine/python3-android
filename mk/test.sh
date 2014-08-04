@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 source ./env
 
-if [[ ! -d "$BASE/build-vm/${TEST_IDENTIFIER}" ]]; then
-   ./test-setup.sh || exit 1
-fi
-
 pushd "$BASE/sdk/android-sdk-r${SDK_REV}" > /dev/null
 
 # TODO: Figure out an appropriate port number.

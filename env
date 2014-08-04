@@ -1,6 +1,4 @@
-pushd $(dirname "$0") > /dev/null
-export BASE=$(pwd)
-popd > /dev/null
+export BASE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 export ANDROID_PREFIX="${BASE}/build"
 export ANDROID_TOOL_PREFIX="${BASE}/build-tools"
@@ -13,8 +11,8 @@ export SDK_REV=22.3
 export ANDROID_API_LEVEL=19
 export ANDROID_PLATFORM=arm
 export ANDROID_COMPILER=4.8
-export ANDROID_HOST=x86_64-pc-linux-gnu
-export ANDROID_AGREE_LICENSE_TERMS=n
+export ANDROID_HOST=x86_64-apple-darwin13.3.0
+export ANDROID_AGREE_LICENSE_TERMS=y
 
 export ANDROID_VM_NAME=PythonTesting
 export ANDROID_EMULATOR_TESTDIR="/data/py3"

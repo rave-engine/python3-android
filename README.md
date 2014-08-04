@@ -9,10 +9,8 @@ Usage
 1. Run `./clean.sh` for good measure.
 2. For every NDK/API Level/Toolchain combination you wish to build for:
    * Edit `env` to match your (desired) configuration.
-   * Run `./fetch.sh` to fetch the NDK and needed source archives.
-   * Run `./build.sh` to build everything!
-   * (Optional) run `./test.sh` to setup an Android emulator and run automated Python regression tests.
-   * Run `./clean-generated.sh` to clean things up for the next build.
+   * `make` to build everything!
+   * (Optional) `make test` to setup an Android emulator and run automated Python regression tests.
 
 Requirements
 ------------
