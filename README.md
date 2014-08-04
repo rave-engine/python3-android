@@ -14,8 +14,6 @@ Usage
    * (Optional) run `./test.sh` to setup an Android emulator and run automated Python regression tests.
    * Run `./clean-generated.sh` to clean things up for the next build.
 
-Currently, cross-compiling is only supported for Linux hosts due Python cross-compile limitations. 
-
 Requirements
 ------------
 
