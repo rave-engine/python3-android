@@ -9,8 +9,8 @@ patch -p1 < "$BASE/mk/ncurses/5.9/ncurses-5.9-android-locale-fixes.patch"
 make || exit 1
 make install || exit 1
 # Fix symlinks for Python _curses and _curses_panel extensions.
-ln -s ncursesw/curses.h "${PREFIX}/curses.h"
-ln -s ncursesw/panel.h "${PREFIX}/panel.h"
+ln -s ncursesw/curses.h "${PREFIX}/include/curses.h"
+ln -s ncursesw/panel.h "${PREFIX}/include/panel.h"
 
 popd >/dev/null
 popd >/dev/null
