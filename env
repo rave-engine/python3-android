@@ -29,8 +29,14 @@ export CXXFLAGS_EXTRA=""
 export LDFLAGS_EXTRA=""
 export MAKEOPTS_EXTRA=""
 
-# Python options.
-export PYTHON_OPTIONAL_MODULES="bz2 lzma readline ssl"
+# Python optional modules.
+# Available:
+#  bz2 - enable the bz2 module and the bzip2 codec (builds bzip2).
+#  lzma - enable the lzma module and the lzma codec (builds xz).
+#  ssl - enable the ssl module and SSL/TLS support for sockets (builds openssl).
+#  readline - enable the readline module and command history/the like in the REPL (builds readline).
+#  curses - enable the curses module (builds ncursesw).
+export PYTHON_OPTIONAL_MODULES="bz2 lzma ssl"
 
 # Do no touch unless you know what you are doing.
 case "${ANDROID_PLATFORM}" in

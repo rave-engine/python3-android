@@ -48,6 +48,10 @@ python_readline: readline
 $(eval $(call formula,openssl,1.0.1h))
 python_ssl: openssl
 
+# Python curses support.
+$(eval $(call formula,ncurses,5.9))
+python_curses: ncurses
+
 
 # Android NDK.
 ndk:

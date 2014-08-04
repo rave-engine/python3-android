@@ -1,0 +1,12 @@
+diff -ru ncurses-5.9/form/fty_num.c ncurses-5.9-android/form/fty_num.c
+--- ncurses-5.9/form/fty_num.c	2010-01-23 22:14:36.000000000 +0100
++++ ncurses-5.9-android/form/fty_num.c	2014-08-04 23:04:23.000000000 +0200
+@@ -40,7 +40,7 @@
+ #include <locale.h>
+ #endif
+
+-#if HAVE_LOCALE_H
++#if HAVE_LOCALE_H && !__ANDROID__
+ #define isDecimalPoint(c) ((c) == ((L && L->decimal_point) ? *(L->decimal_point) : '.'))
+ #else
+ #define isDecimalPoint(c) ((c) == '.')
