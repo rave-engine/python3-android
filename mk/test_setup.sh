@@ -39,6 +39,11 @@ case "${ANDROID_PLATFORM}" in
       ABI_SEARCH_TERM="ARM EABI"
       ABI_OPT="armeabi-v7a"
       ;;
+  mips)
+      echo "Unsupported Android test platform: ${ANDROID_PLATFORM}"
+      echo "This platform has no system images available to test with."
+      exit 1
+     ;;
   x86)
       ABI_SEARCH_TERM="Intel x86"
       ABI_OPT="x86"

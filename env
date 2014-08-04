@@ -30,6 +30,10 @@ case "${ANDROID_PLATFORM}" in
       export ANDROID_TARGET=arm-linux-androideabi
       export ANDROID_TOOLCHAIN="arm-linux-androideabi-${ANDROID_COMPILER}"
       ;;
+  mips)
+      export ANDROID_TARGET=mipsel-linux-android
+      export ANDROID_TOOLCHAIN="mipsel-linu-android-${ANDROID_COMPILER}"
+      ;;
   x86)
       export ANDROID_TARGET=i686-linux-android
       export ANDROID_TOOLCHAIN="x86-${ANDROID_COMPILER}"
