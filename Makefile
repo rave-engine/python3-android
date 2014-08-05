@@ -56,6 +56,10 @@ python_curses: ncurses
 $(eval $(call formula,sqlite,3.8.5))
 python_sqlite3: sqlite
 
+# Python (g)dbm support.
+$(eval $(call formula,gdbm,1.11))
+python_gdbm: gdbm
+
 
 # Android NDK.
 ndk:
