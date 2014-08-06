@@ -10,7 +10,7 @@ make || exit 1
 make install_sw || exit 1
 
 # Remove binaries from premises.
-rm -f "${PREFIX}/bin/"{openssl,c_rehash}
+rm -f "${PREFIX}/bin/"{openssl,c_rehash} || exit 1
 
 popd >/dev/null
 popd >/dev/null

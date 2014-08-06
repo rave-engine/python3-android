@@ -9,7 +9,7 @@ make || exit 1
 make install || exit 1
 
 # Remove binary from premises.
-rm -f "${PREFIX}/bin/sqlite3"
+rm -f "${PREFIX}/bin/sqlite3" || exit 1
 
 popd >/dev/null
 popd >/dev/null
