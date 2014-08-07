@@ -1,8 +1,8 @@
 pushd src >/dev/null
 
-rm -rf openssl-1.0.1i
-tar -xf openssl-1.0.1i.tar.gz || exit 1
-pushd openssl-1.0.1i >/dev/null
+rm -rf "${PACKAGE}"
+tar -xf "${PACKAGE}.tar.gz" || exit 1
+pushd "${PACKAGE}" >/dev/null
 
 [[ ! -d "${PREFIX}/share" ]] && (mkdir "${PREFIX}/share" || exit 1)
 ./Configure dist --prefix="${PREFIX}" --openssldir="${PREFIX}/share" || exit 1

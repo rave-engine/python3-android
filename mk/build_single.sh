@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 source ./env
 [[ ! -d "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}" ]] && (mkdir -p "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}" || exit 1)
 [[ ! -d "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}/include" ]] && (mkdir "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}/include" || exit 1)
@@ -30,6 +31,11 @@ export OBJDUMP="${ANDROID_TARGET}-objdump"
 export RANLIB="${ANDROID_TARGET}-ranlib"
 export STRIP="${ANDROID_TARGET}-strip"
 
+export NAME="$1"
+export VERSION="$2"
+export PACKAGE="${NAME}-${VERSION}"
+export FILESDIR="${BASE}/mk/${NAME}/${VERSION}"
+
 pushd "${BASE}" > /dev/null
-. "${BASE}/mk/$1/$2/build.sh" || exit 1
+. "${FILESDIR}/build.sh" || exit 1
 popd > /dev/null

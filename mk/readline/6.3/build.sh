@@ -1,8 +1,8 @@
 pushd src >/dev/null
 
-rm -rf readline-6.3
-tar -xf readline-6.3.tar.gz || exit 1
-pushd readline-6.3 >/dev/null
+rm -rf "${PACKAGE}"
+tar -xf "${PACKAGE}.tar.gz" || exit 1
+pushd "${PACKAGE}" >/dev/null
 
 autoreconf -i
 ./configure --prefix="${PREFIX}" --host="${TARGET}" --build="${HOST}" || exit 1

@@ -1,10 +1,10 @@
 pushd src >/dev/null
 
-rm -rf ncurses-5.9
-tar -xf ncurses-5.9.tar.gz || exit 1
-pushd ncurses-5.9 >/dev/null
+rm -rf "${PACKAGE}"
+tar -xf "${PACKAGE}.tar.gz" || exit 1
+pushd "${PACKAGE}" >/dev/null
 
-patch -p1 < "$BASE/mk/ncurses/5.9/ncurses-5.9-android-locale-fixes.patch"
+patch -p1 < "${FILESDIR}/${PACKAGE}-android-locale-fixes.patch"
 ./configure --prefix="${PREFIX}" --host="${TARGET}" --build="${HOST}" --without-ada --without-manpages --without-progs --without-tests --with-termlib --enable-widec || exit 1
 make || exit 1
 make install || exit 1
