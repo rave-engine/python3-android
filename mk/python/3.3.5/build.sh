@@ -6,9 +6,7 @@ pushd "Python-${VERSION}" >/dev/null
 
 # Build host components.
 AR=ar AS=as CC=gcc CFLAGS= CPP=cpp CPPFLAGS= CXX=g++ CXXFLAGS= LD=ld LDFLAGS= RANLIB=ranlib ./configure || exit 1
-AR=ar AS=as CC=gcc CFLAGS= CPP=cpp CPPFLAGS= CXX=g++ CXXFLAGS= LD=ld LDFLAGS= RANLIB=ranlib make python Parser/pgen || exit 1
-mv python hostpython || exit 1
-mv Parser/pgen Parser/hostpgen || exit 1
+AR=ar AS=as CC=gcc CFLAGS= CPP=cpp CPPFLAGS= CXX=g++ CXXFLAGS= LD=ld LDFLAGS= RANLIB=ranlib make BUILDPYTHON=hostpython hostpython PGEN=Parser/hostpgen Parser/hostpgen || exit 1
 make distclean || exit 1
 
 # Apply patches and build target Python.
