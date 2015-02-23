@@ -6,13 +6,13 @@ export ANDROID_TOOL_PREFIX="${BASE}/build-tools"
 export ANDROID_TEST_PREFIX="${BASE}/build-vm"
 
 # SDKs and target platforms.
-export NDK_REL=android-ndk-r9d
-export SDK_REL=android-sdk-r22.3
-export NDK_REV=9d
-export SDK_REV=22.3
-export ANDROID_API_LEVEL=19
+export NDK_REL=android-ndk-r10d
+export SDK_REL=android-sdk-r24.0.2
+export NDK_REV=10d
+export SDK_REV=24.0.2
+export ANDROID_API_LEVEL=21
 export ANDROID_PLATFORM=arm
-export ANDROID_COMPILER=4.8
+export ANDROID_COMPILER=4.9
 export ANDROID_HOST=x86_64-pc-linux-gnu
 export ANDROID_AGREE_LICENSE_TERMS=n
 
@@ -23,7 +23,7 @@ export ANDROID_EMULATOR_OPTIONS=""
 #-no-window -no-skin -no-boot-anim"
 
 # Compile flags.
-export CFLAGS_EXTRA=""
+export CFLAGS_EXTRA="-DHAVE_GETTIMEOFDAY"
 export CPPFLAGS_EXTRA=""
 export CXXFLAGS_EXTRA=""
 export LDFLAGS_EXTRA=""
