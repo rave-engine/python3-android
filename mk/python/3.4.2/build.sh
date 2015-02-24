@@ -14,7 +14,7 @@ cat > config.site <<-SITE
 	ac_cv_file__dev_ptmx=no
 	ac_cv_file__dev_ptc=no
 SITE
-ln -s "${TOOL_PREFIX}/sysroot/usr/include/"{linux,sys}"/soundcard.h"
+ln -sf "${TOOL_PREFIX}/sysroot/usr/include/"{linux,sys}"/soundcard.h"
 patch -p1  < "${FILESDIR}/${PACKAGE}-cross-compile.patch" || exit 1
 patch -p1  < "${FILESDIR}/${PACKAGE}-python-misc.patch" || exit 1
 patch -p1  < "${FILESDIR}/${PACKAGE}-android-locale.patch" || exit 1
