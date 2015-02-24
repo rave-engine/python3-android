@@ -23,7 +23,7 @@ export ANDROID_EMULATOR_OPTIONS=""
 #-no-window -no-skin -no-boot-anim"
 
 # Compile flags.
-export CFLAGS_EXTRA="-DHAVE_GETTIMEOFDAY"
+export CFLAGS_EXTRA=""
 export CPPFLAGS_EXTRA=""
 export CXXFLAGS_EXTRA=""
 export LDFLAGS_EXTRA=""
