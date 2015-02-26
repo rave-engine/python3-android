@@ -124,18 +124,21 @@ diff -ru Python-3.3.5/Lib/test/test_subprocess.py Python-3.3.5-android/Lib/test/
              fobj.write("exec '%s' -c 'import sys; sys.exit(47)'\n" %
                         sys.executable)
          os.chmod(fname, 0o700)
-diff -ru Python-3.3.5/Modules/pwdmodule.c Python-3.3.5-android/Modules/pwdmodule.c
---- Python-3.3.5/Modules/pwdmodule.c	2014-03-09 09:40:28.000000000 +0100
-+++ Python-3.3.5-android/Modules/pwdmodule.c	2014-08-04 22:19:36.000000000 +0200
-@@ -76,7 +76,7 @@
- #endif
+diff -ru Python-3.4.2/Modules/pwdmodule.c Python-3.4.2-android/Modules/pwdmodule.c
+--- Python-3.4.2/Modules/pwdmodule.c	2015-02-24 23:06:31.000000000 +0100
++++ Python-3.4.2-android/Modules/pwdmodule.c	2015-02-24 23:09:14.000000000 +0100
+@@ -72,7 +72,11 @@
+     SETS(setIndex++, p->pw_passwd);
      PyStructSequence_SET_ITEM(v, setIndex++, _PyLong_FromUid(p->pw_uid));
      PyStructSequence_SET_ITEM(v, setIndex++, _PyLong_FromGid(p->pw_gid));
--#ifdef __VMS
-+#if defined(__VMS) || defined(__ANDROID__)
-     SETS(setIndex++, "");
- #else
++#if !defined(__ANDROID__)
      SETS(setIndex++, p->pw_gecos);
++#else
++    SETS(setIndex++, "");
++#endif
+     SETS(setIndex++, p->pw_dir);
+     SETS(setIndex++, p->pw_shell);
+ 
 diff -ru Python-3.3.5/Modules/socketmodule.c Python-3.3.5-android/Modules/socketmodule.c
 --- Python-3.3.5/Modules/socketmodule.c	2014-03-09 09:40:28.000000000 +0100
 +++ Python-3.3.5-android/Modules/socketmodule.c	2014-08-04 22:19:36.000000000 +0200

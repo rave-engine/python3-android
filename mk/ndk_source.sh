@@ -14,4 +14,14 @@ case $(uname -m) in
       exit 1
       ;;
 esac
-echo http://dl.google.com/android/ndk/android-ndk-r${NDK_REV}-$(uname -s | tr '[A-Z]' '[a-z'])-${NDK_ARCH}.tar.bz2
+
+case "${NDK_REV}" in
+  10*)
+      NDK_EXT=bin
+      ;;
+  *)
+      NDK_EXT=tar.bz2
+      ;;
+esac
+
+echo http://dl.google.com/android/ndk/android-ndk-r${NDK_REV}-$(uname -s | tr '[A-Z]' '[a-z'])-${NDK_ARCH}.${NDK_EXT}
