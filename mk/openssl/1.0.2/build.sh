@@ -6,7 +6,7 @@ pushd "${PACKAGE}" >/dev/null
 
 [[ ! -d "${PREFIX}/share" ]] && (mkdir "${PREFIX}/share" || exit 1)
 patch -p1 < "${FILESDIR}/${PACKAGE}-android-ndk-target.patch" || exit 1
-./Configure android-ndk shared --prefix="${PREFIX}" --openssldir="${PREFIX}/share" || exit 1
+./Configure android-ndk --prefix="${PREFIX}" --openssldir="${PREFIX}/share" || exit 1
 make || exit 1
 make install_sw || exit 1
 

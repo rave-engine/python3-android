@@ -4,7 +4,7 @@ rm -rf "${NAME}-autoconf-3080500"
 tar -xf "${NAME}-autoconf-3080500.tar.gz" || exit 1
 pushd "${NAME}-autoconf-3080500" >/dev/null
 
-./configure --prefix="${PREFIX}" --host="${TARGET}" --build="${HOST}" || exit 1
+./configure --prefix="${PREFIX}" --host="${TARGET}" --build="${HOST}" --disable-shared || exit 1
 make || exit 1
 make install || exit 1
 
