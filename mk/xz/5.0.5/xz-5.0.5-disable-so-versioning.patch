@@ -1,0 +1,24 @@
+diff -ru xz-5.0.5/src/liblzma/Makefile.am xz-5.0.5-android/src/liblzma/Makefile.am
+--- xz-5.0.5/src/liblzma/Makefile.am	2013-06-30 14:50:31.000000000 +0200
++++ xz-5.0.5-android/src/liblzma/Makefile.am	2015-03-02 11:35:35.000000000 +0100
+@@ -24,7 +24,7 @@
+ 	-I$(top_srcdir)/src/liblzma/simple \
+ 	-I$(top_srcdir)/src/common \
+ 	-DTUKLIB_SYMBOL_PREFIX=lzma_
+-liblzma_la_LDFLAGS = -no-undefined -version-info 5:5:0
++liblzma_la_LDFLAGS = -no-undefined -version-info 5:5:0 -avoid-version
+ 
+ include $(srcdir)/common/Makefile.inc
+ include $(srcdir)/check/Makefile.inc
+diff -ru xz-5.0.5/src/liblzma/Makefile.in xz-5.0.5-android/src/liblzma/Makefile.in
+--- xz-5.0.5/src/liblzma/Makefile.in	2013-06-30 15:17:57.000000000 +0200
++++ xz-5.0.5-android/src/liblzma/Makefile.in	2015-03-02 11:36:04.000000000 +0100
+@@ -719,7 +719,7 @@
+ 	-I$(top_srcdir)/src/common \
+ 	-DTUKLIB_SYMBOL_PREFIX=lzma_
+ 
+-liblzma_la_LDFLAGS = -no-undefined -version-info 5:5:0 \
++liblzma_la_LDFLAGS = -no-undefined -version-info 5:5:0 -avoid-version \
+ 	$(am__append_38)
+ pkgconfigdir = $(libdir)/pkgconfig
+ pkgconfig_DATA = liblzma.pc
