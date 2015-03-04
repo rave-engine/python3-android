@@ -1,1 +1,4 @@
 /mk/env.mk
+/build
+/build-tools
+/build-vm
