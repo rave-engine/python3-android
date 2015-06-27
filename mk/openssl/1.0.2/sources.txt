@@ -1,1 +1,1 @@
-http://openssl.initrd.net/source/openssl-1.0.2.tar.gz
+http://mirrors.ibiblio.org/openssl/source/openssl-1.0.2.tar.gz
