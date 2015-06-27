@@ -2,3 +2,7 @@
 /build
 /build-tools
 /build-vm
+/src/*
+!/src/.keep
+/sdk/*
+!/sdk/.keep
