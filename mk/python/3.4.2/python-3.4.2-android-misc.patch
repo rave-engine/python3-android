@@ -295,3 +295,19 @@ diff -ru Python-3.4.2/Makefile.pre.in Python-3.4.2-android/Makefile.pre.in
  		_TCLTK_INCLUDES='$(TCLTK_INCLUDES)' _TCLTK_LIBS='$(TCLTK_LIBS)' \
  		$(PYTHON_FOR_BUILD) $(srcdir)/setup.py $$quiet build
  
+diff -Nru Python-3.4.2/Makefile.pre.in Python-3.4.2-android/Makefile.pre.in
+--- Python-3.4.2/Makefile.pre.in	2015-06-27 17:04:23.885777456 +0000
++++ Python-3.4.2-android/Makefile.pre.in	2015-06-27 17:05:27.709777315 +0000
+@@ -585,11 +585,9 @@
+ 	$(RANLIB) $@
+ 
+ libpython$(LDVERSION).so: $(LIBRARY_OBJS)
++	$(BLDSHARED) -Wl,-h$(INSTSONAME) -o $(INSTSONAME) $(LIBRARY_OBJS) $(MODLIBS) $(SHLIBS) $(LIBC) $(LIBM) $(LDLAST); \
+ 	if test $(INSTSONAME) != $(LDLIBRARY); then \
+-		$(BLDSHARED) -Wl,-h$(INSTSONAME) -o $(INSTSONAME) $(LIBRARY_OBJS) $(MODLIBS) $(SHLIBS) $(LIBC) $(LIBM) $(LDLAST); \
+ 		$(LN) -f $(INSTSONAME) $@; \
+-	else \
+-		$(BLDSHARED) -o $@ $(LIBRARY_OBJS) $(MODLIBS) $(SHLIBS) $(LIBC) $(LIBM) $(LDLAST); \
+ 	fi
+ 
+ libpython3.so:	libpython$(LDVERSION).so
