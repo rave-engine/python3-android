@@ -33,7 +33,7 @@ $(eval $(call formula,python,3.4.2))
 python_modules: $(foreach mod,$(subst ',,$(PYTHON_OPTIONAL_MODULES)),python_$(mod))
 
 # Python lzma support.
-$(eval $(call formula,xz,5.0.5))
+$(eval $(call formula,xz,5.2.1))
 python_lzma: xz
 
 # Python bzip2 support.
