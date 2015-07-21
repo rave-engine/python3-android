@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 source ./env
 
+# Force license terms.
+if [[ "$ANDROID_AGREE_LICENSE_TERMS" != y ]]; then
+    echo "You didn't agree to the Android SDK license terms! Read them and then set ANDROID_AGREE_LICENSE_TERMS=y in env."
+    exit 1
+fi
+
 # Install the SDK manager.
 if [[ ! -d "$BASE/sdk/android-sdk-r${SDK_REV}" ]]; then
     case $(uname -s) in
