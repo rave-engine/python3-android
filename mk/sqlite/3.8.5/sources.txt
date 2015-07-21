@@ -1,1 +1,0 @@
-https://www.sqlite.org/2014/sqlite-autoconf-3080500.tar.gz

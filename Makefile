@@ -53,7 +53,7 @@ $(eval $(call formula,ncurses,5.9))
 python_curses: ncurses
 
 # Python SQLite support.
-$(eval $(call formula,sqlite,3.8.5))
+$(eval $(call formula,sqlite,3.8.10.2))
 python_sqlite3: sqlite
 
 # Python (g)dbm support.
