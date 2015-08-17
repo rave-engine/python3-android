@@ -6,13 +6,15 @@ export ANDROID_TOOL_PREFIX="${BASE}/build-tools"
 export ANDROID_TEST_PREFIX="${BASE}/build-vm"
 
 # SDKs and target platforms.
-export NDK_REL=android-ndk-r10d
+export NDK_REL=android-ndk-r10e
 export SDK_REL=android-sdk-r24.0.2
-export NDK_REV=10d
+export NDK_REV=10e
 export SDK_REV=24.0.2
 export ANDROID_API_LEVEL=21
 export ANDROID_PLATFORM=arm
+#export ANDROID_PLATFORM=arm64
 export ANDROID_COMPILER=4.9
+export ANDROID_COMPILER64=clang3.6
 export ANDROID_HOST=x86_64-pc-linux-gnu
 export ANDROID_AGREE_LICENSE_TERMS=n
 
@@ -45,6 +47,10 @@ case "${ANDROID_PLATFORM}" in
   arm)
       export ANDROID_TARGET=arm-linux-androideabi
       export ANDROID_TOOLCHAIN="arm-linux-androideabi-${ANDROID_COMPILER}"
+      ;;
+  arm64)
+      export ANDROID_TARGET=aarch64-linux-android
+      export ANDROID_TOOLCHAIN="aarch64-linux-android-${ANDROID_COMPILER64}"
       ;;
   mips)
       export ANDROID_TARGET=mipsel-linux-android
