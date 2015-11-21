@@ -64,6 +64,16 @@ diff -ru Python-3.3.5/setup.py Python-3.3.5-android/setup.py
          lib = sysconfig.get_config_var('TIMEMODULE_LIB')
          if lib:
              time_libs.append(lib)
+@@ -631,7 +631,8 @@
+             missing.append('spwd')
+ 
+         # select(2); not on ancient System V
+-        exts.append( Extension('select', ['selectmodule.c']) )
++        exts.append( Extension('select', ['selectmodule.c'],
++                               libraries=['m']) )
+ 
+         # Fred Drake's interface to the Python parser
+         exts.append( Extension('parser', ['parsermodule.c']) )
 @@ -639,7 +639,8 @@
          # Operations on audio samples
          # According to #993173, this one should actually work fine on
