@@ -36,7 +36,7 @@ diff -ru Python-3.3.5/Lib/platform.py Python-3.3.5-android/Lib/platform.py
 +            try:
 +                result = subprocess.check_output(['/system/bin/getprop', prop],
 +                                                 pass_fds=pass_fds)
-+                return result.decode('ascii').strip()
++                return result.decode('utf-8').strip()
 +            except (subprocess.CalledProcessError, UnicodeDecodeError):
 +                raise RuntimeError('getprop failed')
 +
@@ -59,12 +59,12 @@ diff -ru Python-3.3.5/Lib/platform.py Python-3.3.5-android/Lib/platform.py
 +            if b'=' not in line:
 +                continue
 +            key, val = line.split(b'=', maxsplit=1)
-+            key = key.strip().decode('ascii')
++            key = key.strip().decode('utf-8')
 +
 +            if not version_obtained and key == _android_version_property:
-+                version = val.strip().decode('ascii')
++                version = val.strip().decode('utf-8')
 +            if not buildstr_obtained and key == _android_buildstr_property:
-+                buildstr = val.strip().decode('ascii')
++                buildstr = val.strip().decode('utf-8')
 +
 +    return version, buildstr
 +
