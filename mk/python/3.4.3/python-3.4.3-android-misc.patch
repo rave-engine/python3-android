@@ -1,7 +1,7 @@
 diff -ru Python-3.3.5/Lib/platform.py Python-3.3.5-android/Lib/platform.py
 --- Python-3.3.5/Lib/platform.py	2014-03-09 09:40:13.000000000 +0100
 +++ Python-3.3.5-android/Lib/platform.py	2014-08-04 22:19:36.000000000 +0200
-@@ -368,6 +368,63 @@
+@@ -368,6 +368,76 @@
                                supported_dists=supported_dists,
                                full_distribution_name=0)
 
@@ -30,37 +30,50 @@ diff -ru Python-3.3.5/Lib/platform.py Python-3.3.5-android/Lib/platform.py
 +    # Try the 'official' API tool first, since /system/build.prop might
 +    # not be the only source for properties.
 +    if os.access('/system/bin/getprop', os.X_OK):
++        def _getprop(prop):
++            android_property_fd = _get_android_property_fd()
++            pass_fds = (android_property_fd,) if android_property_fd else ()
++            try:
++                result = subprocess.check_output(['/system/bin/getprop', prop],
++                                                 pass_fds=pass_fds)
++                return result.decode('utf-8').strip()
++            except (subprocess.CalledProcessError, UnicodeDecodeError):
++                raise RuntimeError('getprop failed')
++
 +        try:
-+            output = subprocess.check_output(['/system/bin/getprop',
-+                                              _android_version_property])
-+            version = output.decode('ascii').strip()
++            version = _getprop(_android_version_property)
 +            version_obtained = True
-+        except (subprocess.CalledProcessError, UnicodeDecodeError):
++        except RuntimeError:
 +            pass
 +
 +        try:
-+            output = subprocess.check_output(['/system/bin/getprop',
-+                                              _android_buildstr_property])
-+            buildstr = output.decode('ascii').strip()
++            buildstr = _getprop(_android_buildstr_property)
 +            buildstr_obtained = True
-+        except (subprocess.CalledProcessError, UnicodeDecodeError):
++        except RuntimeError:
 +            pass
 +    done = version_obtained and buildstr_obtained
 +
 +    # Fall back to parsing /system/build.prop manually.
 +    if not done and os.path.isfile('/system/build.prop'):
-+        for line in open('/system/build.prop'):
-+            if '=' not in line:
++        for line in open('/system/build.prop', 'rb'):
++            if b'=' not in line:
 +                continue
-+            key, val = line.split('=')
-+            key = key.strip()
++            key, val = line.split(b'=', maxsplit=1)
++            key = key.strip().decode('utf-8')
 +
 +            if not version_obtained and key == _android_version_property:
-+                version = val.strip()
-+            elif not buildstr_obtained and key == _android_buildstr_property:
-+                buildstr = val.strip()
++                version = val.strip().decode('utf-8')
++            if not buildstr_obtained and key == _android_buildstr_property:
++                buildstr = val.strip().decode('utf-8')
 +
 +    return version, buildstr
++
++def _get_android_property_fd():
++    android_property_workspace = os.getenv('ANDROID_PROPERTY_WORKSPACE')
++    if android_property_workspace:
++        property_fd_str = android_property_workspace.split(',')[0]
++        if property_fd_str.isdigit():
++            return int(property_fd_str)
 +
  def popen(cmd, mode='r', bufsize=-1):
 
