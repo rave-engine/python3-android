@@ -1,12 +1,13 @@
 pushd src >/dev/null
 
-rm -rf "Python-${VERSION}"
-tar -xf "Python-${VERSION}.tar.xz" || exit 1
-pushd "Python-${VERSION}" >/dev/null
+rm -rf "cpython-${VERSION}"
+tar -xf "${VERSION}.tar.bz2" || exit 1
+pushd "cpython-${VERSION}" >/dev/null
 
 # Build host components.
 AR=ar AS=as CC=gcc CFLAGS= CPP=cpp CPPFLAGS= CXX=g++ CXXFLAGS= LD=ld LDFLAGS= RANLIB=ranlib ./configure || exit 1
-AR=ar AS=as CC=gcc CFLAGS= CPP=cpp CPPFLAGS= CXX=g++ CXXFLAGS= LD=ld LDFLAGS= RANLIB=ranlib make BUILDPYTHON=hostpython hostpython PGEN=Parser/hostpgen Parser/hostpgen || exit 1
+AR=ar AS=as CC=gcc CFLAGS= CPP=cpp CPPFLAGS= CXX=g++ CXXFLAGS= LD=ld LDFLAGS= RANLIB=ranlib make BUILDPYTHON=hostpython hostpython PGEN=Parser/hostpgen Parser/hostpgen Programs/_freeze_importlib || exit 1
+cp Programs/{,host}_freeze_importlib
 make distclean || exit 1
 
 # Apply patches and build target Python.

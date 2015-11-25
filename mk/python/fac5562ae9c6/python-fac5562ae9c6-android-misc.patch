@@ -188,23 +188,11 @@ diff -ru Python-3.3.5/Modules/posixmodule.c Python-3.3.5-android/Modules/posixmo
  
  #ifdef MS_WINDOWS
  static int
-diff -ru Python-3.3.5/Python/pytime.c Python-3.3.5-android/Python/pytime.c
---- Python-3.3.5/Python/pytime.c    2015-02-23 11:54:25.000000000 -0500
-+++ Python-3.3.5-android/Python/pytime.c    2015-02-23 11:55:19.000000000 -0500
-@@ -3,7 +3,7 @@
- #include <windows.h>
- #endif
- 
--#if defined(__APPLE__) && defined(HAVE_GETTIMEOFDAY) && defined(HAVE_FTIME)
-+#if (defined(__APPLE__) || defined(__ANDROID__)) && defined(HAVE_GETTIMEOFDAY) && defined(HAVE_FTIME)
-   /*
-    * _PyTime_gettimeofday falls back to ftime when getttimeofday fails because the latter
-    * might fail on some platforms. This fallback is unwanted on MacOSX because
-diff -ru Python-3.4.2/configure Python-3.4.2-android/configure
---- Python-3.4.2/configure	2015-02-24 23:18:31.000000000 +0100
-+++ Python-3.4.2-android/configure	2015-03-01 20:15:02.000000000 +0100
-@@ -5406,6 +5406,34 @@
- MULTIARCH=$($CC --print-multiarch 2>/dev/null)
+diff -ru cpython-fac5562ae9c6/configure.orig cpython-fac5562ae9c6/configure
+--- cpython-fac5562ae9c6/configure.orig	2015-11-24 14:19:12.000000000 +0800
++++ cpython-fac5562ae9c6/configure	2015-11-24 16:43:41.182976082 +0800
+@@ -5587,6 +5587,34 @@
+ # with the ABI build flags appended.
  
  
 +# Test if we're running on Android.
@@ -237,11 +225,11 @@ diff -ru Python-3.4.2/configure Python-3.4.2-android/configure
 +
  
  
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking LIBRARY" >&5
-@@ -5650,7 +5678,14 @@
- 		SOVERSION=`echo $SOVERSION|cut -d "." -f 1`
- 		;;
- 	  esac
+ 
+@@ -5797,7 +5825,14 @@
+ 	  LDLIBRARY='libpython$(LDVERSION).so'
+ 	  BLDLIBRARY='-L. -lpython$(LDVERSION)'
+ 	  RUNSHARED=LD_LIBRARY_PATH=`pwd`${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 -	  INSTSONAME="$LDLIBRARY".$SOVERSION
 +
 +	  if test "$with_android" != yes
@@ -254,12 +242,12 @@ diff -ru Python-3.4.2/configure Python-3.4.2-android/configure
  	  if test "$with_pydebug" != yes
            then
  	      PY3LIBRARY=libpython3.so
-diff -ru Python-3.4.2/configure.ac Python-3.4.2-android/configure.ac
---- Python-3.4.2/configure.ac	2015-02-24 23:18:31.000000000 +0100
-+++ Python-3.4.2-android/configure.ac	2015-03-01 20:14:54.000000000 +0100
-@@ -796,6 +796,21 @@
- MULTIARCH=$($CC --print-multiarch 2>/dev/null)
- AC_SUBST(MULTIARCH)
+diff -ru  cpython-fac5562ae9c6/configure.ac.orig cpython-fac5562ae9c6/configure.ac
+--- cpython-fac5562ae9c6/configure.ac.orig	2015-11-24 14:19:12.000000000 +0800
++++ cpython-fac5562ae9c6/configure.ac	2015-11-24 16:39:35.356301199 +0800
+@@ -858,6 +858,21 @@
+ AC_SUBST(PLATDIR)
+ AC_SUBST(PLATFORM_TRIPLET)
  
 +# Test if we're running on Android.
 +AC_MSG_CHECKING(if target is Android-based)
@@ -277,12 +265,12 @@ diff -ru Python-3.4.2/configure.ac Python-3.4.2-android/configure.ac
 +   ]
 +)
  
- AC_SUBST(LIBRARY)
- AC_MSG_CHECKING(LIBRARY)
-@@ -970,7 +985,14 @@
- 		SOVERSION=`echo $SOVERSION|cut -d "." -f 1`
- 		;;
- 	  esac
+ AC_MSG_CHECKING([for -Wl,--no-as-needed])
+ save_LDFLAGS="$LDFLAGS"
+@@ -1109,7 +1094,14 @@
+ 	  LDLIBRARY='libpython$(LDVERSION).so'
+ 	  BLDLIBRARY='-L. -lpython$(LDVERSION)'
+	  RUNSHARED=LD_LIBRARY_PATH=`pwd`${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 -	  INSTSONAME="$LDLIBRARY".$SOVERSION
 +
 +	  if test "$with_android" != yes

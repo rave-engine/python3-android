@@ -83,29 +83,6 @@ diff -ru Python-3.3.5/Modules/main.c Python-3.3.5-android/Modules/main.c
 diff -ru Python-3.3.5/Objects/unicodeobject.c Python-3.3.5-android/Objects/unicodeobject.c
 --- Python-3.3.5/Objects/unicodeobject.c	2014-03-09 09:40:30.000000000 +0100
 +++ Python-3.3.5-android/Objects/unicodeobject.c	2014-08-04 22:16:29.000000000 +0200
-@@ -3295,13 +3295,22 @@
- static int
- locale_error_handler(const char *errors, int *surrogateescape)
- {
-+
-     if (errors == NULL) {
-+#ifdef __ANDROID__
-+        *surrogateescape = 1;
-+#else
-         *surrogateescape = 0;
-+#endif
-         return 0;
-     }
-
-     if (strcmp(errors, "strict") == 0) {
-+#ifdef __ANDROID__
-+        *surrogateescape = 1;
-+#else
-         *surrogateescape = 0;
-+#endif
-         return 0;
-     }
-     if (strcmp(errors, "surrogateescape") == 0) {
 @@ -3429,7 +3438,7 @@
  {
  #ifdef HAVE_MBCS
@@ -241,10 +218,10 @@ diff -ru Python-3.3.5/Python/pystrtod.c Python-3.3.5-android/Python/pystrtod.c
 
      if (decimal_point[0] != '.' || decimal_point[1] != 0) {
          size_t decimal_point_len = strlen(decimal_point);
-diff -ru Python-3.3.5/Python/pythonrun.c Python-3.3.5-android/Python/pythonrun.c
---- Python-3.3.5/Python/pythonrun.c	2014-03-09 09:40:33.000000000 +0100
-+++ Python-3.3.5-android/Python/pythonrun.c	2014-08-04 22:16:29.000000000 +0200
-@@ -188,6 +188,8 @@
+diff -ru cpython-fac5562ae9c6/Python/pylifecycle.c.orig cpython-fac5562ae9c6/Python/pylifecycle.c
+--- cpython-fac5562ae9c6/Python/pylifecycle.c.orig	2015-11-24 15:34:53.949504814 +0800
++++ cpython-fac5562ae9c6/Python/pylifecycle.c	2015-11-24 15:35:26.622839240 +0800
+@@ -223,6 +223,8 @@
          return NULL;
      }
      return get_codec_name(codeset);
