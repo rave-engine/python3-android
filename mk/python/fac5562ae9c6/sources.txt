@@ -1,1 +1,1 @@
-https://hg.python.org/cpython/archive/fac5562ae9c6.tar.bz2
+hg+https://hg.python.org/cpython/

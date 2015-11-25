@@ -1,8 +1,7 @@
-pushd src >/dev/null
+pushd src/cpython >/dev/null
 
-rm -rf "cpython-${VERSION}"
-tar -xf "${VERSION}.tar.bz2" || exit 1
-pushd "cpython-${VERSION}" >/dev/null
+hg revert --all
+hg purge --all --dirs
 
 # Build host components.
 AR=ar AS=as CC=gcc CFLAGS= CPP=cpp CPPFLAGS= CXX=g++ CXXFLAGS= LD=ld LDFLAGS= RANLIB=ranlib ./configure || exit 1
@@ -27,5 +26,4 @@ patch -p1  < "${FILESDIR}/${PACKAGE}-android-misc.patch" || exit 1
 make CROSS_COMPILE_TARGET=yes HOSTPYTHON="$(pwd)/hostpython" HOSTPGEN="$(pwd)/Parser/hostpgen" || exit 1
 make CROSS_COMPILE_TARGET=yes HOSTPYTHON="$(pwd)/hostpython" HOSTPGEN="$(pwd)/Parser/hostpgen" install || exit 1
 
-popd >/dev/null
 popd >/dev/null

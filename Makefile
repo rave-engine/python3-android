@@ -13,7 +13,7 @@ $1: $1-$2
 
 $1-$2: ndk $3
 	$$(info Checking $1 $2 sources...)
-	@wget -N -P "src/" -i "mk/$1/$2/sources.txt"
+	@mk/get_source.sh $1 $2
 ifeq ("$$(wildcard build/.built-$(BUILD_IDENTIFIER)/$1-$2)","")
 	$$(info Building $1 $2...)
 	@bash --noprofile --norc mk/build_single.sh $1 $2
