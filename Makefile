@@ -27,7 +27,7 @@ endef
 build: python_modules python
 
 # Main Python.
-$(eval $(call formula,python,fac5562ae9c6))
+$(eval $(call formula,python,hg))
 
 # Optional Python modules.
 python_modules: $(foreach mod,$(subst ',,$(PYTHON_OPTIONAL_MODULES)),python_$(mod))
