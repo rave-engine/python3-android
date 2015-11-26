@@ -1,7 +1,7 @@
 pushd src/cpython >/dev/null
 
 hg revert --all
-hg purge --all --dirs
+hg purge --all
 
 # Build host components.
 AR=ar AS=as CC=gcc CFLAGS= CPP=cpp CPPFLAGS= CXX=g++ CXXFLAGS= LD=ld LDFLAGS= RANLIB=ranlib ./configure || exit 1
