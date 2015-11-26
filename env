@@ -40,6 +40,9 @@ export MAKEOPTS_EXTRA=""
 #  gdbm - enable the dbm/gdbm modules (builds GDBM).
 export PYTHON_OPTIONAL_MODULES="bz2 lzma ssl"
 
+# Build cpython hg revision or not?
+export PYTHON_BUILD_HG_REVISION=n
+
 # Do no touch unless you know what you are doing.
 case "${ANDROID_PLATFORM}" in
   arm)
