@@ -20,7 +20,6 @@ patch -p1  < "${FILESDIR}/${PACKAGE}-cross-compile.patch" || exit 1
 patch -p1  < "${FILESDIR}/${PACKAGE}-python-misc.patch" || exit 1
 patch -p1  < "${FILESDIR}/${PACKAGE}-android-locale.patch" || exit 1
 patch -Ep1 < "${FILESDIR}/${PACKAGE}-android-libmpdec.patch" || exit 1
-[[ "${NDK_REV}" != 10* ]] && (patch -p1 < "${FILESDIR}/${PACKAGE}-android-missing-getdents64-definition.patch" || exit 1)
 patch -p1  < "${FILESDIR}/${PACKAGE}-android-misc.patch" || exit 1
 patch -p1  < "${FILESDIR}/${PACKAGE}-modules-link-libm.patch" || exit 1
 
