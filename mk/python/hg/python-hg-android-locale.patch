@@ -204,3 +204,27 @@ diff -ru cpython-fac5562ae9c6/Python/pylifecycle.c.orig cpython-fac5562ae9c6/Pyt
  #else
      PyErr_SetNone(PyExc_NotImplementedError);
      return NULL;
+diff -r 01397c11ebb8 configure.ac
+--- a/configure.ac      Thu Dec 03 01:36:03 2015 +0000
++++ b/configure.ac      Thu Dec 03 19:07:23 2015 +0800
+@@ -3210,6 +3237,20 @@
+  truncate uname unlinkat unsetenv utimensat utimes waitid waitpid wait3 wait4 \
+  wcscoll wcsftime wcsxfrm wmemcmp writev _getpty)
+ 
++AC_MSG_CHECKING(whether setlocale exists and works)
++AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
++#include <locale.h>
++]], [[
++#ifdef __ANDROID__
++error
++#else
++void *p = setlocale;
++#endif
++]])], [AC_DEFINE(HAVE_SETLOCALE, 1, Define if setlocale exists and works)
++       AC_MSG_RESULT(yes)],
++      [AC_MSG_RESULT(no)
++])
++
+ AC_CHECK_DECL(dirfd,
+     AC_DEFINE(HAVE_DIRFD, 1,
+               Define if you have the 'dirfd' function or macro.), ,
