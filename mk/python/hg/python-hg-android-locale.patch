@@ -207,6 +207,15 @@ diff -ru cpython-fac5562ae9c6/Python/pylifecycle.c.orig cpython-fac5562ae9c6/Pyt
 diff -r 01397c11ebb8 configure.ac
 --- a/configure.ac      Thu Dec 03 01:36:03 2015 +0000
 +++ b/configure.ac      Thu Dec 03 19:07:23 2015 +0800
+@@ -3201,7 +3228,7 @@
+  pthread_init pthread_kill putenv pwrite readlink readlinkat readv realpath renameat \
+  select sem_open sem_timedwait sem_getvalue sem_unlink sendfile setegid seteuid \
+  setgid sethostname \
+- setlocale setregid setreuid setresuid setresgid setsid setpgid setpgrp setpriority setuid setvbuf \
++ setregid setreuid setresuid setresgid setsid setpgid setpgrp setpriority setuid setvbuf \
+  sched_get_priority_max sched_setaffinity sched_setscheduler sched_setparam \
+  sched_rr_get_interval \
+  sigaction sigaltstack siginterrupt sigpending sigrelse \
 @@ -3210,6 +3237,20 @@
   truncate uname unlinkat unsetenv utimensat utimes waitid waitpid wait3 wait4 \
   wcscoll wcsftime wcsxfrm wmemcmp writev _getpty)
