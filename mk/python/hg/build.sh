@@ -23,6 +23,8 @@ patch -Ep1 < "${FILESDIR}/${PACKAGE}-android-libmpdec.patch" || exit 1
 patch -p1  < "${FILESDIR}/${PACKAGE}-android-misc.patch" || exit 1
 patch -p1  < "${FILESDIR}/${PACKAGE}-modules-link-libm.patch" || exit 1
 
+autoreconf --install --verbose
+
 mkdir build-target && pushd build-target
 ../configure CROSS_COMPILE_TARGET=yes HOSTPYTHON="$(pwd)/../build-host/python" CONFIG_SITE="$(pwd)/../config.site" --prefix="${PREFIX}" --host="${TARGET}" --build="${HOST}" --disable-ipv6 --enable-shared --without-ensurepip || exit 1
 make CROSS_COMPILE_TARGET=yes HOSTPYTHON="$(pwd)/../build-host/python" HOSTPGEN="$(pwd)/../build-host/Parser/pgen" || exit 1
