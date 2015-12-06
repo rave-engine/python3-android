@@ -10,7 +10,7 @@ if [[ "$source_file" == hg+* ]] ; then
         cd $dest
         hg pull -u
     else
-        hg clone ${source_file:3} "$src_prefix/$dest"
+        hg clone ${source_file:3} "$dest"
     fi
     popd
 else

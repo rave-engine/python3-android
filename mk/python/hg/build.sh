@@ -1,4 +1,4 @@
-pushd src/cpython >/dev/null
+pushd src/cpython || exit 1
 
 hg revert --all
 hg purge --all
