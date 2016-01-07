@@ -1,1 +1,1 @@
-https://openssl.org/source/openssl-1.0.2d.tar.gz
+http://artfiles.org/openssl.org/source//openssl-1.0.2e.tar.gz
