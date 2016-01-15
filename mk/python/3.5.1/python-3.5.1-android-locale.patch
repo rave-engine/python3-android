@@ -1,8 +1,8 @@
 diff -ru Python-3.3.5/Modules/Setup.dist Python-3.3.5-android/Modules/Setup.dist
 --- Python-3.3.5/Modules/Setup.dist	2014-03-09 09:40:23.000000000 +0100
 +++ Python-3.3.5-android/Modules/Setup.dist	2014-08-04 22:16:29.000000000 +0200
-@@ -118,7 +118,7 @@
- itertools itertoolsmodule.c    # Functions creating iterators for efficient looping
+@@ -121,7 +121,7 @@
+ time timemodule.c	# -lm # time operations and variables
 
  # access to ISO C locale support
 -_locale _localemodule.c  # -lintl
@@ -60,7 +60,7 @@ diff -ru Python-3.3.5/Modules/_localemodule.c Python-3.3.5-android/Modules/_loca
      /* if LC_NUMERIC is different in the C library, use saved value */
      l = localeconv();
 
-@@ -189,6 +201,7 @@
+@@ -195,6 +207,7 @@
      RESULT_INT(p_sign_posn);
      RESULT_INT(n_sign_posn);
      return result;
@@ -71,8 +71,8 @@ diff -ru Python-3.3.5/Modules/_localemodule.c Python-3.3.5-android/Modules/_loca
 diff -ru Python-3.3.5/Modules/main.c Python-3.3.5-android/Modules/main.c
 --- Python-3.3.5/Modules/main.c	2014-03-09 09:40:27.000000000 +0100
 +++ Python-3.3.5-android/Modules/main.c	2014-08-04 22:16:29.000000000 +0200
-@@ -522,7 +522,7 @@
-         oldloc = strdup(setlocale(LC_ALL, NULL));
+@@ -549,7 +549,7 @@
+         oldloc = _PyMem_RawStrdup(setlocale(LC_ALL, NULL));
          setlocale(LC_ALL, "");
          for (p = strtok(buf, ","); p != NULL; p = strtok(NULL, ",")) {
 -#ifdef __APPLE__
@@ -83,7 +83,7 @@ diff -ru Python-3.3.5/Modules/main.c Python-3.3.5-android/Modules/main.c
 diff -ru Python-3.3.5/Objects/unicodeobject.c Python-3.3.5-android/Objects/unicodeobject.c
 --- Python-3.3.5/Objects/unicodeobject.c	2014-03-09 09:40:30.000000000 +0100
 +++ Python-3.3.5-android/Objects/unicodeobject.c	2014-08-04 22:16:29.000000000 +0200
-@@ -3295,13 +3295,22 @@
+@@ -3167,13 +3167,22 @@
  static int
  locale_error_handler(const char *errors, int *surrogateescape)
  {
@@ -106,7 +106,7 @@ diff -ru Python-3.3.5/Objects/unicodeobject.c Python-3.3.5-android/Objects/unico
          return 0;
      }
      if (strcmp(errors, "surrogateescape") == 0) {
-@@ -3429,7 +3438,7 @@
+@@ -3302,7 +3311,7 @@
  {
  #ifdef HAVE_MBCS
      return PyUnicode_EncodeCodePage(CP_ACP, unicode, NULL);
@@ -115,7 +115,7 @@ diff -ru Python-3.3.5/Objects/unicodeobject.c Python-3.3.5-android/Objects/unico
      return _PyUnicode_AsUTF8String(unicode, "surrogateescape");
  #else
      PyInterpreterState *interp = PyThreadState_GET()->interp;
-@@ -3709,7 +3718,7 @@
+@@ -3586,7 +3595,7 @@
  {
  #ifdef HAVE_MBCS
      return PyUnicode_DecodeMBCS(s, size, NULL);
@@ -124,7 +124,7 @@ diff -ru Python-3.3.5/Objects/unicodeobject.c Python-3.3.5-android/Objects/unico
      return PyUnicode_DecodeUTF8Stateful(s, size, "surrogateescape", NULL);
  #else
      PyInterpreterState *interp = PyThreadState_GET()->interp;
-@@ -4835,7 +4844,7 @@
+@@ -4777,7 +4786,7 @@
      return NULL;
  }
 
@@ -148,16 +148,16 @@ diff -ru Python-3.3.5/Python/bltinmodule.c Python-3.3.5-android/Python/bltinmodu
 diff -ru Python-3.3.5/Python/fileutils.c Python-3.3.5-android/Python/fileutils.c
 --- Python-3.3.5/Python/fileutils.c	2014-03-09 09:40:32.000000000 +0100
 +++ Python-3.3.5-android/Python/fileutils.c	2014-08-04 22:16:29.000000000 +0200
-@@ -10,7 +10,7 @@
- #include <langinfo.h>
- #endif
+@@ -20,7 +20,7 @@
+ #include <fcntl.h>
+ #endif /* HAVE_FCNTL_H */
 
 -#ifdef __APPLE__
 +#if defined(__APPLE__) || defined(__ANDROID__)
  extern wchar_t* _Py_DecodeUTF8_surrogateescape(const char *s, Py_ssize_t size);
  #endif
 
-@@ -44,7 +44,7 @@
+@@ -70,7 +70,7 @@
      Py_RETURN_NONE;
  }
 
@@ -166,7 +166,7 @@ diff -ru Python-3.3.5/Python/fileutils.c Python-3.3.5-android/Python/fileutils.c
  extern int _Py_normalize_encoding(const char *, char *, size_t);
 
  /* Workaround FreeBSD and OpenIndiana locale encoding issue with the C locale.
-@@ -194,7 +194,7 @@
+@@ -220,7 +220,7 @@
  }
  #endif   /* !defined(__APPLE__) && !defined(MS_WINDOWS) */
 
@@ -175,18 +175,18 @@ diff -ru Python-3.3.5/Python/fileutils.c Python-3.3.5-android/Python/fileutils.c
  static wchar_t*
  decode_ascii_surrogateescape(const char *arg, size_t *size)
  {
-@@ -241,7 +241,7 @@
+@@ -272,7 +272,7 @@
  wchar_t*
- _Py_char2wchar(const char* arg, size_t *size)
+ Py_DecodeLocale(const char* arg, size_t *size)
  {
 -#ifdef __APPLE__
 +#if defined(__APPLE__) || defined(__ANDROID__)
      wchar_t *wstr;
      wstr = _Py_DecodeUTF8_surrogateescape(arg, strlen(arg));
      if (size != NULL) {
-@@ -384,7 +384,7 @@
+@@ -423,7 +423,7 @@
  char*
- _Py_wchar2char(const wchar_t *text, size_t *error_pos)
+ Py_EncodeLocale(const wchar_t *text, size_t *error_pos)
  {
 -#ifdef __APPLE__
 +#if defined(__APPLE__) || defined(__ANDROID__)
@@ -196,7 +196,7 @@ diff -ru Python-3.3.5/Python/fileutils.c Python-3.3.5-android/Python/fileutils.c
 diff -ru Python-3.3.5/Python/formatter_unicode.c Python-3.3.5-android/Python/formatter_unicode.c
 --- Python-3.3.5/Python/formatter_unicode.c	2014-03-09 09:40:32.000000000 +0100
 +++ Python-3.3.5-android/Python/formatter_unicode.c	2014-08-04 22:16:29.000000000 +0200
-@@ -665,6 +665,7 @@
+@@ -667,6 +667,7 @@
  {
      switch (type) {
      case LT_CURRENT_LOCALE: {
@@ -204,7 +204,7 @@ diff -ru Python-3.3.5/Python/formatter_unicode.c Python-3.3.5-android/Python/for
          struct lconv *locale_data = localeconv();
          locale_info->decimal_point = PyUnicode_DecodeLocale(
                                           locale_data->decimal_point,
-@@ -680,6 +681,7 @@
+@@ -682,6 +683,7 @@
          }
          locale_info->grouping = locale_data->grouping;
          break;
@@ -241,15 +241,3 @@ diff -ru Python-3.3.5/Python/pystrtod.c Python-3.3.5-android/Python/pystrtod.c
 
      if (decimal_point[0] != '.' || decimal_point[1] != 0) {
          size_t decimal_point_len = strlen(decimal_point);
-diff -ru Python-3.3.5/Python/pythonrun.c Python-3.3.5-android/Python/pythonrun.c
---- Python-3.3.5/Python/pythonrun.c	2014-03-09 09:40:33.000000000 +0100
-+++ Python-3.3.5-android/Python/pythonrun.c	2014-08-04 22:16:29.000000000 +0200
-@@ -188,6 +188,8 @@
-         return NULL;
-     }
-     return get_codec_name(codeset);
-+#elif __ANDROID__
-+    return get_codec_name("UTF-8");
- #else
-     PyErr_SetNone(PyExc_NotImplementedError);
-     return NULL;

@@ -1,7 +1,7 @@
 diff -Nru Python-3.4.3/setup.py Python-3.4.3-android/setup.py > Python-3.4.3-setup.patch
 --- Python-3.4.3/setup.py	2016-01-06 09:22:17.000000000 -0500
 +++ Python-3.4.3-android/setup.py	2016-01-06 09:30:58.000000000 -0500
-@@ -631,7 +631,9 @@
+@@ -651,7 +651,9 @@
              missing.append('spwd')
  
          # select(2); not on ancient System V
@@ -12,7 +12,7 @@ diff -Nru Python-3.4.3/setup.py Python-3.4.3-android/setup.py > Python-3.4.3-set
  
          # Fred Drake's interface to the Python parser
          exts.append( Extension('parser', ['parsermodule.c']) )
-@@ -655,8 +657,11 @@
+@@ -675,8 +677,11 @@
          # Operations on audio samples
          # According to #993173, this one should actually work fine on
          # 64-bit platforms.
