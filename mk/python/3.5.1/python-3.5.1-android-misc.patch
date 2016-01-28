@@ -1,7 +1,7 @@
 diff -ru Python-3.3.5/Lib/platform.py Python-3.3.5-android/Lib/platform.py
 --- Python-3.3.5/Lib/platform.py	2014-03-09 09:40:13.000000000 +0100
 +++ Python-3.3.5-android/Lib/platform.py	2014-08-04 22:19:36.000000000 +0200
-@@ -368,6 +368,63 @@
+@@ -367,6 +367,63 @@
                                supported_dists=supported_dists,
                                full_distribution_name=0)
 
@@ -68,7 +68,7 @@ diff -ru Python-3.3.5/Lib/platform.py Python-3.3.5-android/Lib/platform.py
 diff -ru Python-3.3.5/Lib/subprocess.py Python-3.3.5-android/Lib/subprocess.py
 --- Python-3.3.5/Lib/subprocess.py	2014-03-09 09:40:13.000000000 +0100
 +++ Python-3.3.5-android/Lib/subprocess.py	2014-08-04 22:19:36.000000000 +0200
-@@ -1343,9 +1343,18 @@
+@@ -1433,9 +1433,18 @@
                  args = list(args)
 
              if shell:
@@ -92,16 +92,16 @@ diff -ru Python-3.3.5/Lib/subprocess.py Python-3.3.5-android/Lib/subprocess.py
 diff -ru Python-3.3.5/Lib/test/test_subprocess.py Python-3.3.5-android/Lib/test/test_subprocess.py
 --- Python-3.3.5/Lib/test/test_subprocess.py	2014-03-09 09:40:19.000000000 +0100
 +++ Python-3.3.5-android/Lib/test/test_subprocess.py	2014-08-04 22:19:36.000000000 +0200
-@@ -17,6 +17,7 @@
+@@ -18,6 +18,7 @@
  import shutil
  import gc
  import textwrap
 +import platform
 
  try:
-     import resource
-@@ -1356,7 +1357,10 @@
-         fd, fname = mkstemp()
+     import threading
+@@ -1517,7 +1518,10 @@
+         fd, fname = tempfile.mkstemp()
          # reopen in text mode
          with open(fd, "w", errors="surrogateescape") as fobj:
 -            fobj.write("#!/bin/sh\n")
@@ -112,8 +112,8 @@ diff -ru Python-3.3.5/Lib/test/test_subprocess.py Python-3.3.5-android/Lib/test/
              fobj.write("exec '%s' -c 'import sys; sys.exit(47)'\n" %
                         sys.executable)
          os.chmod(fname, 0o700)
-@@ -1401,7 +1405,10 @@
-         fd, fname = mkstemp()
+@@ -1562,7 +1566,10 @@
+         fd, fname = tempfile.mkstemp()
          # reopen in text mode
          with open(fd, "w", errors="surrogateescape") as fobj:
 -            fobj.write("#!/bin/sh\n")
@@ -127,7 +127,7 @@ diff -ru Python-3.3.5/Lib/test/test_subprocess.py Python-3.3.5-android/Lib/test/
 diff -ru Python-3.4.2/Modules/pwdmodule.c Python-3.4.2-android/Modules/pwdmodule.c
 --- Python-3.4.2/Modules/pwdmodule.c	2015-02-24 23:06:31.000000000 +0100
 +++ Python-3.4.2-android/Modules/pwdmodule.c	2015-02-24 23:09:14.000000000 +0100
-@@ -72,7 +72,11 @@
+@@ -78,7 +78,11 @@
      SETS(setIndex++, p->pw_passwd);
      PyStructSequence_SET_ITEM(v, setIndex++, _PyLong_FromUid(p->pw_uid));
      PyStructSequence_SET_ITEM(v, setIndex++, _PyLong_FromGid(p->pw_gid));
@@ -142,7 +142,7 @@ diff -ru Python-3.4.2/Modules/pwdmodule.c Python-3.4.2-android/Modules/pwdmodule
 diff -ru Python-3.3.5/Modules/socketmodule.c Python-3.3.5-android/Modules/socketmodule.c
 --- Python-3.3.5/Modules/socketmodule.c	2014-03-09 09:40:28.000000000 +0100
 +++ Python-3.3.5-android/Modules/socketmodule.c	2014-08-04 22:19:36.000000000 +0200
-@@ -150,7 +150,7 @@
+@@ -148,7 +148,7 @@
     On the other hand, not all Linux versions agree, so there the settings
     computed by the configure script are needed! */
 
@@ -151,7 +151,7 @@ diff -ru Python-3.3.5/Modules/socketmodule.c Python-3.3.5-android/Modules/socket
  # undef HAVE_GETHOSTBYNAME_R_3_ARG
  # undef HAVE_GETHOSTBYNAME_R_5_ARG
  # undef HAVE_GETHOSTBYNAME_R_6_ARG
-@@ -169,7 +169,7 @@
+@@ -167,7 +167,7 @@
  #  define HAVE_GETHOSTBYNAME_R_3_ARG
  # elif defined(__sun) || defined(__sgi)
  #  define HAVE_GETHOSTBYNAME_R_5_ARG
@@ -163,35 +163,23 @@ diff -ru Python-3.3.5/Modules/socketmodule.c Python-3.3.5-android/Modules/socket
 diff -ru Python-3.3.5/Modules/posixmodule.c Python-3.3.5-android/Modules/posixmodule.c
 --- Python-3.3.5/Modules/posixmodule.c	2014-03-09 08:40:28.000000000 +0000
 +++ Python-3.3.5-android/Modules/posixmodule.c	2015-02-24 19:57:05.368843433 +0000
-@@ -403,6 +403,11 @@
+@@ -372,6 +372,11 @@
  #endif
- #endif
+ 
+ #define DWORD_MAX 4294967295U
  
 +/* Android doesn't expose AT_EACCESS - manually define it. */
 +#if !defined(AT_EACCESS) && defined(__ANDROID__)
 +#define AT_EACCESS     0x200
 +#endif
 +
- 
  #ifdef MS_WINDOWS
- static int
-diff -ru Python-3.3.5/Python/pytime.c Python-3.3.5-android/Python/pytime.c
---- Python-3.3.5/Python/pytime.c    2015-02-23 11:54:25.000000000 -0500
-+++ Python-3.3.5-android/Python/pytime.c    2015-02-23 11:55:19.000000000 -0500
-@@ -3,7 +3,7 @@
- #include <windows.h>
- #endif
- 
--#if defined(__APPLE__) && defined(HAVE_GETTIMEOFDAY) && defined(HAVE_FTIME)
-+#if (defined(__APPLE__) || defined(__ANDROID__)) && defined(HAVE_GETTIMEOFDAY) && defined(HAVE_FTIME)
-   /*
-    * _PyTime_gettimeofday falls back to ftime when getttimeofday fails because the latter
-    * might fail on some platforms. This fallback is unwanted on MacOSX because
+ #define INITFUNC PyInit_nt
 diff -ru Python-3.4.2/configure Python-3.4.2-android/configure
 --- Python-3.4.2/configure	2015-02-24 23:18:31.000000000 +0100
 +++ Python-3.4.2-android/configure	2015-03-01 20:15:02.000000000 +0100
-@@ -5406,6 +5406,34 @@
- MULTIARCH=$($CC --print-multiarch 2>/dev/null)
+@@ -5593,4 +5072,32 @@
+ esac
  
  
 +# Test if we're running on Android.
@@ -222,13 +210,11 @@ diff -ru Python-3.4.2/configure Python-3.4.2-android/configure
 +fi
 +rm -f conftest*
 +
- 
- 
  { $as_echo "$as_me:${as_lineno-$LINENO}: checking LIBRARY" >&5
-@@ -5650,7 +5678,14 @@
- 		SOVERSION=`echo $SOVERSION|cut -d "." -f 1`
- 		;;
- 	  esac
+@@ -5797,7 +5825,14 @@
+ 	  LDLIBRARY='libpython$(LDVERSION).so'
+ 	  BLDLIBRARY='-L. -lpython$(LDVERSION)'
+ 	  RUNSHARED=LD_LIBRARY_PATH=`pwd`${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 -	  INSTSONAME="$LDLIBRARY".$SOVERSION
 +
 +	  if test "$with_android" != yes
@@ -244,7 +230,7 @@ diff -ru Python-3.4.2/configure Python-3.4.2-android/configure
 diff -ru Python-3.4.2/configure.ac Python-3.4.2-android/configure.ac
 --- Python-3.4.2/configure.ac	2015-02-24 23:18:31.000000000 +0100
 +++ Python-3.4.2-android/configure.ac	2015-03-01 20:14:54.000000000 +0100
-@@ -796,6 +796,21 @@
+@@ -726,6 +726,21 @@
  MULTIARCH=$($CC --print-multiarch 2>/dev/null)
  AC_SUBST(MULTIARCH)
  
@@ -264,12 +250,12 @@ diff -ru Python-3.4.2/configure.ac Python-3.4.2-android/configure.ac
 +   ]
 +)
  
- AC_SUBST(LIBRARY)
- AC_MSG_CHECKING(LIBRARY)
-@@ -970,7 +985,14 @@
- 		SOVERSION=`echo $SOVERSION|cut -d "." -f 1`
- 		;;
- 	  esac
+ AC_MSG_CHECKING([for the platform triplet based on compiler characteristics])
+ cat >> conftest.c <<EOF
+@@ -1094,7 +1109,14 @@
+	  LDLIBRARY='libpython$(LDVERSION).so'
+	  BLDLIBRARY='-L. -lpython$(LDVERSION)'
+	  RUNSHARED=LD_LIBRARY_PATH=`pwd`${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 -	  INSTSONAME="$LDLIBRARY".$SOVERSION
 +
 +	  if test "$with_android" != yes
@@ -286,7 +272,7 @@ diff -ru Python-3.4.2/configure.ac Python-3.4.2-android/configure.ac
 diff -ru Python-3.4.2/Makefile.pre.in Python-3.4.2-android/Makefile.pre.in
 --- Python-3.4.2/Makefile.pre.in	2015-03-04 16:25:36.000000000 +0100
 +++ Python-3.4.2-android/Makefile.pre.in	2015-03-04 16:27:27.000000000 +0100
-@@ -568,7 +568,7 @@
+@@ -595,7 +595,7 @@
  	    *\ -s*|s*) quiet="-q";; \
  	    *) quiet="";; \
  	esac; \
@@ -298,7 +284,7 @@ diff -ru Python-3.4.2/Makefile.pre.in Python-3.4.2-android/Makefile.pre.in
 diff -Nru Python-3.4.2/Makefile.pre.in Python-3.4.2-android/Makefile.pre.in
 --- Python-3.4.2/Makefile.pre.in	2015-06-27 17:04:23.885777456 +0000
 +++ Python-3.4.2-android/Makefile.pre.in	2015-06-27 17:05:27.709777315 +0000
-@@ -585,11 +585,9 @@
+@@ -612,11 +612,9 @@
  	$(RANLIB) $@
  
  libpython$(LDVERSION).so: $(LIBRARY_OBJS)
@@ -311,3 +297,38 @@ diff -Nru Python-3.4.2/Makefile.pre.in Python-3.4.2-android/Makefile.pre.in
  	fi
  
  libpython3.so:	libpython$(LDVERSION).so
+diff -r 178d4ffe1249 Makefile.pre.in
+--- a/Makefile.pre.in	Sun Oct 12 16:13:38 2014 +0200
++++ b/Makefile.pre.in	Mon Oct 13 21:17:15 2014 +0200
+@@ -706,15 +706,14 @@
+ ############################################################################
+ # Importlib
+ 
+-Programs/_freeze_importlib.o: Programs/_freeze_importlib.c Makefile
++#Programs/_freeze_importlib.o: Programs/_freeze_importlib.c Makefile
+ 
+-Programs/_freeze_importlib: Programs/_freeze_importlib.o $(LIBRARY_OBJS_OMIT_FROZEN)
+-	$(LINKCC) $(PY_LDFLAGS) -o $@ Programs/_freeze_importlib.o $(LIBRARY_OBJS_OMIT_FROZEN) $(LIBS) $(MODLIBS) $(SYSLIBS) $(LDLAST)
+ 
+-Python/importlib_external.h: $(srcdir)/Lib/importlib/_bootstrap_external.py Programs/_freeze_importlib
++Python/importlib_external.h: $(srcdir)/Lib/importlib/_bootstrap_external.py Programs/_freeze_importlib.c
+ 	./Programs/_freeze_importlib \
+ 		$(srcdir)/Lib/importlib/_bootstrap_external.py Python/importlib_external.h
+ 
+-Python/importlib.h: $(srcdir)/Lib/importlib/_bootstrap.py Programs/_freeze_importlib
++Python/importlib.h: $(srcdir)/Lib/importlib/_bootstrap.py Programs/_freeze_importlib.c
++	$(MAKE) Programs/_freeze_importlib
+ 	./Programs/_freeze_importlib \
+ 		$(srcdir)/Lib/importlib/_bootstrap.py Python/importlib.h
+@@ -777,7 +776,8 @@ Python/sysmodule.o: $(srcdir)/Python/sys
+ 
+ $(IO_OBJS): $(IO_H)
+ 
+-$(GRAMMAR_H): $(GRAMMAR_INPUT) $(PGEN)
++$(GRAMMAR_H): $(GRAMMAR_INPUT)
++		$(MAKE) $(PGEN)
+ 		@$(MKDIR_P) Include
+ 		$(PGEN) $(GRAMMAR_INPUT) $(GRAMMAR_H) $(GRAMMAR_C)
+ $(GRAMMAR_C): $(GRAMMAR_H)
+ 
+ 

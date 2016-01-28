@@ -18,8 +18,8 @@ diff -ru Python-3.3.5/Lib/test/test_pwd.py Python-3.3.5-android/Lib/test/test_pw
          self.assertRaises(TypeError, pwd.getpwuid)
          self.assertRaises(TypeError, pwd.getpwuid, 3.14)
 diff -ru Python-3.4.2/Modules/python.c Python-3.4.2-android/Modules/python.c
---- Python-3.4.2/Modules/python.c	2015-02-24 22:42:37.000000000 +0100
-+++ Python-3.4.2-android/Modules/python.c	2015-02-24 23:04:27.000000000 +0100
+--- Python-3.4.2/Programs/python.c	2015-02-24 22:42:37.000000000 +0100
++++ Python-3.4.2-android/Programs/python.c	2015-02-24 23:04:27.000000000 +0100
 @@ -44,10 +44,13 @@
      fpsetmask(m & ~FP_X_OFL);
  #endif
@@ -55,7 +55,7 @@ diff -ru Python-3.4.2/Modules/python.c Python-3.4.2-android/Modules/python.c
 diff -ru Python-3.3.5/setup.py Python-3.3.5-android/setup.py
 --- Python-3.3.5/setup.py	2014-03-09 09:40:35.000000000 +0100
 +++ Python-3.3.5-android/setup.py	2014-08-04 22:14:36.000000000 +0200
-@@ -562,7 +562,7 @@
+@@ -592,7 +592,7 @@
                                 libraries=math_libs) )
 
          # time libraries: librt may be needed for clock_gettime()
@@ -64,7 +64,18 @@ diff -ru Python-3.3.5/setup.py Python-3.3.5-android/setup.py
          lib = sysconfig.get_config_var('TIMEMODULE_LIB')
          if lib:
              time_libs.append(lib)
-@@ -639,7 +639,8 @@
+@@ -651,7 +651,9 @@
+             missing.append('spwd')
+ 
+         # select(2); not on ancient System V
+-        exts.append( Extension('select', ['selectmodule.c']) )
++        # pyepoll_poll needs math_libs for ceil()
++        exts.append( Extension('select', ['selectmodule.c'],
++                               libraries=math_libs) )
+ 
+         # Fred Drake's interface to the Python parser
+         exts.append( Extension('parser', ['parsermodule.c']) )             
+@@ -675,7 +677,8 @@
          # Operations on audio samples
          # According to #993173, this one should actually work fine on
          # 64-bit platforms.
@@ -74,7 +85,7 @@ diff -ru Python-3.3.5/setup.py Python-3.3.5-android/setup.py
 
          # readline
          do_readline = self.compiler.find_library_file(lib_dirs, 'readline')
-@@ -1904,7 +1905,8 @@
+@@ -1948,7 +1951,8 @@
                          sources=sources,
                          depends=depends)
          ext_test = Extension('_ctypes_test',
