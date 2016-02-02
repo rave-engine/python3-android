@@ -18,6 +18,7 @@ export ANDROID_COMPILER=4.9
 export ANDROID_COMPILER64=clang3.6
 export ANDROID_HOST=x86_64-pc-linux-gnu
 export ANDROID_AGREE_LICENSE_TERMS=n
+export SOURCES_LOCAL=1
 
 # Testing.
 export ANDROID_VM_NAME=PythonTesting

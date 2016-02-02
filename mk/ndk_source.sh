@@ -24,4 +24,9 @@ case "${NDK_REV}" in
       ;;
 esac
 
-echo http://dl.google.com/android/ndk/android-ndk-r${NDK_REV}-$(uname -s | tr '[A-Z]' '[a-z'])-${NDK_ARCH}.${NDK_EXT}
+if [ $SOURCES_LOCAL = 1 ]
+then
+  echo http://artifactory.ops.cld/artifactory/ThirdParty/COTS/android/android-ndk/r10e/android-ndk-r${NDK_REV}-$(uname -s | tr '[A-Z]' '[a-z'])-${NDK_ARCH}.${NDK_EXT}
+else
+  echo http://dl.google.com/android/ndk/android-ndk-r${NDK_REV}-$(uname -s | tr '[A-Z]' '[a-z'])-${NDK_ARCH}.${NDK_EXT}
+fi

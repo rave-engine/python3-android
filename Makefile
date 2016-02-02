@@ -4,7 +4,7 @@ all: build
 
 # Get configuration.
 mk/env.mk: env
-	@bash --noprofile --norc -c 'source ./env; set -o posix; set' | egrep '^(ANDROID|SDK|NDK|BUILD|TEST|PYTHON)_' > $@
+	@bash --noprofile --norc -c 'source ./env; set -o posix; set' | egrep '^(ANDROID|SDK|NDK|BUILD|TEST|PYTHON|SOURCES)_' > $@
 -include mk/env.mk
 
 # A formula.
@@ -13,7 +13,11 @@ $1: $1-$2
 
 $1-$2: ndk $3
 	$$(info Checking $1 $2 sources...)
+ifeq ($(SOURCES_LOCAL),1)
+	@wget -N -P "src/" -i "mk/$1/$2/sources-local.txt"
+else
 	@wget -N -P "src/" -i "mk/$1/$2/sources.txt"
+endif
 ifeq ("$$(wildcard build/.built-$(BUILD_IDENTIFIER)/$1-$2)","")
 	$$(info Building $1 $2...)
 	@bash --noprofile --norc mk/build_single.sh $1 $2
