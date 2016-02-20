@@ -67,8 +67,6 @@ python_gdbm: gdbm
 
 # Android NDK.
 ndk:
-	$(info Checking NDK sources...)
-	@wget -N -P "sdk/" $(shell bash mk/ndk_source.sh)
 ifeq ("$(wildcard build/.built-ndk-$(BUILD_IDENTIFIER))","")
 	$(info Preparing NDK toolchain...)
 	@bash --noprofile --norc mk/build_ndk.sh
