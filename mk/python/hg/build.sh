@@ -22,6 +22,7 @@ patch -Ep1 < "${FILESDIR}/${PACKAGE}-android-libmpdec.patch" || exit 1
 patch -p1  < "${FILESDIR}/${PACKAGE}-android-misc.patch" || exit 1
 patch -p1  < "${FILESDIR}/${PACKAGE}-modules-link-libm.patch" || exit 1
 patch -p1  < "${FILESDIR}/${PACKAGE}-soundcard-h-path.patch" || exit 1
+patch -p1  < "${FILESDIR}/${PACKAGE}-android-l-pie.patch" || exit 1
 
 autoreconf --install --verbose
 

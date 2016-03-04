@@ -16,6 +16,9 @@ export SDK_PLATFORM="android-${SDK_REV}"
 export cross="${ANDROID_TARGET}-"
 
 export CFLAGS="--sysroot ${TOOL_PREFIX}/sysroot -I${PREFIX}/include -I${TOOL_PREFIX}/include -DANDROID -mandroid ${CFLAGS_EXTRA}"
+if [ "$ANDROID_API_LEVEL" -ge 21 ] ; then
+    export CFLAGS="$CFLAGS -fPIE"
+fi
 export CPPFLAGS="${CFLAGS} ${CPPFLAGS_EXTRA}"
 export CXXFLAGS="${CFLAGS} ${CXXFLAGS_EXTRA}"
 export LDFLAGS="--sysroot ${TOOL_PREFIX}/sysroot -L${PREFIX}/lib -L${TOOL_PREFIX}/lib ${LDFLAGS_EXTRA}"

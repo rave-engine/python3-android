@@ -1,0 +1,17 @@
+diff -r 865cf8eba51a configure.ac
+--- a/configure.ac	Mon Feb 29 11:25:09 2016 +0000
++++ b/configure.ac	Tue Mar 01 00:30:00 2016 +0800
+@@ -2425,7 +2447,12 @@
+ 	    LINKFORSHARED="-Wl,-E -Wl,+s";;
+ #	    LINKFORSHARED="-Wl,-E -Wl,+s -Wl,+b\$(BINLIBDEST)/lib-dynload";;
+ 	BSD/OS/4*) LINKFORSHARED="-Xlinker -export-dynamic";;
+-	Linux*|GNU*) LINKFORSHARED="-Xlinker -export-dynamic";;
++    Linux*|GNU*)
++        LINKFORSHARED="-Xlinker -export-dynamic"
++        if test "$ANDROID_API_LEVEL" -ge 21 ; then
++            LINKFORSHARED="$LINKFORSHARED -fPIE -Wl,-pie"  # -fpie not working
++        fi
++        ;;
+ 	# -u libsys_s pulls in all symbols in libsys
+ 	Darwin/*) 
+ 		LINKFORSHARED="$extra_undefs -framework CoreFoundation"
