@@ -1,9 +1,15 @@
 set -x
 
-NAME=10e-16-arm-linux-androideabi-4.9
+source ./env
+
+NAME=${BUILD_IDENTIFIER}
 TMP=/data/local/tmp
 
 cd build
+
+mkdir -p $NAME/tools
+cp ../devscripts/{c_rehash.py,env.sh} $NAME/tools
+
 tar zcf ${NAME}.tar.gz $NAME
 adb shell rm /sdcard/${NAME}.tar.gz
 adb push ${NAME}.tar.gz /sdcard/${NAME}.tar.gz
