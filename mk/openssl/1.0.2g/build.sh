@@ -11,7 +11,6 @@ patch -p1 < "${FILESDIR}/${PACKAGE}-disable-libversion.patch" || exit 1
 make DISABLE_LIBVERSION=1 || exit 1
 make DISABLE_LIBVERSION=1 install_sw || exit 1
 
-OPENSSL_VER=1.0.0
 for comp in ssl crypto ; do
     rm ${PREFIX}/lib/lib${comp}.a || exit 1
 done
