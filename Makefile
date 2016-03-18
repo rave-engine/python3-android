@@ -27,11 +27,7 @@ endef
 build: python_modules python
 
 # Main Python.
-ifeq ($(PYTHON_BUILD_HG_REVISION),y)
 $(eval $(call formula,python,hg))
-else
-$(eval $(call formula,python,3.4.3))
-endif
 
 # Optional Python modules.
 python_modules: $(foreach mod,$(subst ',,$(PYTHON_OPTIONAL_MODULES)),python_$(mod))
