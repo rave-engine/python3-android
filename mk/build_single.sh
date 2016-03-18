@@ -37,7 +37,7 @@ export STRIP="${ANDROID_TARGET}-strip"
 export NAME="$1"
 export VERSION="$2"
 export PACKAGE="${NAME}-${VERSION}"
-export FILESDIR="${BASE}/mk/${NAME}/${VERSION}"
+export FILESDIR="${BASE}/mk/${NAME}"
 
 pushd "${BASE}" > /dev/null
 . "${FILESDIR}/build.sh" || exit 1

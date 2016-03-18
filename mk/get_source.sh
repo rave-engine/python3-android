@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source_manifest="mk/$1/$2/sources.txt"
+source_manifest="mk/$1/sources.txt"
 source_file=$(cat "$source_manifest")
 src_prefix="src/"
 

@@ -13,7 +13,7 @@ $1: $1-$2
 
 $1-$2: ndk $3
 	$$(info Checking $1 $2 sources...)
-	@mk/get_source.sh $1 $2
+	@mk/get_source.sh $1
 ifeq ("$$(wildcard build/.built-$(BUILD_IDENTIFIER)/$1-$2)","")
 	$$(info Building $1 $2...)
 	@bash --noprofile --norc mk/build_single.sh $1 $2

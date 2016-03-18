@@ -38,7 +38,7 @@ export MAKEOPTS_EXTRA=""
 #  curses - enable the curses module (builds ncursesw).
 #  sqlite3 - enable the sqlite3 module (builds SQLite).
 #  gdbm - enable the dbm/gdbm modules (builds GDBM).
-export PYTHON_OPTIONAL_MODULES="ssl curses readline"
+export PYTHON_OPTIONAL_MODULES="ssl curses readline sqlite3 bz2 lzma gdbm"
 
 # Do no touch unless you know what you are doing.
 case "${ANDROID_PLATFORM}" in

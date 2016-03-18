@@ -15,14 +15,14 @@ cat > config.site <<-SITE
 	ac_cv_file__dev_ptc=no
 SITE
 
-patch -p1  < "${FILESDIR}/${PACKAGE}-cross-compile.patch" || exit 1
-patch -p1  < "${FILESDIR}/${PACKAGE}-python-misc.patch" || exit 1
-patch -p1  < "${FILESDIR}/${PACKAGE}-android-locale.patch" || exit 1
-patch -Ep1 < "${FILESDIR}/${PACKAGE}-android-libmpdec.patch" || exit 1
-patch -p1  < "${FILESDIR}/${PACKAGE}-android-misc.patch" || exit 1
-patch -p1  < "${FILESDIR}/${PACKAGE}-modules-link-libm.patch" || exit 1
-patch -p1  < "${FILESDIR}/${PACKAGE}-soundcard-h-path.patch" || exit 1
-patch -p1  < "${FILESDIR}/${PACKAGE}-android-l-pie.patch" || exit 1
+patch -p1  < "${FILESDIR}/cross-compile.patch" || exit 1
+patch -p1  < "${FILESDIR}/python-misc.patch" || exit 1
+patch -p1  < "${FILESDIR}/android-locale.patch" || exit 1
+patch -Ep1 < "${FILESDIR}/android-libmpdec.patch" || exit 1
+patch -p1  < "${FILESDIR}/android-misc.patch" || exit 1
+patch -p1  < "${FILESDIR}/modules-link-libm.patch" || exit 1
+patch -p1  < "${FILESDIR}/soundcard-h-path.patch" || exit 1
+patch -p1  < "${FILESDIR}/android-l-pie.patch" || exit 1
 
 autoreconf --install --verbose
 
