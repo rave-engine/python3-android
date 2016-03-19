@@ -19,6 +19,9 @@ case "${NDK_REV}" in
   10*)
       NDK_EXT=bin
       ;;
+  11*)
+      NDK_EXT=zip
+      ;;
   *)
       NDK_EXT=tar.bz2
       ;;
@@ -26,7 +29,14 @@ esac
 
 if [ $SOURCES_LOCAL = 1 ]
 then
-  echo http://artifactory.ops.cld/artifactory/ThirdParty/COTS/android/android-ndk/r10e/android-ndk-r${NDK_REV}-$(uname -s | tr '[A-Z]' '[a-z'])-${NDK_ARCH}.${NDK_EXT}
+  echo http://artifactory.ops.cld/artifactory/ThirdParty/COTS/android/android-ndk/r${NDK_REV}/android-ndk-r${NDK_REV}-$(uname -s | tr '[A-Z]' '[a-z'])-${NDK_ARCH}.${NDK_EXT}
 else
-  echo http://dl.google.com/android/ndk/android-ndk-r${NDK_REV}-$(uname -s | tr '[A-Z]' '[a-z'])-${NDK_ARCH}.${NDK_EXT}
+  case "${NDK_REV}" in
+    11*)
+        echo http://dl.google.com/android/repository/android-ndk-r${NDK_REV}-$(uname -s | tr '[A-Z]' '[a-z'])-${NDK_ARCH}.${NDK_EXT}
+        ;;
+    *)
+        echo http://dl.google.com/android/ndk/android-ndk-r${NDK_REV}-$(uname -s | tr '[A-Z]' '[a-z'])-${NDK_ARCH}.${NDK_EXT}
+        ;;
+  esac 
 fi

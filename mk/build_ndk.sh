@@ -30,6 +30,13 @@ case "${NDK_REV}" in
            popd
       fi
       ;;
+  11*)
+      NDK_ARCHIVE="${BASE}/sdk/android-ndk-r${NDK_REV}-$(uname -s | tr '[A-Z]' '[a-z]')-${NDK_ARCH}"
+      if [[ ! -d "${BASE}/sdk/${NDK_REL}" ]]; then
+           # Zip archive
+           unzip "${NDK_ARCHIVE}" -d "${BASE}/sdk" || exit 1
+      fi
+      ;;
   *)
       NDK_ARCHIVE="$BASE/sdk/android-ndk-r${NDK_REV}-$(uname -s | tr '[A-Z]' '[a-z]')-${NDK_ARCH}.tar.bz2"
       if [[ ! -d "${BASE}/sdk/${NDK_REL}" ]]; then
