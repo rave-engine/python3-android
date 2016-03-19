@@ -17,38 +17,3 @@ diff -ru Python-3.3.5/Lib/test/test_pwd.py Python-3.3.5-android/Lib/test/test_pw
      def test_errors(self):
          self.assertRaises(TypeError, pwd.getpwuid)
          self.assertRaises(TypeError, pwd.getpwuid, 3.14)
-diff -ru Python-3.4.2/Modules/python.c Python-3.4.2-android/Modules/python.c
---- Python-3.4.2/Programs/python.c	2015-02-24 22:42:37.000000000 +0100
-+++ Python-3.4.2-android/Programs/python.c	2015-02-24 23:04:27.000000000 +0100
-@@ -44,10 +44,13 @@
-     fpsetmask(m & ~FP_X_OFL);
- #endif
- 
--    oldloc = _PyMem_RawStrdup(setlocale(LC_ALL, NULL));
--    if (!oldloc) {
--        fprintf(stderr, "out of memory\n");
--        return 1;
-+    oldloc = setlocale(LC_ALL, NULL);
-+    if (oldloc) {
-+        oldloc = _PyMem_RawStrdup(oldloc);
-+        if (!oldloc) {
-+            fprintf(stderr, "out of memory\n");
-+            return 1;
-+        }
-     }
- 
-     setlocale(LC_ALL, "");
-@@ -64,8 +67,11 @@
-     }
-     argv_copy2[argc] = argv_copy[argc] = NULL;
- 
--    setlocale(LC_ALL, oldloc);
--    PyMem_RawFree(oldloc);
-+    if (oldloc) {
-+        setlocale(LC_ALL, oldloc);
-+        PyMem_RawFree(oldloc);
-+    }
-+
-     res = Py_Main(argc, argv_copy);
-     for (i = 0; i < argc; i++) {
-         PyMem_RawFree(argv_copy2[i]);

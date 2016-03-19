@@ -17,7 +17,6 @@ SITE
 
 patch -p1  < "${FILESDIR}/cross-compile.patch" || exit 1
 patch -p1  < "${FILESDIR}/python-misc.patch" || exit 1
-patch -p1  < "${FILESDIR}/android-locale.patch" || exit 1
 patch -Ep1 < "${FILESDIR}/android-libmpdec.patch" || exit 1
 patch -p1  < "${FILESDIR}/android-misc.patch" || exit 1
 patch -p1  < "${FILESDIR}/modules-link-libm.patch" || exit 1
@@ -27,8 +26,8 @@ patch -p1  < "${FILESDIR}/android-l-pie.patch" || exit 1
 autoreconf --install --verbose
 
 mkdir build-target && pushd build-target
-../configure CROSS_COMPILE_TARGET=yes HOSTPYTHON="$(pwd)/../build-host/python" CONFIG_SITE="$(pwd)/../config.site" --prefix="${PREFIX}" --host="${TARGET}" --build="${HOST}" --disable-ipv6 --enable-shared --without-ensurepip || exit 1
-make CROSS_COMPILE_TARGET=yes HOSTPYTHON="$(pwd)/../build-host/python" HOSTPGEN="$(pwd)/../build-host/Parser/pgen" || exit 1
-make CROSS_COMPILE_TARGET=yes HOSTPYTHON="$(pwd)/../build-host/python" HOSTPGEN="$(pwd)/../build-host/Parser/pgen" install || exit 1
+../configure CPPFLAGS="${CPPFLAGS} -I${PREFIX}/include/android-support" CROSS_COMPILE_TARGET=yes HOSTPYTHON="$(pwd)/../build-host/python" CONFIG_SITE="$(pwd)/../config.site" --prefix="${PREFIX}" --host="${TARGET}" --build="${HOST}" --disable-ipv6 --enable-shared --without-ensurepip --with-libc="-landroid_support -lm" || exit 1
+make CPPFLAGS="${CPPFLAGS} -I${PREFIX}/include/android-support" CROSS_COMPILE_TARGET=yes HOSTPYTHON="$(pwd)/../build-host/python" HOSTPGEN="$(pwd)/../build-host/Parser/pgen" EXTRA_CFLAGS="-I${PREFIX}/include/android_support" || exit 1
+make CPPFLAGS="${CPPFLAGS} -I${PREFIX}/include/android-support" CROSS_COMPILE_TARGET=yes HOSTPYTHON="$(pwd)/../build-host/python" HOSTPGEN="$(pwd)/../build-host/Parser/pgen" EXTRA_CFLAGS="-I${PREFIX}/include/android_support" install || exit 1
 
 popd >/dev/null
