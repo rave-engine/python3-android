@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 source_manifest="mk/$1/sources.txt"
+if [ ! -e "$source_manifest" ] ; then
+    exit
+fi
 source_file=$(cat "$source_manifest")
 src_prefix="src/"
 

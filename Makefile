@@ -30,7 +30,9 @@ build: python_modules python
 $(eval $(call formula,python,hg))
 
 # Optional Python modules.
-python_modules: $(foreach mod,$(subst ',,$(PYTHON_OPTIONAL_MODULES)),python_$(mod))
+python_modules: android-support $(foreach mod,$(subst ',,$(PYTHON_OPTIONAL_MODULES)),python_$(mod))
+
+$(eval $(call formula,android-support,))
 
 # Python lzma support.
 $(eval $(call formula,xz,5.2.1))
