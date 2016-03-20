@@ -17,7 +17,6 @@ SITE
 
 patch -p1  < "${FILESDIR}/cross-compile.patch" || exit 1
 patch -p1  < "${FILESDIR}/python-misc.patch" || exit 1
-patch -Ep1 < "${FILESDIR}/android-libmpdec.patch" || exit 1
 patch -p1  < "${FILESDIR}/android-misc.patch" || exit 1
 patch -p1  < "${FILESDIR}/modules-link-libm.patch" || exit 1
 patch -p1  < "${FILESDIR}/soundcard-h-path.patch" || exit 1
