@@ -1,0 +1,36 @@
+diff -r 8b85df50d906 configure.ac
+--- a/configure.ac	Sun Mar 20 12:51:16 2016 +0200
++++ b/configure.ac	Sun Mar 20 21:54:27 2016 +0800
+@@ -3937,6 +3964,16 @@
+ AC_SUBST(HAVE_GETHOSTBYNAME_R)
+ AC_SUBST(HAVE_GETHOSTBYNAME)
+ 
++# check if struct passwd has pw_gecos member
++AC_MSG_CHECKING(if struct passwd has pw_gecos member)
++AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <pwd.h>]], [[
++struct passwd p;
++p.pw_gecos = 0;]])],
++  [AC_MSG_RESULT(yes)
++   AC_DEFINE(HAVE_PASSWD_PW_GECOS, 1, [Define if struct passwd has pw_gecos member])],
++  [AC_MSG_RESULT(no)]
++)
++
+ # checks for system services
+ # (none yet)
+ 
+diff -r 8b85df50d906 Modules/pwdmodule.c
+--- a/Modules/pwdmodule.c	Sun Mar 20 12:51:16 2016 +0200
++++ b/Modules/pwdmodule.c	Sun Mar 20 21:55:06 2016 +0800
+@@ -78,7 +78,12 @@
+     SETS(setIndex++, p->pw_passwd);
+     PyStructSequence_SET_ITEM(v, setIndex++, _PyLong_FromUid(p->pw_uid));
+     PyStructSequence_SET_ITEM(v, setIndex++, _PyLong_FromGid(p->pw_gid));
++#ifdef HAVE_PASSWD_PW_GECOS
+     SETS(setIndex++, p->pw_gecos);
++#else
++    SETS(setIndex++, Py_None);
++    Py_INCREF(Py_None);
++#endif
+     SETS(setIndex++, p->pw_dir);
+     SETS(setIndex++, p->pw_shell);
+ 
