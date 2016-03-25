@@ -22,7 +22,7 @@
 +	SHOBJ_LD='${CC}'
 +	SHOBJ_LDFLAGS='-shared -Wl,-soname,$@'
 +
-+	SHLIB_XLDFLAGS='-Wl,-rpath,$(libdir) -Wl,-soname,$@ -Wl,--no-undefined'
++	SHLIB_XLDFLAGS='-Wl,-soname,$@ -Wl,--no-undefined'
 +	SHLIB_LIBVERSION='$(SHLIB_LIBSUFF)'
 +	SHLIB_LIBS='-lncursesw'
 +	;;
