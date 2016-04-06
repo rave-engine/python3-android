@@ -137,6 +137,27 @@ diff -ru Python-3.3.5/Lib/test/test_subprocess.py Python-3.3.5-android/Lib/test/
              fobj.write("exec '%s' -c 'import sys; sys.exit(47)'\n" %
                         sys.executable)
          os.chmod(fname, 0o700)
+diff -ru Python-3.3.5/Modules/socketmodule.c Python-3.3.5-android/Modules/socketmodule.c
+--- Python-3.3.5/Modules/socketmodule.c	2014-03-09 09:40:28.000000000 +0100
++++ Python-3.3.5-android/Modules/socketmodule.c	2014-08-04 22:19:36.000000000 +0200
+@@ -150,7 +150,7 @@
+    On the other hand, not all Linux versions agree, so there the settings
+    computed by the configure script are needed! */
+
+-#ifndef linux
++#if !defined(linux) || __ANDROID__
+ # undef HAVE_GETHOSTBYNAME_R_3_ARG
+ # undef HAVE_GETHOSTBYNAME_R_5_ARG
+ # undef HAVE_GETHOSTBYNAME_R_6_ARG
+@@ -169,7 +169,7 @@
+ #  define HAVE_GETHOSTBYNAME_R_3_ARG
+ # elif defined(__sun) || defined(__sgi)
+ #  define HAVE_GETHOSTBYNAME_R_5_ARG
+-# elif defined(linux)
++# elif defined(linux) && !__ANDROID__
+ /* Rely on the configure script */
+ # else
+ #  undef HAVE_GETHOSTBYNAME_R
 diff -ru Python-3.3.5/Modules/posixmodule.c Python-3.3.5-android/Modules/posixmodule.c
 --- Python-3.3.5/Modules/posixmodule.c	2014-03-09 08:40:28.000000000 +0000
 +++ Python-3.3.5-android/Modules/posixmodule.c	2015-02-24 19:57:05.368843433 +0000
