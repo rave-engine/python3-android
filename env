@@ -2,7 +2,6 @@ export BASE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Directories.
 export ANDROID_PREFIX="${BASE}/build"
-export ANDROID_TOOL_PREFIX="${BASE}/build-tools"
 export ANDROID_TEST_PREFIX="${BASE}/build-vm"
 
 # SDKs and target platforms.

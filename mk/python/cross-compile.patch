@@ -50,3 +50,17 @@ diff -r c64e68d703cf configure.ac
  	    which $interp >/dev/null 2>&1 || continue
  	    if $interp -c 'import sys;sys.exit(not sys.version_info@<:@:2@:>@ >= (3,3))'; then
  	        break
+diff -r 856d50130154 setup.py
+--- a/setup.py	Tue Apr 05 10:17:38 2016 +0000
++++ b/setup.py	Wed Apr 06 02:05:20 2016 +0800
+@@ -492,6 +492,10 @@
+             self.add_gcc_paths()
+         self.add_multiarch_paths()
+ 
++        if 'SYSROOT' in os.environ:
++            add_dir_to_list(self.compiler.include_dirs, os.path.join(os.environ['SYSROOT'], 'usr/include'))
++            add_dir_to_list(self.compiler.library_dirs, os.path.join(os.environ['SYSROOT'], 'usr/lib'))
++
+         # Add paths specified in the environment variables LDFLAGS and
+         # CPPFLAGS for header and library files.
+         # We must get the values from the Makefile and not the environment
