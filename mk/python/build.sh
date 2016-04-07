@@ -24,7 +24,7 @@ patch -p1  < "${FILESDIR}/android-l-pie.patch" || exit 1
 patch -p1  < "${FILESDIR}/passwd-pw_gecos.patch" || exit 1
 patch -p1  < "${FILESDIR}/ndk-android-support.patch" || exit 1
 
-autoreconf --install --verbose
+autoreconf --install --verbose --force
 
 mkdir build-target && pushd build-target
 ../configure CPPFLAGS="${CPPFLAGS} -I${PREFIX}/include/android-support" CROSS_COMPILE_TARGET=yes HOSTPYTHON="$(pwd)/../build-host/python" CONFIG_SITE="$(pwd)/../config.site" --prefix="${PREFIX}" --host="${TARGET}" --build="${HOST}" --disable-ipv6 --enable-shared --without-ensurepip --with-android-support || exit 1
