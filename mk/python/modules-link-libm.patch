@@ -13,6 +13,16 @@ diff -r 6a8fbb97c8d8 setup.py
  
          # XXX Omitted modules: gl, pure, dl, SGI-specific modules
  
+@@ -620,7 +621,8 @@
+         # time operations and variables
+         exts.append( Extension('time', ['timemodule.c'],
+                                libraries=time_libs) )
+-        exts.append( Extension('_datetime', ['_datetimemodule.c']) )
++        exts.append( Extension('_datetime', ['_datetimemodule.c'],
++                               libraries=math_libs) )
+         # random number generator implemented in C
+         exts.append( Extension("_random", ["_randommodule.c"]) )
+         # bisect
 @@ -675,7 +672,7 @@
          # Operations on audio samples
          # According to #993173, this one should actually work fine on
