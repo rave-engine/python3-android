@@ -8,7 +8,7 @@ TMP=/data/local/tmp
 cd build
 
 mkdir -p $NAME/tools
-cp ../devscripts/{c_rehash.py,env.sh} $NAME/tools
+cp ../devscripts/{c_rehash.py,env.sh,import_all.py} $NAME/tools
 
 tar cf ${NAME}.tar $NAME
 adb shell rm /sdcard/${NAME}.tar
