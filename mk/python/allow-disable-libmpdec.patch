@@ -1,0 +1,38 @@
+diff -r 719c11b6b6ff configure.ac
+--- a/configure.ac	Wed Apr 06 09:50:03 2016 +0300
++++ b/configure.ac	Wed Apr 06 19:08:35 2016 +0800
+@@ -2739,6 +2766,21 @@
+ 	SIGNAL_OBJS="Parser/intrcheck.o Python/sigcheck.o"
+ fi
+ 
++# Determine if _decimal should be used.
++AC_SUBST(USE_SIGNAL_MODULE)
++AC_MSG_CHECKING(for --with-decimal-module)
++AC_ARG_WITH(decimal-module,
++            AS_HELP_STRING([--with-decimal-module], [disable/enable decimal module]))
++
++if test -z "$with_decimal_module"
++then with_decimal_module="yes"
++fi
++AC_MSG_RESULT($with_decimal_module)
++
++if test "${with_decimal_module}" = "yes"; then
++	AC_DEFINE(USE_DECIMAL_MODULE, 1, [Define to 1 if _decimal should be built])
++fi
++
+ # This is used to generate Setup.config
+ AC_SUBST(USE_THREAD_MODULE)
+ USE_THREAD_MODULE=""
+diff -r 719c11b6b6ff setup.py
+--- a/setup.py	Wed Apr 06 09:50:03 2016 +0300
++++ b/setup.py	Wed Apr 06 19:17:58 2016 +0800
+@@ -1513,7 +1518,8 @@
+                                   ['cjkcodecs/_codecs_%s.c' % loc]))
+ 
+         # Stefan Krah's _decimal module
+-        exts.append(self._decimal_ext())
++        if sysconfig.get_config_var('USE_DECIMAL_MODULE'):
++            exts.append(self._decimal_ext())
+ 
+         # Thomas Heller's _ctypes module
+         self.detect_ctypes(inc_dirs, lib_dirs)
