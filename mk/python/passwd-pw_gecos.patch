@@ -21,15 +21,14 @@ diff -r 8b85df50d906 configure.ac
 diff -r 8b85df50d906 Modules/pwdmodule.c
 --- a/Modules/pwdmodule.c	Sun Mar 20 12:51:16 2016 +0200
 +++ b/Modules/pwdmodule.c	Sun Mar 20 21:55:06 2016 +0800
-@@ -78,7 +78,12 @@
+@@ -78,7 +78,11 @@
      SETS(setIndex++, p->pw_passwd);
      PyStructSequence_SET_ITEM(v, setIndex++, _PyLong_FromUid(p->pw_uid));
      PyStructSequence_SET_ITEM(v, setIndex++, _PyLong_FromGid(p->pw_gid));
 +#ifdef HAVE_PASSWD_PW_GECOS
      SETS(setIndex++, p->pw_gecos);
 +#else
-+    SETS(setIndex++, Py_None);
-+    Py_INCREF(Py_None);
++    SETS(setIndex++, NULL);
 +#endif
      SETS(setIndex++, p->pw_dir);
      SETS(setIndex++, p->pw_shell);
