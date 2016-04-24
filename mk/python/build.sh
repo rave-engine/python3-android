@@ -28,7 +28,7 @@ autoreconf --install --verbose --force
 
 mkdir build-target && pushd build-target
 ../configure CPPFLAGS="${CPPFLAGS} -I${PREFIX}/include/android-support" CROSS_COMPILE_TARGET=yes HOSTPYTHON="$(pwd)/../build-host/python" CONFIG_SITE="$(pwd)/../config.site" --prefix="${PREFIX}" --host="${TARGET}" --build="${HOST}" --disable-ipv6 --enable-shared --without-ensurepip --with-android-support --without-decimal-module || exit 1
-make CROSS_COMPILE_TARGET=yes HOSTPYTHON="$(pwd)/../build-host/python" HOSTPGEN="$(pwd)/../build-host/Parser/pgen" || exit 1
-make CROSS_COMPILE_TARGET=yes HOSTPYTHON="$(pwd)/../build-host/python" HOSTPGEN="$(pwd)/../build-host/Parser/pgen" altinstall || exit 1
+make CROSS_COMPILE_TARGET=yes HOSTPYTHON="$(pwd)/../build-host/python" || exit 1
+make CROSS_COMPILE_TARGET=yes HOSTPYTHON="$(pwd)/../build-host/python" altinstall || exit 1
 
 popd >/dev/null

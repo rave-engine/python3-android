@@ -1,35 +1,6 @@
 diff -ru cpython-fac5562ae9c6/Makefile.pre.in.orig cpython-fac5562ae9c6/Makefile.pre.in
 --- cpython-fac5562ae9c6/Makefile.pre.in.orig	2015-11-26 00:01:34.116741659 +0800
 +++ cpython-fac5562ae9c6/Makefile.pre.in	2015-11-26 00:04:05.046746704 +0800
-@@ -712,12 +710,12 @@
- Programs/_freeze_importlib: Programs/_freeze_importlib.o $(LIBRARY_OBJS_OMIT_FROZEN)
- 	$(LINKCC) $(PY_LDFLAGS) -o $@ Programs/_freeze_importlib.o $(LIBRARY_OBJS_OMIT_FROZEN) $(LIBS) $(MODLIBS) $(SYSLIBS) $(LDLAST)
- 
--Python/importlib_external.h: $(srcdir)/Lib/importlib/_bootstrap_external.py Programs/_freeze_importlib
--	./Programs/_freeze_importlib \
-+Python/importlib_external.h: $(srcdir)/Lib/importlib/_bootstrap_external.py $(HOST_FREEZE_IMPORTLIB)
-+	$(HOST_FREEZE_IMPORTLIB) \
- 		$(srcdir)/Lib/importlib/_bootstrap_external.py Python/importlib_external.h
- 
--Python/importlib.h: $(srcdir)/Lib/importlib/_bootstrap.py Programs/_freeze_importlib
--	./Programs/_freeze_importlib \
-+Python/importlib.h: $(srcdir)/Lib/importlib/_bootstrap.py $(HOST_FREEZE_IMPORTLIB)
-+	$(HOST_FREEZE_IMPORTLIB) \
- 		$(srcdir)/Lib/importlib/_bootstrap.py Python/importlib.h
- 
- 
-@@ -777,9 +777,9 @@
- 
- $(IO_OBJS): $(IO_H)
- 
--$(GRAMMAR_H): $(GRAMMAR_INPUT) $(PGEN)
-+$(GRAMMAR_H): $(GRAMMAR_INPUT) $(HOSTPGEN)
- 		@$(MKDIR_P) Include
--		$(PGEN) $(GRAMMAR_INPUT) $(GRAMMAR_H) $(GRAMMAR_C)
-+		$(HOSTPGEN) $(GRAMMAR_INPUT) $(GRAMMAR_H) $(GRAMMAR_C)
- $(GRAMMAR_C): $(GRAMMAR_H)
- 		touch $(GRAMMAR_C)
- 
 @@ -1416,6 +1416,7 @@
  # Install the dynamically loadable modules
  # This goes into $(exec_prefix)
