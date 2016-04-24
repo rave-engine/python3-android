@@ -29,8 +29,8 @@ patch -p1  < "${FILESDIR}/allow-disable-libmpdec.patch" || exit 1
 autoreconf --install --verbose --force
 
 mkdir build-target && pushd build-target
-../configure CPPFLAGS="${CPPFLAGS} -I${PREFIX}/include/android-support" HOSTPYTHON="$(pwd)/../build-host/python" CONFIG_SITE="$(pwd)/../config.site" --prefix="${PREFIX}" --host="${TARGET}" --build="${HOST}" --disable-ipv6 --enable-shared --without-ensurepip --with-android-support --without-decimal-module || exit 1
-make HOSTPYTHON="$(pwd)/../build-host/python" || exit 1
-make HOSTPYTHON="$(pwd)/../build-host/python" altinstall || exit 1
+../configure PATH="$(pwd)/../build-host:$PATH" CPPFLAGS="${CPPFLAGS} -I${PREFIX}/include/android-support" CONFIG_SITE="$(pwd)/../config.site" --prefix="${PREFIX}" --host="${TARGET}" --build="${HOST}" --disable-ipv6 --enable-shared --without-ensurepip --with-android-support --without-decimal-module || exit 1
+make PATH="$(pwd)/../build-host:$PATH" || exit 1
+make PATH="$(pwd)/../build-host:$PATH" altinstall || exit 1
 
 popd >/dev/null
