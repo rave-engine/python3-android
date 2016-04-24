@@ -38,6 +38,7 @@ export MAKEOPTS_EXTRA=""
 #  sqlite3 - enable the sqlite3 module (builds SQLite).
 #  gdbm - enable the dbm/gdbm modules (builds GDBM).
 export PYTHON_OPTIONAL_MODULES="ssl curses readline sqlite3 bz2 lzma gdbm"
+export PYTHON_HOST_BUILD=no
 
 # Do no touch unless you know what you are doing.
 case "${ANDROID_PLATFORM}" in
