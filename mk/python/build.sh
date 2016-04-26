@@ -22,7 +22,6 @@ patch -p1  < "${FILESDIR}/python-misc.patch" || exit 1
 patch -p1  < "${FILESDIR}/android-misc.patch" || exit 1
 patch -p1  < "${FILESDIR}/soundcard-h-path.patch" || exit 1
 patch -p1  < "${FILESDIR}/android-l-pie.patch" || exit 1
-patch -p1  < "${FILESDIR}/passwd-pw_gecos.patch" || exit 1
 patch -p1  < "${FILESDIR}/ndk-android-support.patch" || exit 1
 
 autoreconf --install --verbose --force
