@@ -20,7 +20,6 @@ SITE
 patch -p1  < "${FILESDIR}/cross-compile.patch" || exit 1
 patch -p1  < "${FILESDIR}/python-misc.patch" || exit 1
 patch -p1  < "${FILESDIR}/android-misc.patch" || exit 1
-patch -p1  < "${FILESDIR}/soundcard-h-path.patch" || exit 1
 patch -p1  < "${FILESDIR}/android-l-pie.patch" || exit 1
 patch -p1  < "${FILESDIR}/ndk-android-support.patch" || exit 1
 
