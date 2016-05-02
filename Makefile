@@ -52,7 +52,7 @@ $(eval $(call formula,openssl,1.0.2g))
 python_ssl: openssl
 
 # Python curses support.
-$(eval $(call formula,ncurses,5.9))
+$(eval $(call formula,ncurses,6.0))
 python_curses: ncurses
 
 # Python SQLite support.

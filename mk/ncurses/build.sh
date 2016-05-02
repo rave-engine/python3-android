@@ -5,6 +5,9 @@ tar -xf "${PACKAGE}.tar.gz" || exit 1
 pushd "${PACKAGE}" >/dev/null
 
 patch -p1 < "${FILESDIR}/fix-bash-syntax-error.patch"
+patch -p1 < "${FILESDIR}/cc_c_o_check.patch"
+# Patch ./configure directly instead of running autoreconf as ncurses uses a
+# patched version of autotools
 ./configure \
     --prefix="${PREFIX}" \
     --host="${TARGET}" \
@@ -16,8 +19,6 @@ patch -p1 < "${FILESDIR}/fix-bash-syntax-error.patch"
     --without-termlib \
     --enable-termcap \
     --enable-widec \
-    --disable-database \
-    --disable-home-terminfo \
     --with-shared \
     --without-normal \
     --without-debug \
