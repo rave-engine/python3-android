@@ -1,79 +1,41 @@
 diff -ru Python-3.3.5/Lib/platform.py Python-3.3.5-android/Lib/platform.py
 --- Python-3.3.5/Lib/platform.py	2014-03-09 09:40:13.000000000 +0100
 +++ Python-3.3.5-android/Lib/platform.py	2014-08-04 22:19:36.000000000 +0200
-@@ -368,6 +368,76 @@
+@@ -368,6 +368,38 @@
                                supported_dists=supported_dists,
                                full_distribution_name=0)
 
-+_android_environment_vars = (
-+    'ANDROID_ROOT', 'ANDROID_ASSETS', 'ANDROID_STORAGE', 'ANDROID_DATA',
-+    'ANDROID_PROPERTY_WORKSPACE', 'ANDROID_BOOTLOGO')
-+_android_version_property = 'ro.build.version.release'
-+_android_buildstr_property = 'ro.build.version.full'
++def _android_getprop(prop, default):
++    # On Android 4.1, `getprop` relies on an inherited file descriptor to
++    # gain access to the system property area. The id of this file descriptor
++    # is stored in the environment variable ANDROID_PROPERTY_WORKSPACE
++    pass_fds = ()
++    android_property_workspace = os.getenv('ANDROID_PROPERTY_WORKSPACE')
++    if android_property_workspace and ',' in android_property_workspace:
++        property_fd_str = android_property_workspace.split(',')[0]
++        if property_fd_str.isdigit():
++            pass_fds = (int(property_fd_str),)
 +
-+def android_version(version='', buildstr=''):
++    try:
++        result = subprocess.check_output(['/system/bin/getprop', prop],
++                                         pass_fds=pass_fds)
++        return result.decode('utf-8').strip()
++    except (subprocess.CalledProcessError, UnicodeDecodeError, OSError):
++        return default
++
++def android_ver(version='', buildstr=''):
 +    """ Attempt to get the Android version number and build string.
 +
-+        The function checks for the getprop binary to retrieve build info,
-+        and falls back to manually reading /system/build.prop if available.
++        The function checks for the getprop binary to retrieve build info.
 +
 +        Returns a (version, buildstr) tuple which defaults to the args given
 +        as parameters.
 +    """
-+    if not any(os.getenv(e) for e in _android_environment_vars):
-+        # Probably not on Android...
-+        return version, buildstr
 +
-+    version_obtained = False
-+    buildstr_obtained = False
-+
-+    # Try the 'official' API tool first, since /system/build.prop might
-+    # not be the only source for properties.
-+    if os.access('/system/bin/getprop', os.X_OK):
-+        def _getprop(prop):
-+            android_property_fd = _get_android_property_fd()
-+            pass_fds = (android_property_fd,) if android_property_fd else ()
-+            try:
-+                result = subprocess.check_output(['/system/bin/getprop', prop],
-+                                                 pass_fds=pass_fds)
-+                return result.decode('utf-8').strip()
-+            except (subprocess.CalledProcessError, UnicodeDecodeError):
-+                raise RuntimeError('getprop failed')
-+
-+        try:
-+            version = _getprop(_android_version_property)
-+            version_obtained = True
-+        except RuntimeError:
-+            pass
-+
-+        try:
-+            buildstr = _getprop(_android_buildstr_property)
-+            buildstr_obtained = True
-+        except RuntimeError:
-+            pass
-+    done = version_obtained and buildstr_obtained
-+
-+    # Fall back to parsing /system/build.prop manually.
-+    if not done and os.path.isfile('/system/build.prop'):
-+        for line in open('/system/build.prop', 'rb'):
-+            if b'=' not in line:
-+                continue
-+            key, val = line.split(b'=', maxsplit=1)
-+            key = key.strip().decode('utf-8')
-+
-+            if not version_obtained and key == _android_version_property:
-+                version = val.strip().decode('utf-8')
-+            if not buildstr_obtained and key == _android_buildstr_property:
-+                buildstr = val.strip().decode('utf-8')
++    version = _android_getprop('ro.build.version.release', version)
++    buildstr = _android_getprop('ro.build.version.full', buildstr)
 +
 +    return version, buildstr
-+
-+def _get_android_property_fd():
-+    android_property_workspace = os.getenv('ANDROID_PROPERTY_WORKSPACE')
-+    if android_property_workspace:
-+        property_fd_str = android_property_workspace.split(',')[0]
-+        if property_fd_str.isdigit():
-+            return int(property_fd_str)
 +
  def popen(cmd, mode='r', bufsize=-1):
 
@@ -93,7 +55,7 @@ diff -ru Python-3.3.5/Lib/subprocess.py Python-3.3.5-android/Lib/subprocess.py
 +                    main = '/bin/sh'
 +                else:
 +                    import platform
-+                    if platform.android_version()[0]:
++                    if platform.android_ver()[0]:
 +                        main = '/system/bin/sh'
 +                    else:
 +                        raise RuntimeError('Could not find system shell')
@@ -118,7 +80,7 @@ diff -ru Python-3.3.5/Lib/test/test_subprocess.py Python-3.3.5-android/Lib/test/
          # reopen in text mode
          with open(fd, "w", errors="surrogateescape") as fobj:
 -            fobj.write("#!/bin/sh\n")
-+            if platform.android_version()[0]:
++            if platform.android_ver()[0]:
 +                fobj.write('#!/system/bin/sh\n')
 +            else:
 +                fobj.write("#!/bin/sh\n")
@@ -130,49 +92,13 @@ diff -ru Python-3.3.5/Lib/test/test_subprocess.py Python-3.3.5-android/Lib/test/
          # reopen in text mode
          with open(fd, "w", errors="surrogateescape") as fobj:
 -            fobj.write("#!/bin/sh\n")
-+            if platform.android_version()[0]:
++            if platform.android_ver()[0]:
 +                fobj.write('#!/system/bin/sh\n')
 +            else:
 +                fobj.write("#!/bin/sh\n")
              fobj.write("exec '%s' -c 'import sys; sys.exit(47)'\n" %
                         sys.executable)
          os.chmod(fname, 0o700)
-diff -ru Python-3.3.5/Modules/socketmodule.c Python-3.3.5-android/Modules/socketmodule.c
---- Python-3.3.5/Modules/socketmodule.c	2014-03-09 09:40:28.000000000 +0100
-+++ Python-3.3.5-android/Modules/socketmodule.c	2014-08-04 22:19:36.000000000 +0200
-@@ -150,7 +150,7 @@
-    On the other hand, not all Linux versions agree, so there the settings
-    computed by the configure script are needed! */
-
--#ifndef linux
-+#if !defined(linux) || __ANDROID__
- # undef HAVE_GETHOSTBYNAME_R_3_ARG
- # undef HAVE_GETHOSTBYNAME_R_5_ARG
- # undef HAVE_GETHOSTBYNAME_R_6_ARG
-@@ -169,7 +169,7 @@
- #  define HAVE_GETHOSTBYNAME_R_3_ARG
- # elif defined(__sun) || defined(__sgi)
- #  define HAVE_GETHOSTBYNAME_R_5_ARG
--# elif defined(linux)
-+# elif defined(linux) && !__ANDROID__
- /* Rely on the configure script */
- # else
- #  undef HAVE_GETHOSTBYNAME_R
-diff -ru Python-3.3.5/Modules/posixmodule.c Python-3.3.5-android/Modules/posixmodule.c
---- Python-3.3.5/Modules/posixmodule.c	2014-03-09 08:40:28.000000000 +0000
-+++ Python-3.3.5-android/Modules/posixmodule.c	2015-02-24 19:57:05.368843433 +0000
-@@ -403,6 +403,11 @@
- #endif
- #endif
- 
-+/* Android doesn't expose AT_EACCESS - manually define it. */
-+#if !defined(AT_EACCESS) && defined(__ANDROID__)
-+#define AT_EACCESS     0x200
-+#endif
-+
- 
- #ifdef MS_WINDOWS
- static int
 diff -ru  cpython-fac5562ae9c6/configure.ac.orig cpython-fac5562ae9c6/configure.ac
 --- cpython-fac5562ae9c6/configure.ac.orig	2015-11-24 14:19:12.000000000 +0800
 +++ cpython-fac5562ae9c6/configure.ac	2015-11-24 16:39:35.356301199 +0800
