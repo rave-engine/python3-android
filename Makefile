@@ -36,7 +36,7 @@ python_modules: android-support $(foreach mod,$(subst ',,$(PYTHON_OPTIONAL_MODUL
 $(eval $(call formula,android-support,))
 
 # Python lzma support.
-$(eval $(call formula,xz,5.2.1))
+$(eval $(call formula,xz,5.2.2))
 python_lzma: xz
 
 # Python bzip2 support.
