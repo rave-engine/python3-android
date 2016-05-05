@@ -1,10 +1,10 @@
-diff -ru Python-3.3.5/Lib/platform.py Python-3.3.5-android/Lib/platform.py
---- Python-3.3.5/Lib/platform.py	2014-03-09 09:40:13.000000000 +0100
-+++ Python-3.3.5-android/Lib/platform.py	2014-08-04 22:19:36.000000000 +0200
-@@ -368,6 +368,38 @@
-                               supported_dists=supported_dists,
-                               full_distribution_name=0)
-
+diff -r 89116bd505cb Lib/platform.py
+--- a/Lib/platform.py	Wed May 04 12:00:32 2016 -0400
++++ b/Lib/platform.py	Thu May 05 03:03:06 2016 +0800
+@@ -690,6 +690,51 @@
+ 
+     return release, vendor, vminfo, osinfo
+ 
 +def _android_getprop(prop, default):
 +    # On Android 4.1, `getprop` relies on an inherited file descriptor to
 +    # gain access to the system property area. The id of this file descriptor
@@ -17,29 +17,42 @@ diff -ru Python-3.3.5/Lib/platform.py Python-3.3.5-android/Lib/platform.py
 +            pass_fds = (int(property_fd_str),)
 +
 +    try:
-+        result = subprocess.check_output(['/system/bin/getprop', prop],
-+                                         pass_fds=pass_fds)
++        result = subprocess.check_output(['getprop', prop], pass_fds=pass_fds)
 +        return result.decode('utf-8').strip()
-+    except (subprocess.CalledProcessError, UnicodeDecodeError, OSError):
++    except (OSError, subprocess.CalledProcessError, UnicodeDecodeError):
 +        return default
 +
-+def android_ver(version='', buildstr=''):
-+    """ Attempt to get the Android version number and build string.
++def android_ver(version='', sdk='', versioninfo=('', ''), hardwareinfo=('', '')):
++    """ Attempt to get the Android version information.
 +
-+        The function checks for the getprop binary to retrieve build info.
++        The function checks Android system properties to retrieve info.
 +
-+        Returns a (version, buildstr) tuple which defaults to the args given
-+        as parameters.
++        Returns a (version, sdk, versioninfo, hardwareinfo) tuple with
++        versioninfo being a (codename, incremental) tuple and hardwareinfo
++        being a (boardname, abi) tuple.
++
++        Values which cannot be determined are set to the defaults
++        given as parameters (which all default to '').
 +    """
 +
 +    version = _android_getprop('ro.build.version.release', version)
-+    buildstr = _android_getprop('ro.build.version.full', buildstr)
++    sdk = _android_getprop('ro.build.version.sdk', sdk)
 +
-+    return version, buildstr
++    codename, incremental = versioninfo
++    codename = _android_getprop('ro.build.version.codename', codename)
++    incremental = _android_getprop('ro.build.version.incremental', incremental)
++    versioninfo = codename, incremental
 +
- def popen(cmd, mode='r', bufsize=-1):
-
-     """ Portable popen() interface.
++    boardname, abi = hardwareinfo
++    boardname = _android_getprop('ro.product.board', boardname)
++    abi = _android_getprop('ro.product.cpu.abi', abi)
++    hardwareinfo = boardname, abi
++
++    return version, sdk, versioninfo, hardwareinfo
++
+ ### System name aliasing
+ 
+ def system_alias(system, release, version):
 diff -ru Python-3.3.5/Lib/subprocess.py Python-3.3.5-android/Lib/subprocess.py
 --- Python-3.3.5/Lib/subprocess.py	2014-03-09 09:40:13.000000000 +0100
 +++ Python-3.3.5-android/Lib/subprocess.py	2014-08-04 22:19:36.000000000 +0200
