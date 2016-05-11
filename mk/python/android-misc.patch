@@ -1,7 +1,7 @@
 diff -r 89116bd505cb Lib/platform.py
 --- a/Lib/platform.py	Wed May 04 12:00:32 2016 -0400
 +++ b/Lib/platform.py	Thu May 05 03:03:06 2016 +0800
-@@ -690,6 +690,51 @@
+@@ -690,6 +690,52 @@
  
      return release, vendor, vminfo, osinfo
  
@@ -10,19 +10,20 @@ diff -r 89116bd505cb Lib/platform.py
 +    # gain access to the system property area. The id of this file descriptor
 +    # is stored in the environment variable ANDROID_PROPERTY_WORKSPACE
 +    pass_fds = ()
-+    android_property_workspace = os.getenv('ANDROID_PROPERTY_WORKSPACE')
-+    if android_property_workspace and ',' in android_property_workspace:
-+        property_fd_str = android_property_workspace.split(',')[0]
-+        if property_fd_str.isdigit():
-+            pass_fds = (int(property_fd_str),)
++    android_property_workspace = os.getenv('ANDROID_PROPERTY_WORKSPACE', '')
++    if ',' in android_property_workspace:
++        try:
++            pass_fds = (int(android_property_workspace.split(',')[0]),)
++        except ValueError:
++            pass
 +
 +    try:
-+        result = subprocess.check_output(['getprop', prop], pass_fds=pass_fds)
-+        return result.decode('utf-8').strip()
-+    except (OSError, subprocess.CalledProcessError, UnicodeDecodeError):
++        return subprocess.check_output(['getprop', prop],
++                pass_fds=pass_fds).decode('utf-8').strip()
++    except OSError:
 +        return default
 +
-+def android_ver(version='', sdk='', versioninfo=('', ''), hardwareinfo=('', '')):
++def android_ver(version='', sdk=0, versioninfo=('', ''), hardwareinfo=('', '')):
 +    """ Attempt to get the Android version information.
 +
 +        The function checks Android system properties to retrieve info.
@@ -32,11 +33,11 @@ diff -r 89116bd505cb Lib/platform.py
 +        being a (boardname, abi) tuple.
 +
 +        Values which cannot be determined are set to the defaults
-+        given as parameters (which all default to '').
++        given as parameters (which sdk defaults to 0 and others default to '').
 +    """
 +
 +    version = _android_getprop('ro.build.version.release', version)
-+    sdk = _android_getprop('ro.build.version.sdk', sdk)
++    sdk = int(_android_getprop('ro.build.version.sdk', str(sdk)))
 +
 +    codename, incremental = versioninfo
 +    codename = _android_getprop('ro.build.version.codename', codename)
