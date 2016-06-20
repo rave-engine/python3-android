@@ -30,7 +30,7 @@ case "${NDK_REV}" in
            popd
       fi
       ;;
-  11*)
+  11*|12*)
       NDK_ARCHIVE="${BASE}/sdk/android-ndk-r${NDK_REV}-$(uname -s | tr '[A-Z]' '[a-z]')-${NDK_ARCH}"
       if [[ ! -d "${BASE}/sdk/${NDK_REL}" ]]; then
            # Zip archive

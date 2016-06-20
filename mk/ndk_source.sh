@@ -19,7 +19,7 @@ case "${NDK_REV}" in
   10*)
       NDK_EXT=bin
       ;;
-  11*)
+  11*|12*)
       NDK_EXT=zip
       ;;
   *)
@@ -32,7 +32,7 @@ then
   echo http://artifactory.ops.cld/artifactory/ThirdParty/COTS/android/android-ndk/r${NDK_REV}/android-ndk-r${NDK_REV}-$(uname -s | tr '[A-Z]' '[a-z'])-${NDK_ARCH}.${NDK_EXT}
 else
   case "${NDK_REV}" in
-    11*)
+    11*|12*)
         echo http://dl.google.com/android/repository/android-ndk-r${NDK_REV}-$(uname -s | tr '[A-Z]' '[a-z'])-${NDK_ARCH}.${NDK_EXT}
         ;;
     *)
