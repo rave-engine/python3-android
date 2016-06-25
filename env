@@ -37,21 +37,25 @@ export MAKEOPTS_EXTRA=""
 #  curses - enable the curses module (builds ncursesw).
 #  sqlite3 - enable the sqlite3 module (builds SQLite).
 #  gdbm - enable the dbm/gdbm modules (builds GDBM).
-export PYTHON_OPTIONAL_MODULES="ssl curses readline sqlite3 bz2 lzma gdbm"
+export PYTHON_OPTIONAL_MODULES="ssl curses readline sqlite3 bz2 lzma"
+#  GDBM is currently broken due to buggy libtool with clang
 export PYTHON_HOST_BUILD=no
 
 # Do no touch unless you know what you are doing.
 case "${ANDROID_PLATFORM}" in
   arm)
       export ANDROID_TARGET=arm-linux-androideabi
+      export LLVM_TARGET=armv7-none-linux-androideabi
       export ANDROID_TOOLCHAIN="arm-linux-androideabi-${ANDROID_COMPILER}"
       ;;
   mips)
       export ANDROID_TARGET=mipsel-linux-android
+      export LLVM_TARGET=mipsel-none-linux-android
       export ANDROID_TOOLCHAIN="mipsel-linu-android-${ANDROID_COMPILER}"
       ;;
   x86)
       export ANDROID_TARGET=i686-linux-android
+      export LLVM_TARGET=i686-none-linux-android
       export ANDROID_TOOLCHAIN="x86-${ANDROID_COMPILER}"
       ;;
   *)
