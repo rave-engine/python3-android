@@ -58,7 +58,7 @@ $(eval $(call formula,sqlite,3.13.0))
 python_sqlite3: sqlite
 
 # Python (g)dbm support.
-$(eval $(call formula,gdbm,1.11))
+$(eval $(call formula,gdbm,1.12))
 python_gdbm: gdbm
 
 
