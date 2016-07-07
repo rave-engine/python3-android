@@ -37,7 +37,7 @@ export MAKEOPTS_EXTRA=""
 #  curses - enable the curses module (builds ncursesw).
 #  sqlite3 - enable the sqlite3 module (builds SQLite).
 #  gdbm - enable the dbm/gdbm modules (builds GDBM).
-export PYTHON_OPTIONAL_MODULES="ssl curses readline sqlite3 bz2 lzma"
+export PYTHON_OPTIONAL_MODULES="ssl curses readline sqlite3 bz2 lzma gdbm"
 #  GDBM is currently broken due to buggy libtool with clang
 export PYTHON_HOST_BUILD=no
 
