@@ -5,9 +5,6 @@ tar -xf "${PACKAGE}.tar.gz" || exit 1
 pushd "${PACKAGE}" >/dev/null
 
 patch -p1 < "${FILESDIR}/fix-bash-syntax-error.patch"
-patch -p1 < "${FILESDIR}/cc_c_o_check.patch"
-# Patch ./configure directly instead of running autoreconf as ncurses uses a
-# patched version of autotools
 ./configure \
     --prefix="${PREFIX}" \
     --host="${TARGET}" \
@@ -25,7 +22,9 @@ patch -p1 < "${FILESDIR}/cc_c_o_check.patch"
     --without-shlib-version \
     --without-cxx-binding \
     --enable-overwrite \
-    --without-curses-h || exit 1
+    --without-curses-h \
+    --with-warnings || exit 1
+
 make || exit 1
 make install || exit 1
 
