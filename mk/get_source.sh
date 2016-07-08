@@ -6,14 +6,24 @@ fi
 source_file=$(cat "$source_manifest")
 src_prefix="src/"
 
-if [[ "$source_file" == hg+* ]] ; then
+if [[ "$source_file" == hg+* || "$source_file" == git+* ]] ; then
     pushd "$src_prefix"
     dest=$(basename "$source_file")
-    if [ -d "$dest" ] ; then
-        cd $dest
-        hg pull -u
+    if [[ "$source_file" == hg+* ]] ; then
+        if [ -d "$dest" ] ; then
+            cd $dest
+            hg pull -u
+        else
+            hg clone ${source_file:3} "$dest"
+        fi
     else
-        hg clone ${source_file:3} "$dest"
+        if [ -d "$dest" ] ; then
+            cd $dest
+            git fetch --tags origin
+            git merge origin/master
+        else
+            git clone ${source_file:4} "$dest"
+        fi
     fi
     popd
 else
