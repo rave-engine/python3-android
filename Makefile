@@ -61,6 +61,10 @@ python_sqlite3: sqlite
 $(eval $(call formula,gdbm,1.12))
 python_gdbm: gdbm
 
+# Python ctypes/libffi support
+$(eval $(call formula,libffi,git))
+python_libffi: libffi
+
 
 ## Cleaning.
 

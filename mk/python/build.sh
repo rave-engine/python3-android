@@ -22,10 +22,21 @@ patch -p1  < "${FILESDIR}/python-misc.patch" || exit 1
 patch -p1  < "${FILESDIR}/android-misc.patch" || exit 1
 patch -p1  < "${FILESDIR}/android-l-pie.patch" || exit 1
 
+rm -rf Modules/_ctypes/{darwin,libffi}*
+
 autoreconf --install --verbose --force
 
 mkdir build-target && pushd build-target
-../configure PATH="$(pwd)/../build-host:$PATH" CONFIG_SITE="$(pwd)/../config.site" --prefix="${PREFIX}" --host="${TARGET}" --build="${HOST}" --disable-ipv6 --enable-shared --without-ensurepip || exit 1
+PATH="$(pwd)/../build-host:$PATH" \
+CONFIG_SITE="$(pwd)/../config.site" \
+../configure \
+    --prefix="${PREFIX}" \
+    --host="${TARGET}" \
+    --build="${HOST}" \
+    --disable-ipv6 \
+    --enable-shared \
+    --without-ensurepip \
+    --with-system-ffi || exit 1
 make PATH="$(pwd)/../build-host:$PATH" || exit 1
 make PATH="$(pwd)/../build-host:$PATH" altinstall || exit 1
 

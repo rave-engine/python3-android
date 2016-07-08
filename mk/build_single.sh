@@ -62,6 +62,8 @@ export VERSION="$2"
 export PACKAGE="${NAME}-${VERSION}"
 export FILESDIR="${BASE}/mk/${NAME}"
 
+export PKG_CONFIG_LIBDIR="${PREFIX}/lib/pkgconfig"
+
 pushd "${BASE}" > /dev/null
 . "${FILESDIR}/build.sh" || exit 1
 popd > /dev/null
