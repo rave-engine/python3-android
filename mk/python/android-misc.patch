@@ -78,41 +78,6 @@ diff -ru Python-3.3.5/Lib/subprocess.py Python-3.3.5-android/Lib/subprocess.py
 
              if executable is None:
                  executable = args[0]
-diff -ru Python-3.3.5/Lib/test/test_subprocess.py Python-3.3.5-android/Lib/test/test_subprocess.py
---- Python-3.3.5/Lib/test/test_subprocess.py	2014-03-09 09:40:19.000000000 +0100
-+++ Python-3.3.5-android/Lib/test/test_subprocess.py	2014-08-04 22:19:36.000000000 +0200
-@@ -17,6 +17,7 @@
- import shutil
- import gc
- import textwrap
-+import platform
-
- try:
-     import resource
-@@ -1356,7 +1357,10 @@
-         fd, fname = mkstemp()
-         # reopen in text mode
-         with open(fd, "w", errors="surrogateescape") as fobj:
--            fobj.write("#!/bin/sh\n")
-+            if platform.android_ver()[0]:
-+                fobj.write('#!/system/bin/sh\n')
-+            else:
-+                fobj.write("#!/bin/sh\n")
-             fobj.write("exec '%s' -c 'import sys; sys.exit(47)'\n" %
-                        sys.executable)
-         os.chmod(fname, 0o700)
-@@ -1401,7 +1405,10 @@
-         fd, fname = mkstemp()
-         # reopen in text mode
-         with open(fd, "w", errors="surrogateescape") as fobj:
--            fobj.write("#!/bin/sh\n")
-+            if platform.android_ver()[0]:
-+                fobj.write('#!/system/bin/sh\n')
-+            else:
-+                fobj.write("#!/bin/sh\n")
-             fobj.write("exec '%s' -c 'import sys; sys.exit(47)'\n" %
-                        sys.executable)
-         os.chmod(fname, 0o700)
 diff -ru  cpython-fac5562ae9c6/configure.ac.orig cpython-fac5562ae9c6/configure.ac
 --- cpython-fac5562ae9c6/configure.ac.orig	2015-11-24 14:19:12.000000000 +0800
 +++ cpython-fac5562ae9c6/configure.ac	2015-11-24 16:39:35.356301199 +0800
