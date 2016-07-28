@@ -9,9 +9,7 @@ export PREFIX="${ANDROID_PREFIX}/${BUILD_IDENTIFIER}"
 export HOST="${ANDROID_HOST}"
 export TARGET="${ANDROID_TARGET}"
 
-export NDK_ROOT="${BASE}/sdk/${NDK_REL}"
 export SDK_ROOT="${BASE}/sdk/${SDK_REL}"
-export NDK_PLATFORM="android-${NDK_REV}"
 export SDK_PLATFORM="android-${SDK_REV}"
 export cross="${ANDROID_TARGET}-"
 

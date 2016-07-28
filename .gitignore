@@ -1,8 +1,5 @@
 /mk/env.mk
 /build
-/build-vm
 /src/*
 !/src/.keep
-/sdk/*
-!/sdk/.keep
 /clang-bin/

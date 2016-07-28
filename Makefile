@@ -4,7 +4,7 @@ all: build
 
 # Get configuration.
 mk/env.mk: env
-	@bash --noprofile --norc -c 'source ./env; set -o posix; set' | egrep '^(ANDROID|SDK|NDK|BUILD|TEST|PYTHON)_' > $@
+	@bash --noprofile --norc -c 'source ./env; set -o posix; set' | egrep '^(ANDROID|NDK|BUILD|PYTHON)_' > $@
 -include mk/env.mk
 
 # A formula.
@@ -69,22 +69,9 @@ python_libffi: libffi
 ## Cleaning.
 
 clean: clean_generated clean_builds
-	@rm -rf "$(ANDROID_TEST_PREFIX)"
-	@rm -rf "$(ANDROID_TOOL_PREFIX)"
 
 clean_generated:
 	@find ./src -mindepth 1 -maxdepth 1 -type d -exec rm -rf "{}" \;
 
 clean_builds:
 	@rm -rf "$(ANDROID_PREFIX)"
-
-
-## Testing.
-
-test: test_setup
-	@bash --noprofile --norc mk/test.sh
-
-test_setup:
-ifeq ("$(wildcard build-vm/$(TEST_IDENTIFIER))","")
-	@bash --noprofile --norc mk/test_setup.sh
-endif
