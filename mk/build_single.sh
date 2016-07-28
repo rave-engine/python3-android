@@ -13,10 +13,6 @@ export PREFIX="${ANDROID_PREFIX}/${BUILD_IDENTIFIER}"
 export HOST="${ANDROID_HOST}"
 export TARGET="${ANDROID_TARGET}"
 
-export SDK_ROOT="${BASE}/sdk/${SDK_REL}"
-export SDK_PLATFORM="android-${SDK_REV}"
-export cross="${ANDROID_TARGET}-"
-
 SYSROOT="${ANDROID_NDK}/platforms/android-${ANDROID_API_LEVEL}/arch-${ANDROID_PLATFORM}/usr"
 LLVM_BASE_FLAGS="-target ${LLVM_TARGET} -gcc-toolchain ${TOOL_PREFIX} --sysroot ${SYSROOT}"
 
