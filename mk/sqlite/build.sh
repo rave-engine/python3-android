@@ -1,6 +1,6 @@
-./configure --prefix="${PREFIX}" --host="${TARGET}" --build="${HOST}" --disable-shared || exit 1
-make || exit 1
-make install || exit 1
+./configure --prefix="${PREFIX}" --host="${TARGET}" --build="${HOST}" --disable-shared
+make
+make install
 
 # Remove binary from premises.
-rm -f "${PREFIX}/bin/sqlite3" || exit 1
+rm -f "${PREFIX}/bin/sqlite3"

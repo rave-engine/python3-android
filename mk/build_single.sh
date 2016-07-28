@@ -4,8 +4,8 @@ set -e
 source ./env
 source "${BASE}/mk/common.sh"
 
-[[ ! -d "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}" ]] && (mkdir -p "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}" || exit 1)
-[[ ! -d "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}/include" ]] && (mkdir "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}/include" || exit 1)
+[[ ! -d "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}" ]] && mkdir -p "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}"
+[[ ! -d "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}/include" ]] && mkdir "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}/include"
 
 TOOL_PREFIX=${ANDROID_NDK}/toolchains/${ANDROID_TOOLCHAIN}/prebuilt/linux-x86_64
 CLANG_PREFIX=${ANDROID_NDK}/toolchains/llvm/prebuilt/linux-x86_64
@@ -67,6 +67,6 @@ export PKG_CONFIG_LIBDIR="${PREFIX}/lib/pkgconfig"
 
 clean_and_extract_package $NAME
 
-pushd "${BASE}/src/$(source_folder $NAME)" || exit 1
+pushd "${BASE}/src/$(source_folder $NAME)"
 bash --norc --noprofile -e "${FILESDIR}/build.sh"
 popd

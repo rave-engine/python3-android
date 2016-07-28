@@ -17,7 +17,7 @@ patch -p1 < "${FILESDIR}/fix-bash-syntax-error.patch"
     --without-cxx-binding \
     --enable-overwrite \
     --without-curses-h \
-    --with-warnings || exit 1
+    --with-warnings
 
-make || exit 1
-make install || exit 1
+make
+make install
