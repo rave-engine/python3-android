@@ -14,7 +14,6 @@ rm -rf Modules/_ctypes/{darwin,libffi}*
 autoreconf --install --verbose --force
 
 mkdir build-target && pushd build-target
-PATH="$(pwd)/../build-host:$PATH" \
 CONFIG_SITE="$(pwd)/../config.site" \
 ../configure \
     --prefix="${PREFIX}" \
@@ -24,5 +23,5 @@ CONFIG_SITE="$(pwd)/../config.site" \
     --enable-shared \
     --without-ensurepip \
     --with-system-ffi
-make PATH="$(pwd)/../build-host:$PATH"
-make PATH="$(pwd)/../build-host:$PATH" altinstall
+make
+make altinstall
