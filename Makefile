@@ -7,8 +7,11 @@ mk/env.mk: env
 	@bash --noprofile --norc -c 'source ./env; set -o posix; set' | egrep '^(ANDROID|NDK|BUILD|PYTHON)_' > $@
 -include mk/env.mk
 
+PYTHON_MODULES=
+
 # A formula.
 define formula
+PYTHON_MODULES=$(PYTHON_MODULES) $1
 $1: $1-$2
 
 $1-$2: $3
@@ -71,7 +74,10 @@ python_libffi: libffi
 clean: clean_generated clean_builds
 
 clean_generated:
-	@find ./src -mindepth 1 -maxdepth 1 -type d -exec rm -rf "{}" \;
+	mods="$(PYTHON_MODULES)" && \
+	for mod in $${mods[@]} ; do \
+		bash --norc --noprofile -e mk/clean_single.sh $$mod ; \
+	done
 
 clean_builds:
 	@rm -rf "$(ANDROID_PREFIX)"
