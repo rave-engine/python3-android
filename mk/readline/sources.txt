@@ -1,1 +1,9 @@
 https://ftp.gnu.org/gnu/readline/readline-6.3.tar.gz
+https://ftp.gnu.org/gnu/readline/readline-6.3-patches/readline63-001
+https://ftp.gnu.org/gnu/readline/readline-6.3-patches/readline63-002
+https://ftp.gnu.org/gnu/readline/readline-6.3-patches/readline63-003
+https://ftp.gnu.org/gnu/readline/readline-6.3-patches/readline63-004
+https://ftp.gnu.org/gnu/readline/readline-6.3-patches/readline63-005
+https://ftp.gnu.org/gnu/readline/readline-6.3-patches/readline63-006
+https://ftp.gnu.org/gnu/readline/readline-6.3-patches/readline63-007
+https://ftp.gnu.org/gnu/readline/readline-6.3-patches/readline63-008
