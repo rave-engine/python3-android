@@ -1,8 +1,3 @@
-pushd src/cpython || exit 1
-
-hg revert --all
-hg purge --all
-
 if test "$PYTHON_HOST_BUILD" = "yes" ; then
     # Build host components.
     mkdir build-host && pushd build-host
@@ -39,5 +34,3 @@ CONFIG_SITE="$(pwd)/../config.site" \
     --with-system-ffi || exit 1
 make PATH="$(pwd)/../build-host:$PATH" || exit 1
 make PATH="$(pwd)/../build-host:$PATH" altinstall || exit 1
-
-popd >/dev/null

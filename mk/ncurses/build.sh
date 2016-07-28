@@ -1,9 +1,3 @@
-pushd src >/dev/null
-
-rm -rf "${PACKAGE}"
-tar -xf "${PACKAGE}.tar.gz" || exit 1
-pushd "${PACKAGE}" >/dev/null
-
 patch -p1 < "${FILESDIR}/fix-bash-syntax-error.patch"
 ./configure \
     --prefix="${PREFIX}" \
@@ -27,6 +21,3 @@ patch -p1 < "${FILESDIR}/fix-bash-syntax-error.patch"
 
 make || exit 1
 make install || exit 1
-
-popd >/dev/null
-popd >/dev/null

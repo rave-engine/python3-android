@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
+set -e
+
 source ./env
+source "${BASE}/mk/common.sh"
+
 [[ ! -d "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}" ]] && (mkdir -p "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}" || exit 1)
 [[ ! -d "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}/include" ]] && (mkdir "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}/include" || exit 1)
 
@@ -57,11 +61,12 @@ export READELF="${TOOL_PREFIX}/bin/${ANDROID_TARGET}-readelf"
 
 export NAME="$1"
 export VERSION="$2"
-export PACKAGE="${NAME}-${VERSION}"
 export FILESDIR="${BASE}/mk/${NAME}"
 
 export PKG_CONFIG_LIBDIR="${PREFIX}/lib/pkgconfig"
 
-pushd "${BASE}" > /dev/null
-. "${FILESDIR}/build.sh" || exit 1
-popd > /dev/null
+clean_and_extract_package $NAME
+
+pushd "${BASE}/src/$(source_folder $NAME)" || exit 1
+bash --norc --noprofile -e "${FILESDIR}/build.sh"
+popd
