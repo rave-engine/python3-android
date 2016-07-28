@@ -1,11 +1,3 @@
-if test "$PYTHON_HOST_BUILD" = "yes" ; then
-    # Build host components.
-    mkdir build-host && pushd build-host
-    AR=ar AS=as CC=gcc CFLAGS= CPP=cpp CPPFLAGS= CXX=g++ CXXFLAGS= LD=ld LDFLAGS= RANLIB=ranlib ../configure
-    AR=ar AS=as CC=gcc CFLAGS= CPP=cpp CPPFLAGS= CXX=g++ CXXFLAGS= LD=ld LDFLAGS= RANLIB=ranlib make
-    popd
-fi
-
 # Apply patches and build target Python.
 cat > config.site <<-SITE
 	ac_cv_file__dev_ptmx=no

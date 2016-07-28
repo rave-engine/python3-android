@@ -27,8 +27,6 @@ export MAKEOPTS_EXTRA=""
 #  gdbm - enable the dbm/gdbm modules (builds GDBM).
 #  libffi - enable the ctypes module (builds libffi)
 export PYTHON_OPTIONAL_MODULES="ssl curses readline sqlite3 bz2 lzma gdbm libffi"
-#  GDBM is currently broken due to buggy libtool with clang
-export PYTHON_HOST_BUILD=no
 
 # Do no touch unless you know what you are doing.
 case "${ANDROID_PLATFORM}" in
