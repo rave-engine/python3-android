@@ -56,7 +56,6 @@ export STRIP="${TOOL_PREFIX}/bin/${ANDROID_TARGET}-strip"
 export READELF="${TOOL_PREFIX}/bin/${ANDROID_TARGET}-readelf"
 
 export NAME="$1"
-export VERSION="$2"
 export FILESDIR="${BASE}/mk/${NAME}"
 
 export PKG_CONFIG_LIBDIR="${PREFIX}/lib/pkgconfig"
