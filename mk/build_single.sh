@@ -17,13 +17,9 @@ SYSROOT="${ANDROID_NDK}/platforms/android-${ANDROID_API_LEVEL}/arch-${ANDROID_PL
 LLVM_BASE_FLAGS="-target ${LLVM_TARGET} -gcc-toolchain ${TOOL_PREFIX} --sysroot ${SYSROOT}"
 
 export CPPFLAGS="-I${PREFIX}/include -DANDROID ${CPPFLAGS_EXTRA}"
-export CFLAGS="-Werror=implicit-function-declaration"
-if [ "$ANDROID_API_LEVEL" -ge 21 ] ; then
-    export CFLAGS="$CFLAGS -fPIE"
-fi
-export CFLAGS="${CFLAGS} ${CPPFLAGS_EXTRA}"
-export CXXFLAGS="${CXXFLAGS} ${CXXFLAGS_EXTRA}"
-export LDFLAGS="-L${PREFIX}/lib ${LDFLAGS_EXTRA}"
+export CFLAGS="-Werror=implicit-function-declaration -fPIE ${CPPFLAGS_EXTRA}"
+export CXXFLAGS="-fPIE ${CXXFLAGS} ${CXXFLAGS_EXTRA}"
+export LDFLAGS="-pie -L${PREFIX}/lib ${LDFLAGS_EXTRA}"
 
 CLANG_BIN="${BASE}/clang-bin"
 rm -rvf "${CLANG_BIN}"

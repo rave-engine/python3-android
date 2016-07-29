@@ -7,7 +7,6 @@ SITE
 patch -p1  < "${FILESDIR}/cross-compile.patch"
 patch -p1  < "${FILESDIR}/python-misc.patch"
 patch -p1  < "${FILESDIR}/android-misc.patch"
-patch -p1  < "${FILESDIR}/android-l-pie.patch"
 
 rm -rf Modules/_ctypes/{darwin,libffi}*
 
