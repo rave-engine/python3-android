@@ -4,8 +4,8 @@ all: build
 
 # Get configuration.
 mk/env.mk: env
-	@bash --noprofile --norc -c 'source ./env; set -o posix; set' | egrep '^(ANDROID|NDK|BUILD|PYTHON)_' > $@
--include mk/env.mk
+	@bash --noprofile --norc -c 'source ./env; set -o posix; set' | sed -e "s#'##g" | egrep '^(ANDROID|NDK|BUILD|PYTHON)_' > $@
+include mk/env.mk
 
 PYTHON_MODULES=
 
@@ -33,39 +33,31 @@ build: python_modules python
 $(eval $(call formula,python))
 
 # Optional Python modules.
-python_modules: $(foreach mod,$(subst ',,$(PYTHON_OPTIONAL_MODULES)),python_$(mod))
+python_modules: $(PYTHON_OPTIONAL_MODULES)
 
 # Python lzma support.
 $(eval $(call formula,xz))
-python_lzma: xz
 
 # Python bzip2 support.
 $(eval $(call formula,bzip2))
-python_bz2: bzip2
 
 # Python readline support.
 $(eval $(call formula,readline))
-python_readline: readline
 
 # Python SSL support.
 $(eval $(call formula,openssl))
-python_ssl: openssl
 
 # Python curses support.
 $(eval $(call formula,ncurses))
-python_curses: ncurses
 
 # Python SQLite support.
 $(eval $(call formula,sqlite))
-python_sqlite3: sqlite
 
 # Python (g)dbm support.
 $(eval $(call formula,gdbm))
-python_gdbm: gdbm
 
 # Python ctypes/libffi support
 $(eval $(call formula,libffi))
-python_libffi: libffi
 
 
 ## Cleaning.
