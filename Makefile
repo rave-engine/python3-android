@@ -62,7 +62,7 @@ $(eval $(call formula,libffi))
 
 ## Cleaning.
 
-clean: clean_generated clean_builds
+clean: clean_generated clean_builds clean_auxiliary_files
 
 clean_generated:
 	mods="$(PYTHON_MODULES)" && \
@@ -72,3 +72,6 @@ clean_generated:
 
 clean_builds:
 	@rm -rf "$(ANDROID_PREFIX)"
+
+clean_auxiliary_files:
+	rm -rvf clang-bin mk/env.mk
