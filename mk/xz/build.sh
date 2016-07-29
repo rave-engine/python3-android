@@ -3,12 +3,6 @@ patch -p1 < "${FILESDIR}/disable-so-versioning.patch"
     --prefix="${PREFIX}" \
     --host="${TARGET}" \
     --build="${HOST}" \
-    --disable-shared \
-    --disable-xz \
-    --disable-xzdec \
-    --disable-lzmadec \
-    --disable-lzmainfo \
-    --disable-lzma-links \
-    --disable-scripts
+    --disable-static
 make
 make install
