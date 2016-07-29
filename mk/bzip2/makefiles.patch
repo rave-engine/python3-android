@@ -91,7 +91,7 @@ diff -ur bzip2-1.0.6/Makefile-libbz2_so bzip2-1.0.6-p/Makefile-libbz2_so
 -	rm -f libbz2.so.1.0
 -	ln -s libbz2.so.1.0.6 libbz2.so.1.0
 +	$(CC) -shared -Wl,-soname -Wl,libbz2.so -o libbz2.so $(OBJS)
-+	$(CC) $(CFLAGS) -o bzip2-shared bzip2.c libbz2.so
++	$(CC) $(CFLAGS) $(LDFLAGS) -o bzip2-shared bzip2.c libbz2.so
  
  clean: 
  	rm -f $(OBJS) bzip2.o libbz2.so.1.0.6 libbz2.so.1.0 bzip2-shared
