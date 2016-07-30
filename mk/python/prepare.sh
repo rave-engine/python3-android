@@ -1,4 +1,3 @@
-patch -p1 < "${FILESDIR}/cross-compile.patch"
 patch -p1 < "${FILESDIR}/python-misc.patch"
 patch -p1 < "${FILESDIR}/android-misc.patch"
 
