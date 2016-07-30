@@ -97,20 +97,3 @@ diff -ru  cpython-fac5562ae9c6/configure.ac.orig cpython-fac5562ae9c6/configure.
  	  if test "$with_pydebug" != yes
            then
  	      PY3LIBRARY=libpython3.so
-
-diff -Nru Python-3.4.2/Makefile.pre.in Python-3.4.2-android/Makefile.pre.in
---- Python-3.4.2/Makefile.pre.in	2015-06-27 17:04:23.885777456 +0000
-+++ Python-3.4.2-android/Makefile.pre.in	2015-06-27 17:05:27.709777315 +0000
-@@ -585,11 +585,9 @@
- 	$(RANLIB) $@
- 
- libpython$(LDVERSION).so: $(LIBRARY_OBJS)
-+	$(BLDSHARED) -Wl,-h$(INSTSONAME) -o $(INSTSONAME) $(LIBRARY_OBJS) $(MODLIBS) $(SHLIBS) $(LIBC) $(LIBM) $(LDLAST); \
- 	if test $(INSTSONAME) != $(LDLIBRARY); then \
--		$(BLDSHARED) -Wl,-h$(INSTSONAME) -o $(INSTSONAME) $(LIBRARY_OBJS) $(MODLIBS) $(SHLIBS) $(LIBC) $(LIBM) $(LDLAST); \
- 		$(LN) -f $(INSTSONAME) $@; \
--	else \
--		$(BLDSHARED) -o $@ $(LIBRARY_OBJS) $(MODLIBS) $(SHLIBS) $(LIBC) $(LIBM) $(LDLAST); \
- 	fi
- 
- libpython3.so:	libpython$(LDVERSION).so
