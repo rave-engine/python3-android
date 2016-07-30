@@ -16,10 +16,10 @@ export TARGET="${ANDROID_TARGET}"
 SYSROOT="${ANDROID_NDK}/platforms/android-${ANDROID_API_LEVEL}/arch-${ANDROID_PLATFORM}/usr"
 LLVM_BASE_FLAGS="-target ${LLVM_TARGET} -gcc-toolchain ${TOOL_PREFIX} --sysroot ${SYSROOT}"
 
-export CPPFLAGS="-I${PREFIX}/include -DANDROID ${CPPFLAGS_EXTRA}"
+export CPPFLAGS="-I${SYSROOT}/include -I${PREFIX}/include -DANDROID ${CPPFLAGS_EXTRA}"
 export CFLAGS="-Werror=implicit-function-declaration -fPIE ${CPPFLAGS_EXTRA}"
 export CXXFLAGS="-fPIE ${CXXFLAGS} ${CXXFLAGS_EXTRA}"
-export LDFLAGS="-pie -L${PREFIX}/lib ${LDFLAGS_EXTRA}"
+export LDFLAGS="-pie -L${SYSROOT}/lib -L${PREFIX}/lib ${LDFLAGS_EXTRA}"
 
 CLANG_BIN="${BASE}/clang-bin"
 rm -rvf "${CLANG_BIN}"
