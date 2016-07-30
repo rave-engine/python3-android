@@ -81,35 +81,13 @@ diff -ru Python-3.3.5/Lib/subprocess.py Python-3.3.5-android/Lib/subprocess.py
 diff -ru  cpython-fac5562ae9c6/configure.ac.orig cpython-fac5562ae9c6/configure.ac
 --- cpython-fac5562ae9c6/configure.ac.orig	2015-11-24 14:19:12.000000000 +0800
 +++ cpython-fac5562ae9c6/configure.ac	2015-11-24 16:39:35.356301199 +0800
-@@ -858,6 +858,21 @@
- AC_SUBST(PLATDIR)
- AC_SUBST(PLATFORM_TRIPLET)
- 
-+# Test if we're running on Android.
-+AC_MSG_CHECKING(if target is Android-based)
-+AC_EGREP_CPP(yes,
-+[
-+#if __ANDROID__
-+yes
-+#endif
-+], [
-+    AC_MSG_RESULT(yes)
-+    with_android=yes
-+   ], [
-+    AC_MSG_RESULT(no)
-+    with_android=no
-+   ]
-+)
- 
- AC_MSG_CHECKING([for -Wl,--no-as-needed])
- save_LDFLAGS="$LDFLAGS"
 @@ -1109,7 +1094,14 @@
  	  LDLIBRARY='libpython$(LDVERSION).so'
  	  BLDLIBRARY='-L. -lpython$(LDVERSION)'
 	  RUNSHARED=LD_LIBRARY_PATH=`pwd`${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 -	  INSTSONAME="$LDLIBRARY".$SOVERSION
 +
-+	  if test "$with_android" != yes
++	  if [ -z "$ANDROID_API_LEVEL" ]
 +	  then
 +		INSTSONAME="$LDLIBRARY".$SOVERSION
 +	  else
