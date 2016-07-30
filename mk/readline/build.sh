@@ -1,8 +1,3 @@
-for i in {001..008} ; do
-    patch -p0 < "${BASE}/src/readline63-$i"
-done
-patch -p1 < "${FILESDIR}/build-unversioned-so.patch"
-
 # See the wcwidth() test in aclocal.m4. Tested on Android 6.0 and it's broken
 ./configure \
     bash_cv_wcwidth_broken=yes \

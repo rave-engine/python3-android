@@ -1,4 +1,3 @@
-patch -p1 < "${FILESDIR}/disable-so-versioning.patch"
 ./configure \
     --prefix="${PREFIX}" \
     --host="${TARGET}" \

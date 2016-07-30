@@ -1,7 +1,5 @@
 export CFLAGS="$CPPFLAGS $CFLAGS" 
 
-patch -p1 < "${FILESDIR}/makefiles.patch"
-
 make clean
 make bzip2recover
 make -f Makefile-libbz2_so

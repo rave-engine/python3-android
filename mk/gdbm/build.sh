@@ -1,4 +1,3 @@
-patch -p1 < "${FILESDIR}/disable-so-versioning.patch"
 autoreconf --install --verbose --symlink --force
 ./configure \
     --prefix="${PREFIX}" \

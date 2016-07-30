@@ -1,4 +1,3 @@
-patch -p1 < "${FILESDIR}/fix-bash-syntax-error.patch"
 ./configure \
     --prefix="${PREFIX}" \
     --host="${TARGET}" \

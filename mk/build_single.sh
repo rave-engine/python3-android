@@ -56,8 +56,13 @@ export FILESDIR="${BASE}/mk/${NAME}"
 
 export PKG_CONFIG_LIBDIR="${PREFIX}/lib/pkgconfig"
 
-clean_and_extract_package $NAME
+if [ -z "$SKIP_CLEAN" ] ; then
+    clean_and_extract_package $NAME
+fi
 
 pushd "${BASE}/src/$(source_folder $NAME)"
+if [ -z "$SKIP_CLEAN" -a -f "${FILESDIR}/prepare.sh" ] ; then
+    bash --norc --noprofile -e "${FILESDIR}/prepare.sh"
+fi
 bash --norc --noprofile -e "${FILESDIR}/build.sh"
 popd

@@ -42,5 +42,6 @@ clean_and_extract_package() {
     if [[ "$filename" == *.tar.* ]] ; then
         pushd "${BASE}/src"
         tar -xvf "$(source_filename $NAME)"
+        popd
     fi
 }
