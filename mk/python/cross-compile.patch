@@ -9,15 +9,3 @@ diff -ru cpython-fac5562ae9c6/Makefile.pre.in.orig cpython-fac5562ae9c6/Makefile
  	$(RUNSHARED) $(PYTHON_FOR_BUILD) $(srcdir)/setup.py install \
  	   	--prefix=$(prefix) \
  		--install-scripts=$(BINDIR) \
-diff -r 64ed56fbc5e7 configure.ac
---- a/configure.ac	Sat Jun 25 03:06:58 2016 +0000
-+++ b/configure.ac	Sat Jun 25 14:59:11 2016 +0800
-@@ -859,7 +859,7 @@
- 
- EOF
- 
--if $CPP conftest.c >conftest.out 2>/dev/null; then
-+if $CPP $CPPFLAGS conftest.c >conftest.out 2>/dev/null; then
-   PLATFORM_TRIPLET=`grep -v '^#' conftest.out | grep -v '^ *$' | tr -d ' 	'`
-   AC_MSG_RESULT([$PLATFORM_TRIPLET])
- else
