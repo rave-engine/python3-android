@@ -17,7 +17,7 @@ SYSROOT="${ANDROID_NDK}/platforms/android-${ANDROID_API_LEVEL}/arch-${ANDROID_PL
 LLVM_BASE_FLAGS="-target ${LLVM_TARGET} -gcc-toolchain ${TOOL_PREFIX} --sysroot ${SYSROOT}"
 
 export CPPFLAGS="-I${SYSROOT}/include -I${PREFIX}/include -DANDROID ${CPPFLAGS_EXTRA}"
-export CFLAGS="-Werror=implicit-function-declaration -fPIE ${CPPFLAGS_EXTRA}"
+export CFLAGS="-fPIE ${CPPFLAGS_EXTRA}"
 export CXXFLAGS="-fPIE ${CXXFLAGS} ${CXXFLAGS_EXTRA}"
 export LDFLAGS="-pie -L${SYSROOT}/lib -L${PREFIX}/lib ${LDFLAGS_EXTRA}"
 
