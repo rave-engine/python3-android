@@ -1,1 +1,1 @@
-https://ftp.gnu.org/pub/gnu/ncurses/ncurses-6.0.tar.gz
+ftp://invisible-island.net/ncurses/current/ncurses-6.0-20160820.tgz

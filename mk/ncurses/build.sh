@@ -12,7 +12,6 @@
     --with-shared \
     --without-normal \
     --without-debug \
-    --without-shlib-version \
     --without-cxx-binding \
     --enable-overwrite \
     --without-curses-h \
