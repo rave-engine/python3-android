@@ -8,7 +8,13 @@ source_filename() {
 
 source_folder() {
     filename=$(source_filename $1)
-    echo "${filename%.tar.*}"
+    if [[ "$filename" == *.tar.* ]] ; then
+        echo "${filename%.tar.*}"
+    elif [[ "$filename" == *.tgz ]] ; then
+        echo "${filename%.tgz}"
+    else
+        echo "$filename"
+    fi
 }
 
 clean_package() {
@@ -39,7 +45,7 @@ clean_and_extract_package() {
 
     filename=$(source_filename $NAME)
     echo $filename
-    if [[ "$filename" == *.tar.* ]] ; then
+    if [[ "$filename" == *.tar.* || "$filename" == *.tgz ]] ; then
         pushd "${BASE}/src"
         tar -xvf "$(source_filename $NAME)"
         popd
