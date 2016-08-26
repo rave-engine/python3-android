@@ -25,6 +25,7 @@ export LDFLAGS="-pie -L${SYSROOT}/lib -L${PREFIX}/lib ${LDFLAGS_EXTRA}"
 # TODO: figure out flags for other architectures
 case "$ANDROID_PLATFORM" in
     arm64)  export CFLAGS="$CFLAGS -fno-integrated-as";;
+    arm)    export CFLAGS="$CFLAGS -fno-integrated-as";;
 esac
 
 CLANG_BIN="${BASE}/clang-bin"
