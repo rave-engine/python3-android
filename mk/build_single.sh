@@ -67,7 +67,7 @@ if [ -z "$SKIP_CLEAN" ] ; then
     clean_and_extract_package $NAME
 fi
 
-pushd "${BASE}/src/$(source_folder $NAME)"
+pushd "${BASE}/src/$(get_source_folder $NAME)"
 if [ -z "$SKIP_CLEAN" -a -f "${FILESDIR}/prepare.sh" ] ; then
     bash --norc --noprofile -e "${FILESDIR}/prepare.sh"
 fi

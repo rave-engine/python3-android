@@ -6,7 +6,7 @@ source_filename() {
     basename $(source_url $1)
 }
 
-source_folder() {
+get_source_folder() {
     filename=$(source_filename $1)
     if [[ "$filename" == *.tar.* ]] ; then
         echo "${filename%.tar.*}"
@@ -22,18 +22,24 @@ clean_package() {
 
     url="$(source_url $NAME)"
     pushd "${BASE}/src"
+
+    source_folder="$(get_source_folder $NAME)"
+    if [[ ! -e "$source_folder" ]] ; then
+        return
+    fi
+
     if [[ "$url" == hg+* ]] ; then
-        pushd "$(source_folder $NAME)"
+        pushd "$source_folder"
         hg revert --all
         hg purge --all
         popd
     elif [[ "$url" == git+* ]] ; then
-        pushd "$(source_folder $NAME)"
+        pushd "$source_folder"
         git checkout .
         git clean -dfx
         popd
     else
-        rm -rvf "$(source_folder $NAME)"
+        rm -rvf "$source_folder"
     fi
     popd
 }
