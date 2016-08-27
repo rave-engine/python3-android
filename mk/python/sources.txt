@@ -1,2 +1,2 @@
 hg+https://hg.python.org/cpython/
-https://bugs.python.org/file44048/Port-Python-s-SSL-module-to-OpenSSL-1.1.0-2.patch
+https://bugs.python.org/file44232/Port-Python-s-SSL-module-to-OpenSSL-1.1.0-3.patch
