@@ -2,6 +2,6 @@
     --prefix="${PREFIX}" \
     --host="${TARGET}" \
     --build="${HOST}" \
-    --disable-static
+    --disable-shared
 make
 make install

@@ -9,8 +9,8 @@
     --without-termlib \
     --enable-termcap \
     --enable-widec \
-    --with-shared \
-    --without-normal \
+    --without-shared \
+    --with-normal \
     --without-debug \
     --without-cxx-binding \
     --enable-overwrite \

@@ -1,6 +1,5 @@
-diff -ur bzip2-1.0.6/Makefile bzip2-1.0.6-p/Makefile
---- bzip2-1.0.6/Makefile	2010-09-11 06:46:02.000000000 +0800
-+++ bzip2-1.0.6-p/Makefile	2016-07-30 02:55:08.823690288 +0800
+--- bzip2-1.0.6/Makefile.orig	2010-09-11 06:46:02.000000000 +0800
++++ bzip2-1.0.6/Makefile	2016-08-28 15:03:11.739254400 +0800
 @@ -15,16 +15,16 @@
  SHELL=/bin/sh
  
@@ -24,33 +23,9 @@ diff -ur bzip2-1.0.6/Makefile bzip2-1.0.6-p/Makefile
  
  
  OBJS= blocksort.o  \
-@@ -69,35 +69,29 @@
- 	cmp sample3.tst sample3.ref
- 	@cat words3
- 
--install: bzip2 bzip2recover
-+install: bzip2recover
- 	if ( test ! -d $(PREFIX)/bin ) ; then mkdir -p $(PREFIX)/bin ; fi
- 	if ( test ! -d $(PREFIX)/lib ) ; then mkdir -p $(PREFIX)/lib ; fi
- 	if ( test ! -d $(PREFIX)/man ) ; then mkdir -p $(PREFIX)/man ; fi
- 	if ( test ! -d $(PREFIX)/man/man1 ) ; then mkdir -p $(PREFIX)/man/man1 ; fi
- 	if ( test ! -d $(PREFIX)/include ) ; then mkdir -p $(PREFIX)/include ; fi
--	cp -f bzip2 $(PREFIX)/bin/bzip2
--	cp -f bzip2 $(PREFIX)/bin/bunzip2
--	cp -f bzip2 $(PREFIX)/bin/bzcat
-+	ln -s -f bzip2 $(PREFIX)/bin/bunzip2
-+	ln -s -f bzip2 $(PREFIX)/bin/bzcat
- 	cp -f bzip2recover $(PREFIX)/bin/bzip2recover
--	chmod a+x $(PREFIX)/bin/bzip2
--	chmod a+x $(PREFIX)/bin/bunzip2
--	chmod a+x $(PREFIX)/bin/bzcat
- 	chmod a+x $(PREFIX)/bin/bzip2recover
- 	cp -f bzip2.1 $(PREFIX)/man/man1
- 	chmod a+r $(PREFIX)/man/man1/bzip2.1
- 	cp -f bzlib.h $(PREFIX)/include
- 	chmod a+r $(PREFIX)/include/bzlib.h
--	cp -f libbz2.a $(PREFIX)/lib
--	chmod a+r $(PREFIX)/lib/libbz2.a
+@@ -90,14 +90,14 @@
+ 	cp -f libbz2.a $(PREFIX)/lib
+ 	chmod a+r $(PREFIX)/lib/libbz2.a
  	cp -f bzgrep $(PREFIX)/bin/bzgrep
 -	ln -s -f $(PREFIX)/bin/bzgrep $(PREFIX)/bin/bzegrep
 -	ln -s -f $(PREFIX)/bin/bzgrep $(PREFIX)/bin/bzfgrep
@@ -67,31 +42,3 @@ diff -ur bzip2-1.0.6/Makefile bzip2-1.0.6-p/Makefile
  	chmod a+x $(PREFIX)/bin/bzdiff
  	cp -f bzgrep.1 bzmore.1 bzdiff.1 $(PREFIX)/man/man1
  	chmod a+r $(PREFIX)/man/man1/bzgrep.1
-diff -ur bzip2-1.0.6/Makefile-libbz2_so bzip2-1.0.6-p/Makefile-libbz2_so
---- bzip2-1.0.6/Makefile-libbz2_so	2010-09-11 07:07:52.000000000 +0800
-+++ bzip2-1.0.6-p/Makefile-libbz2_so	2016-07-30 02:51:00.840348667 +0800
-@@ -22,9 +22,9 @@
- 
- 
- SHELL=/bin/sh
--CC=gcc
-+CC?=gcc
- BIGFILES=-D_FILE_OFFSET_BITS=64
--CFLAGS=-fpic -fPIC -Wall -Winline -O2 -g $(BIGFILES)
-+CFLAGS+=-fpic -fPIC -Wall -Winline -O2 -g $(BIGFILES)
- 
- OBJS= blocksort.o  \
-       huffman.o    \
-@@ -35,10 +35,8 @@
-       bzlib.o
- 
- all: $(OBJS)
--	$(CC) -shared -Wl,-soname -Wl,libbz2.so.1.0 -o libbz2.so.1.0.6 $(OBJS)
--	$(CC) $(CFLAGS) -o bzip2-shared bzip2.c libbz2.so.1.0.6
--	rm -f libbz2.so.1.0
--	ln -s libbz2.so.1.0.6 libbz2.so.1.0
-+	$(CC) -shared -Wl,-soname -Wl,libbz2.so -o libbz2.so $(OBJS)
-+	$(CC) $(CFLAGS) $(LDFLAGS) -o bzip2-shared bzip2.c libbz2.so
- 
- clean: 
- 	rm -f $(OBJS) bzip2.o libbz2.so.1.0.6 libbz2.so.1.0 bzip2-shared
