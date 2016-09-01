@@ -1,0 +1,11 @@
+--- cpython/configure.ac.orig	2016-08-30 12:31:16.940470273 +0800
++++ cpython/configure.ac	2016-08-30 12:38:10.960458332 +0800
+@@ -78,7 +78,7 @@
+ 	    AC_MSG_ERROR([python$PACKAGE_VERSION interpreter not found])
+ 	fi
+         AC_MSG_RESULT($interp)
+-	PYTHON_FOR_BUILD='_PYTHON_PROJECT_BASE=$(abs_builddir) _PYTHON_HOST_PLATFORM=$(_PYTHON_HOST_PLATFORM) PYTHONPATH=$(shell test -f pybuilddir.txt && echo $(abs_builddir)/`cat pybuilddir.txt`:)$(srcdir)/Lib:$(srcdir)/Lib/$(PLATDIR) '$interp
++	PYTHON_FOR_BUILD='/usr/bin/env _PYTHON_PROJECT_BASE=$(abs_builddir) _PYTHON_HOST_PLATFORM=$(_PYTHON_HOST_PLATFORM) PYTHONPATH=$(shell test -f pybuilddir.txt && echo $(abs_builddir)/`cat pybuilddir.txt`:)$(srcdir)/Lib:$(srcdir)/Lib/$(PLATDIR) '$interp
+     fi
+     # Used to comment out stuff for rebuilding generated files
+     GENERATED_COMMENT='#'
