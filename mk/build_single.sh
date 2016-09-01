@@ -19,13 +19,21 @@ LLVM_BASE_FLAGS="-target ${LLVM_TARGET} -gcc-toolchain ${TOOL_PREFIX} --sysroot 
 export CPPFLAGS="-I${SYSROOT}/include -I${PREFIX}/include -DANDROID ${CPPFLAGS_EXTRA}"
 export CFLAGS="-fPIE ${CPPFLAGS_EXTRA}"
 export CXXFLAGS="-fPIE ${CXXFLAGS} ${CXXFLAGS_EXTRA}"
-export LDFLAGS="-pie -L${SYSROOT}/lib -L${PREFIX}/lib ${LDFLAGS_EXTRA}"
+export LDFLAGS="-pie -L${PREFIX}/lib ${LDFLAGS_EXTRA}"
+if [[ "$ANDROID_PLATFORM" == mips64 ]] ; then
+    # In NDK, arch-mips64 has both usr/lib and usr/lib64. The former provides
+    # 32 bit files.
+    export LDFLAGS="-L${SYSROOT}/lib64 $LDFLAGS"
+else
+    export LDFLAGS="-L${SYSROOT}/lib $LDFLAGS"
+fi
 
 # OpenSSL doesn't work without -fno-integrated-as
 # TODO: figure out flags for other architectures
 case "$ANDROID_PLATFORM" in
     arm64)  export CFLAGS="$CFLAGS -fno-integrated-as";;
     arm)    export CFLAGS="$CFLAGS -fno-integrated-as";;
+    mips)   export CFLAGS="$CFLAGS -fno-integrated-as";;
 esac
 
 CLANG_BIN="${BASE}/clang-bin"

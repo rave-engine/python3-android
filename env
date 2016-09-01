@@ -43,7 +43,12 @@ case "${ANDROID_PLATFORM}" in
   mips)
       export ANDROID_TARGET=mipsel-linux-android
       export LLVM_TARGET=mipsel-none-linux-android
-      export ANDROID_TOOLCHAIN="mipsel-linu-android-${ANDROID_COMPILER}"
+      export ANDROID_TOOLCHAIN="mipsel-linux-android-${ANDROID_COMPILER}"
+      ;;
+  mips64)
+      export ANDROID_TARGET=mips64el-linux-android
+      export LLVM_TARGET=mips64el-none-linux-android
+      export ANDROID_TOOLCHAIN="mips64el-linux-android-${ANDROID_COMPILER}"
       ;;
   x86)
       export ANDROID_TARGET=i686-linux-android
