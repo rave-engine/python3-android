@@ -20,6 +20,7 @@ Building requires:
 2. The latest Android NDK installed and environment variable ``$ANDROID_NDK`` points to its root directory.
 3. git, hg and python3.6 in $PATH
 
-Known Limitations
------------------
-1. OpenSSL does not support MIPS64. Please remove it from `env` if you build for MIPS64
+Known Issues
+------------
+
+1. Python is currently not usable. See https://bugs.python.org/issue28046
