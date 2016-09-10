@@ -3,6 +3,7 @@ case "$ANDROID_PLATFORM" in
     arm64)  openssl_target=android64-aarch64;;
     x86)    openssl_target=android-x86;;
     mips)   openssl_target=android-mips;;
+    mips64) openssl_target=android64-mips64;;
 esac
 export OPENSSL_CFLAGS="$CFLAGS"
 ./Configure "$openssl_target" no-shared --prefix="${PREFIX}" --openssldir="${PREFIX}/share"

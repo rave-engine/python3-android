@@ -34,6 +34,7 @@ case "$ANDROID_PLATFORM" in
     arm64)  export CFLAGS="$CFLAGS -fno-integrated-as";;
     arm)    export CFLAGS="$CFLAGS -fno-integrated-as";;
     mips)   export CFLAGS="$CFLAGS -fno-integrated-as";;
+    mips64) export CFLAGS="$CFLAGS -fno-integrated-as";;
 esac
 
 CLANG_BIN="${BASE}/clang-bin"
