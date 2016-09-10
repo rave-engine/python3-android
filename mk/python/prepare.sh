@@ -1,7 +1,6 @@
-patch -p1 < "${FILESDIR}/cross-compile.patch"
-patch -p1 < "${FILESDIR}/python-misc.patch"
-patch -p1 < "${FILESDIR}/android-misc.patch"
-patch -p1 < "${FILESDIR}/check-crypt.patch"
+patch -F0 -p1 -i "${FILESDIR}/python-misc.patch"
+patch -F0 -p1 -i "${FILESDIR}/android-misc.patch"
+patch -F0 -p1 -i "${FILESDIR}/check-crypt.patch"
 
 rm -rf Modules/_ctypes/{darwin,libffi}*
 

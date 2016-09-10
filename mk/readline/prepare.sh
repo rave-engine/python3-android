@@ -1,3 +1,3 @@
 for i in {001..008} ; do
-    patch -p0 < "${BASE}/src/readline63-$i"
+    patch -F0 -p0 -i "${BASE}/src/readline63-$i"
 done
