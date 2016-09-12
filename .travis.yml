@@ -1,0 +1,32 @@
+language: C
+
+dist: trusty
+sudo: required
+
+addons:
+  apt:
+    packages:
+      - texinfo
+
+install:
+  - cat travis/hgrc >> ~/.hgrc
+  - |
+      pushd $HOME
+      hg clone https://hg.python.org/cpython/
+      pushd cpython
+      ./configure --prefix=$HOME/usr
+      make
+      make install
+      popd
+      popd
+  - export PATH=$PATH:$HOME/usr/bin
+  - |
+      pushd $HOME
+      wget https://dl.google.com/android/repository/android-ndk-r12b-linux-x86_64.zip
+      unzip -q android-ndk-r12b-linux-x86_64.zip
+      mv android-ndk-r12b android-ndk
+      popd
+  - export ANDROID_NDK=$HOME/android-ndk
+
+script:
+  - make
