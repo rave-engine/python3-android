@@ -9,6 +9,7 @@ addons:
       - texinfo
 
 install:
+  - cat travis/hgrc >> ~/.hgrc
   - wget https://dl.google.com/android/repository/android-ndk-r12b-linux-x86_64.zip
   - unzip -q android-ndk-r12b-linux-x86_64.zip
   - export ANDROID_NDK=$(pwd)/android-ndk-r12b
