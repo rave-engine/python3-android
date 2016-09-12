@@ -14,19 +14,12 @@ export HOST="${ANDROID_HOST}"
 export TARGET="${ANDROID_TARGET}"
 
 SYSROOT="${ANDROID_NDK}/platforms/android-${ANDROID_API_LEVEL}/arch-${ANDROID_PLATFORM}/usr"
-LLVM_BASE_FLAGS="-target ${LLVM_TARGET} -gcc-toolchain ${TOOL_PREFIX} --sysroot ${SYSROOT}"
+LLVM_BASE_FLAGS="-target ${LLVM_TARGET} -gcc-toolchain ${TOOL_PREFIX} --sysroot=${SYSROOT}"
 
-export CPPFLAGS="-I${SYSROOT}/include -I${PREFIX}/include -DANDROID ${CPPFLAGS_EXTRA}"
-export CFLAGS="-fPIE ${CPPFLAGS_EXTRA}"
-export CXXFLAGS="-fPIE ${CXXFLAGS} ${CXXFLAGS_EXTRA}"
-export LDFLAGS="-pie -L${PREFIX}/lib ${LDFLAGS_EXTRA}"
-if [[ "$ANDROID_PLATFORM" == mips64 ]] ; then
-    # In NDK, arch-mips64 has both usr/lib and usr/lib64. The former provides
-    # 32 bit files.
-    export LDFLAGS="-L${SYSROOT}/lib64 $LDFLAGS"
-else
-    export LDFLAGS="-L${SYSROOT}/lib $LDFLAGS"
-fi
+export CPPFLAGS="${LLVM_BASE_FLAGS} -I${PREFIX}/include -DANDROID ${CPPFLAGS_EXTRA}"
+export CFLAGS="${LLVM_BASE_FLAGS} -fPIE ${CPPFLAGS_EXTRA}"
+export CXXFLAGS="${LLVM_BASE_FLAGS} -fPIE ${CXXFLAGS} ${CXXFLAGS_EXTRA}"
+export LDFLAGS="${LLVM_BASE_FLAGS} -pie -L${PREFIX}/lib ${LDFLAGS_EXTRA}"
 
 # OpenSSL doesn't work without -fno-integrated-as
 # TODO: figure out flags for other architectures
@@ -37,27 +30,9 @@ case "$ANDROID_PLATFORM" in
     mips64) export CFLAGS="$CFLAGS -fno-integrated-as";;
 esac
 
-CLANG_BIN="${BASE}/clang-bin"
-rm -rvf "${CLANG_BIN}"
-mkdir "${CLANG_BIN}"
-cat > "${CLANG_BIN}/cc" << EOF
-#!/bin/bash
-${CLANG_PREFIX}/bin/clang ${LLVM_BASE_FLAGS} "\$@"
-EOF
-cat > "${CLANG_BIN}/c++" << EOF
-#!/bin/bash
-${CLANG_PREFIX}/bin/clang++ ${LLVM_BASE_FLAGS} "\$@"
-EOF
-cat > "${CLANG_BIN}/cpp" << EOF
-#!/bin/bash
-${CLANG_PREFIX}/bin/clang -E ${LLVM_BASE_FLAGS} "\$@"
-EOF
-
-export CC="${CLANG_BIN}/cc"
-export CXX="${CLANG_BIN}/c++"
-export CPP="${CLANG_BIN}/cpp"
-chmod +x "${CC}" "${CXX}" "${CPP}"
-
+export CC="${CLANG_PREFIX}/bin/clang"
+export CXX="${CLANG_PREFIX}/bin/clang++"
+export CPP="${CLANG_PREFIX}/bin/clang -E"
 export AR="${TOOL_PREFIX}/bin/${ANDROID_TARGET}-ar"
 export AS="${TOOL_PREFIX}/bin/${ANDROID_TARGET}-ls"
 export LD="${TOOL_PREFIX}/bin/${ANDROID_TARGET}-ld"
