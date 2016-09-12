@@ -8,8 +8,6 @@ CONFIG_SITE="${FILESDIR}/config.site" \
     --host="${TARGET}" \
     --build="${HOST}" \
     --disable-ipv6 \
-    --enable-shared \
-    --without-ensurepip \
     --with-system-ffi
 make
 make altinstall
