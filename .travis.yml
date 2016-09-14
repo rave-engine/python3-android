@@ -16,7 +16,7 @@ install:
       pushd cpython
       ./configure --prefix=$HOME/usr
       make
-      make install
+      make install > /dev/null
       popd
       popd
   - export PATH=$PATH:$HOME/usr/bin
