@@ -57,6 +57,11 @@ case "${ANDROID_PLATFORM}" in
       export LLVM_TARGET=i686-none-linux-android
       export ANDROID_TOOLCHAIN="x86-${ANDROID_COMPILER}"
       ;;
+  x86_64)
+      export ANDROID_TARGET=x86_64-linux-android
+      export LLVM_TARGET=x86_64-none-linux-android
+      export ANDROID_TOOLCHAIN="x86_64-${ANDROID_COMPILER}"
+      ;;
   *)
       echo "Unknown Android platform: ${ANDROID_PLATFORM}"
       exit 1

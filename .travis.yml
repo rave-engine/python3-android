@@ -14,6 +14,7 @@ env:
   - ANDROID_PLATFORM=mips
   - ANDROID_PLATFORM=mips64
   - ANDROID_PLATFORM=x86
+  - ANDROID_PLATFORM=x86_64
 
 install:
   - cat travis/hgrc >> ~/.hgrc
