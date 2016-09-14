@@ -8,6 +8,13 @@ addons:
     packages:
       - texinfo
 
+env:
+  - ANDROID_PLATFORM=arm
+  - ANDROID_PLATFORM=arm64
+  - ANDROID_PLATFORM=mips
+  - ANDROID_PLATFORM=mips64
+  - ANDROID_PLATFORM=x86
+
 install:
   - cat travis/hgrc >> ~/.hgrc
   - |

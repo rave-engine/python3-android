@@ -5,7 +5,9 @@ export ANDROID_PREFIX="${BASE}/build"
 
 # SDKs and target platforms.
 export ANDROID_API_LEVEL=21
-export ANDROID_PLATFORM=arm64
+if [ -z "$ANDROID_PLATFORM" ] ; then
+    export ANDROID_PLATFORM=arm64
+fi
 export ANDROID_COMPILER=4.9
 export ANDROID_HOST=x86_64-pc-linux-gnu
 
