@@ -1,1 +1,1 @@
-ftp://invisible-island.net/ncurses/current/ncurses-6.0-20160910.tgz
+ftp://invisible-island.net/ncurses/current/ncurses-6.0-20160917.tgz
