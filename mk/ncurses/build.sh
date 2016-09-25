@@ -13,7 +13,6 @@
     --with-normal \
     --without-debug \
     --without-cxx-binding \
-    --enable-overwrite \
     --without-curses-h \
     --with-warnings
 
