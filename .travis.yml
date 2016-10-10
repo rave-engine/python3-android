@@ -1,4 +1,4 @@
-language: C
+language: python
 
 dist: trusty
 sudo: required
@@ -7,6 +7,9 @@ addons:
   apt:
     packages:
       - texinfo
+
+python:
+  - "nightly"
 
 env:
   - ANDROID_PLATFORM=arm
@@ -18,16 +21,6 @@ env:
 
 install:
   - cat travis/hgrc >> ~/.hgrc
-  - |
-      pushd $HOME
-      hg clone https://hg.python.org/cpython/
-      pushd cpython
-      ./configure --prefix=$HOME/usr
-      make
-      make install > /dev/null
-      popd
-      popd
-  - export PATH=$PATH:$HOME/usr/bin
   - |
       pushd $HOME
       wget https://dl.google.com/android/repository/android-ndk-r13-linux-x86_64.zip
