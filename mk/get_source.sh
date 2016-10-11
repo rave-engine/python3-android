@@ -27,6 +27,6 @@ while read source_file ; do
         fi
         popd
     else
-        wget -N -P "$src_prefix" "$source_file"
+        wget --continue -N -P "$src_prefix" "$source_file"
     fi
 done < "$source_manifest"
