@@ -71,7 +71,7 @@ clean_generated:
 	done
 
 clean_builds:
-	@rm -rf "$(ANDROID_PREFIX)"
+	rm -rf "$(ANDROID_PREFIX)"
 
 clean_auxiliary_files:
 	rm -rvf clang-bin mk/env.mk

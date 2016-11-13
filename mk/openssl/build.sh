@@ -7,6 +7,6 @@ case "$ANDROID_PLATFORM" in
     mips64) openssl_target=android64-mips64;;
 esac
 export OPENSSL_CFLAGS="$CFLAGS"
-./Configure "$openssl_target" no-shared --prefix="${PREFIX}" --openssldir="${PREFIX}/share"
+./Configure "$openssl_target" no-shared --prefix=/usr --openssldir=/etc/ssl
 make
 make install_sw

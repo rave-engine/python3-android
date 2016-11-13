@@ -1,5 +1,4 @@
 ./configure \
-    --prefix="${PREFIX}" \
     --host="${TARGET}" \
     --build="${HOST}" \
     --without-ada \

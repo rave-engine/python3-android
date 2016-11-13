@@ -5,21 +5,20 @@ source ./env
 source "${BASE}/mk/common.sh"
 
 [[ ! -d "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}" ]] && mkdir -p "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}"
-[[ ! -d "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}/include" ]] && mkdir "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}/include"
 
 TOOL_PREFIX=${ANDROID_NDK}/toolchains/${ANDROID_TOOLCHAIN}/prebuilt/linux-x86_64
 CLANG_PREFIX=${ANDROID_NDK}/toolchains/llvm/prebuilt/linux-x86_64
-export PREFIX="${ANDROID_PREFIX}/${BUILD_IDENTIFIER}"
+export DESTDIR="${ANDROID_PREFIX}/${BUILD_IDENTIFIER}"
 export HOST="${ANDROID_HOST}"
 export TARGET="${ANDROID_TARGET}"
 
 SYSROOT="${ANDROID_NDK}/platforms/android-${ANDROID_API_LEVEL}/arch-${ANDROID_PLATFORM}/usr"
 LLVM_BASE_FLAGS="-target ${LLVM_TARGET} -gcc-toolchain ${TOOL_PREFIX} --sysroot=${SYSROOT}"
 
-export CPPFLAGS="${LLVM_BASE_FLAGS} -I${PREFIX}/include -DANDROID ${CPPFLAGS_EXTRA}"
+export CPPFLAGS="${LLVM_BASE_FLAGS} -I${DESTDIR}/usr/include -DANDROID ${CPPFLAGS_EXTRA}"
 export CFLAGS="${LLVM_BASE_FLAGS} -fPIE ${CPPFLAGS_EXTRA}"
 export CXXFLAGS="${LLVM_BASE_FLAGS} -fPIE ${CXXFLAGS} ${CXXFLAGS_EXTRA}"
-export LDFLAGS="${LLVM_BASE_FLAGS} -pie -L${PREFIX}/lib ${LDFLAGS_EXTRA}"
+export LDFLAGS="${LLVM_BASE_FLAGS} -pie -L${DESTDIR}/usr/lib ${LDFLAGS_EXTRA}"
 
 # OpenSSL doesn't work without -fno-integrated-as
 # TODO: figure out flags for other architectures
@@ -45,7 +44,7 @@ export READELF="${TOOL_PREFIX}/bin/${ANDROID_TARGET}-readelf"
 export NAME="$1"
 export FILESDIR="${BASE}/mk/${NAME}"
 
-export PKG_CONFIG_LIBDIR="${PREFIX}/lib/pkgconfig"
+export PKG_CONFIG_LIBDIR="${DESTDIR}/lib/pkgconfig"
 
 if [ -z "$SKIP_CLEAN" ] ; then
     clean_and_extract_package $NAME

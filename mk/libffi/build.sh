@@ -1,7 +1,7 @@
 ./autogen.sh
 
 ./configure \
-    --prefix="${PREFIX}" \
+    --prefix=/usr \
     --host="${TARGET}" \
     --build="${HOST}" \
     --disable-shared

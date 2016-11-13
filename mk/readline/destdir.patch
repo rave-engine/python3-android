@@ -1,0 +1,13 @@
+diff --git a/Makefile.in b/Makefile.in
+index 6522573..9d3a271 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -67,7 +67,7 @@ docdir = @docdir@
+ man3dir = $(mandir)/man3
+ 
+ # Support an alternate destination root directory for package building
+-DESTDIR =
++DESTDIR ?=
+ 
+ # Programs to make tags files.
+ ETAGS = etags
