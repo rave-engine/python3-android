@@ -28,7 +28,8 @@ export MAKEOPTS_EXTRA=""
 #  sqlite - enable the sqlite3 module
 #  gdbm - enable the dbm/gdbm modules
 #  libffi - enable the ctypes module
-export PYTHON_OPTIONAL_MODULES="openssl ncurses readline sqlite bzip2 xz gdbm libffi"
+#  zlib - enable the zlib module
+export PYTHON_OPTIONAL_MODULES="openssl ncurses readline sqlite bzip2 xz gdbm libffi zlib"
 
 # Do no touch unless you know what you are doing.
 case "${ANDROID_PLATFORM}" in

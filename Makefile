@@ -59,6 +59,9 @@ $(eval $(call formula,gdbm))
 # Python ctypes/libffi support
 $(eval $(call formula,libffi))
 
+# Python zlib support
+$(eval $(call formula,zlib))
+
 
 ## Cleaning.
 
