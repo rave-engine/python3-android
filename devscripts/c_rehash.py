@@ -5,7 +5,7 @@ import sys
 
 ssl_cert_src = '/system/etc/security/cacerts'
 # This file is installed at $PREFIX/tools/
-ssl_cert_dst = join(dirname(dirname(abspath(__file__))), 'share', 'certs')
+ssl_cert_dst = join(dirname(dirname(abspath(__file__))), 'etc', 'ssl', 'certs')
 
 if len(sys.argv) == 3:
     ssl_cert_src = sys.argv[1]

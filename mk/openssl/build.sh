@@ -9,4 +9,4 @@ esac
 export OPENSSL_CFLAGS="$CFLAGS"
 ./Configure "$openssl_target" no-shared --prefix=/usr --openssldir=/etc/ssl
 make
-make install_sw
+make install_sw install_ssldirs
