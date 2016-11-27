@@ -1,1 +1,1 @@
-ftp://invisible-island.net/ncurses/current/ncurses-6.0-20161029.tgz
+git+git://ncurses.scripts.mit.edu/ncurses
