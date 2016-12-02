@@ -15,13 +15,25 @@ case $(uname -m) in
       ;;
 esac
 
+# NOTE: For newer is seems that we require to unzip
 case "${NDK_REV}" in
   10*)
       NDK_EXT=bin
+      ;;
+  13*)
+      NDK_EXT=zip
       ;;
   *)
       NDK_EXT=tar.bz2
       ;;
 esac
 
-echo http://dl.google.com/android/ndk/android-ndk-r${NDK_REV}-$(uname -s | tr '[A-Z]' '[a-z'])-${NDK_ARCH}.${NDK_EXT}
+
+case "${NDK_EXT}" in
+  zip)
+	echo http://dl.google.com/android/repository//android-ndk-r${NDK_REV}-$(uname -s | tr '[A-Z]' '[a-z'])-${NDK_ARCH}.${NDK_EXT}
+	;;
+  *)
+	echo http://dl.google.com/android/ndk/android-ndk-r${NDK_REV}-$(uname -s | tr '[A-Z]' '[a-z'])-${NDK_ARCH}.${NDK_EXT}
+	;;
+esac
