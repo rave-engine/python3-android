@@ -1,12 +1,25 @@
+source_manifest() {
+    echo "${BASE}/mk/$1/sources.json"
+}
 source_url() {
-    head -n 1 "${BASE}/mk/$1/sources.txt"
+    jq -r ".[0].url" "$(source_manifest $1)"
 }
 
 source_filename() {
     basename $(source_url $1)
 }
 
+source_protocol() {
+    jq -r ".[0].protocol" "$(source_manifest $1)"
+}
+
 get_source_folder() {
+    source_alias=$(jq -r ".[0].alias" "$(source_manifest $1)")
+    if [[ "$source_alias" != "null" ]] ; then
+        echo "$source_alias"
+        return
+    fi
+
     filename=$(source_filename $1)
     if [[ "$filename" == *.tar.* ]] ; then
         echo "${filename%.tar.*}"
@@ -21,6 +34,7 @@ clean_package() {
     local NAME=$1
 
     url="$(source_url $NAME)"
+    protocol="$(source_protocol $NAME)"
     pushd "${BASE}/src"
 
     source_folder="$(get_source_folder $NAME)"
@@ -28,12 +42,12 @@ clean_package() {
         return
     fi
 
-    if [[ "$url" == hg+* ]] ; then
+    if [[ "$protocol" == hg ]] ; then
         pushd "$source_folder"
         hg revert --all
         hg purge --all
         popd
-    elif [[ "$url" == git+* ]] ; then
+    elif [[ "$protocol" == git ]] ; then
         pushd "$source_folder"
         git checkout .
         git clean -dfx

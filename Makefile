@@ -15,7 +15,7 @@ PYTHON_MODULES=$(PYTHON_MODULES) $1
 
 $1: $2
 	$$(info Checking $1 sources...)
-	@mk/get_source.sh $1
+	python mk/get_source.py $1
 ifeq ("$$(wildcard build/.built-$(BUILD_IDENTIFIER)/$1)","")
 	$$(info Building $1...)
 	@bash --noprofile --norc mk/build_single.sh $1

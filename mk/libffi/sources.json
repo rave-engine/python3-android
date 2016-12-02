@@ -1,0 +1,8 @@
+[{
+    "url": "https://github.com/libffi/libffi",
+    "protocol": "git"
+}, {
+    "url": "https://github.com/libffi/libffi/pull/265.patch"
+}, {
+    "url": "https://github.com/libffi/libffi/pull/288.patch"
+}]

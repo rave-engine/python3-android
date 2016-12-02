@@ -1,1 +1,0 @@
-git+git://ncurses.scripts.mit.edu/ncurses

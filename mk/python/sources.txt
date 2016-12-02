@@ -1,1 +1,0 @@
-hg+https://hg.python.org/cpython/

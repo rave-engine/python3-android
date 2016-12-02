@@ -1,1 +1,0 @@
-git+http://git.savannah.gnu.org/r/readline.git
