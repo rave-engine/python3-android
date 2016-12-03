@@ -62,6 +62,11 @@ $(eval $(call formula,libffi))
 # Python zlib support
 $(eval $(call formula,zlib))
 
+# Thomas Dickey's patched autoconf, used in ncurses
+$(eval $(call formula,autoconf-ncurses))
+
+ncurses: autoconf-ncurses
+
 
 ## Cleaning.
 
