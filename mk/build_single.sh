@@ -15,10 +15,10 @@ export TARGET="${ANDROID_TARGET}"
 SYSROOT="${ANDROID_NDK}/platforms/android-${ANDROID_API_LEVEL}/arch-${ANDROID_PLATFORM}/usr"
 LLVM_BASE_FLAGS="-target ${LLVM_TARGET} -gcc-toolchain ${TOOL_PREFIX} --sysroot=${SYSROOT}"
 
-export CPPFLAGS="${LLVM_BASE_FLAGS} -I${DESTDIR}/usr/include -DANDROID ${CPPFLAGS_EXTRA}"
-export CFLAGS="${LLVM_BASE_FLAGS} -fPIE ${CPPFLAGS_EXTRA}"
-export CXXFLAGS="${LLVM_BASE_FLAGS} -fPIE ${CXXFLAGS} ${CXXFLAGS_EXTRA}"
-export LDFLAGS="${LLVM_BASE_FLAGS} -pie -L${DESTDIR}/usr/lib ${LDFLAGS_EXTRA}"
+export CPPFLAGS="-I${DESTDIR}/usr/include -DANDROID ${CPPFLAGS_EXTRA}"
+export CFLAGS="-fPIE ${CPPFLAGS_EXTRA}"
+export CXXFLAGS="-fPIE ${CXXFLAGS} ${CXXFLAGS_EXTRA}"
+export LDFLAGS="-pie -L${DESTDIR}/usr/lib ${LDFLAGS_EXTRA}"
 
 # OpenSSL doesn't work without -fno-integrated-as
 # TODO: figure out flags for other architectures
@@ -29,12 +29,12 @@ case "$ANDROID_PLATFORM" in
     mips64) export CFLAGS="$CFLAGS -fno-integrated-as";;
 esac
 
-export CC="${CLANG_PREFIX}/bin/clang"
-export CXX="${CLANG_PREFIX}/bin/clang++"
-export CPP="${CLANG_PREFIX}/bin/clang -E"
+export CC="${CLANG_PREFIX}/bin/clang ${LLVM_BASE_FLAGS}"
+export CXX="${CLANG_PREFIX}/bin/clang++ ${LLVM_BASE_FLAGS}"
+export CPP="${CLANG_PREFIX}/bin/clang -E ${LLVM_BASE_FLAGS}"
 export AR="${TOOL_PREFIX}/bin/${ANDROID_TARGET}-ar"
 export AS="${TOOL_PREFIX}/bin/${ANDROID_TARGET}-ls"
-export LD="${TOOL_PREFIX}/bin/${ANDROID_TARGET}-ld"
+export LD="${TOOL_PREFIX}/bin/${ANDROID_TARGET}-ld --sysroot=${SYSROOT}"
 export OBJCOPY="${TOOL_PREFIX}/bin/${ANDROID_TARGET}-objcopy"
 export OBJDUMP="${TOOL_PREFIX}/bin/${ANDROID_TARGET}-objdump"
 export RANLIB="${TOOL_PREFIX}/bin/${ANDROID_TARGET}-ranlib"
