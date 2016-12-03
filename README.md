@@ -3,6 +3,8 @@ Python 3 Android
 
 This is an experimental set of build scripts that will crosscompile Python 3 for an ARM Android device.
 
+**This project is not maintained anymore. Do check out [@GRRedWing's](https://github.com/GRRedWings/python3-android) and [@yan12125's](https://github.com/yan12125/python3-android) forks for a continuation of development on Python 3 for Android.**
+
 Usage
 ------
 
