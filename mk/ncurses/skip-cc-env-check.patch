@@ -1,0 +1,12 @@
+diff --git a/aclocal.m4 b/aclocal.m4
+index 4dc16ba..cfcaf3b 100644
+--- a/aclocal.m4
++++ b/aclocal.m4
+@@ -5350,7 +5350,6 @@ CF_GCC_VERSION
+ CF_ACVERSION_CHECK(2.52,
+ 	[AC_PROG_CC_STDC],
+ 	[CF_ANSI_CC_REQD])
+-CF_CC_ENV_FLAGS
+ ])dnl
+ dnl ---------------------------------------------------------------------------
+ dnl CF_PROG_CC_C_O version: 4 updated: 2016/05/21 18:08:09
