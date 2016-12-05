@@ -30,6 +30,15 @@ case "${NDK_REV}" in
            popd
       fi
       ;;
+  13*)
+      NDK_ARCHIVE="$BASE/sdk/android-ndk-r${NDK_REV}-$(uname -s | tr '[A-Z]' '[a-z]')-${NDK_ARCH}.zip"
+      if [[ ! -d "${BASE}/sdk/${NDK_REL}" ]]; then
+           # Zip archive.
+	   pushd "${BASE}/sdk"
+           unzip "${NDK_ARCHIVE}" || exit 1
+	   popd
+      fi
+      ;;
   *)
       NDK_ARCHIVE="$BASE/sdk/android-ndk-r${NDK_REV}-$(uname -s | tr '[A-Z]' '[a-z]')-${NDK_ARCH}.tar.bz2"
       if [[ ! -d "${BASE}/sdk/${NDK_REL}" ]]; then
@@ -40,6 +49,6 @@ case "${NDK_REV}" in
 esac
 
 if [[ ! -f "${ANDROID_PREFIX}/.built-ndk-${BUILD_IDENTIFIER}" ]]; then
-    ("${BASE}/sdk/${NDK_REL}/build/tools/make-standalone-toolchain.sh" --platform="android-${ANDROID_API_LEVEL}" --install-dir="${ANDROID_TOOL_PREFIX}/${BUILD_IDENTIFIER}" --toolchain="${ANDROID_TOOLCHAIN}" &&\
+    ("${BASE}/sdk/${NDK_REL}/build/tools/make-standalone-toolchain.sh" --force --platform="android-${ANDROID_API_LEVEL}" --install-dir="${ANDROID_TOOL_PREFIX}/${BUILD_IDENTIFIER}" --toolchain="${ANDROID_TOOLCHAIN}" &&\
      touch "${ANDROID_PREFIX}/.built-ndk-${BUILD_IDENTIFIER}") || exit 1
 fi
