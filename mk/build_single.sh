@@ -45,6 +45,7 @@ export NAME="$1"
 export FILESDIR="${BASE}/mk/${NAME}"
 
 export PKG_CONFIG_LIBDIR="${DESTDIR}/usr/lib/pkgconfig"
+export PKG_CONFIG_SYSROOT_DIR="${DESTDIR}"
 
 if [ -z "$SKIP_CLEAN" ] ; then
     clean_and_extract_package $NAME
