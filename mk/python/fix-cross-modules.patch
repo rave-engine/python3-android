@@ -1,0 +1,23 @@
+diff --git a/setup.py b/setup.py
+--- a/setup.py
++++ b/setup.py
+@@ -492,17 +492,18 @@ class PyBuildExt(build_ext):
+         # directories (i.e. '.' and 'Include') must be first.  See issue
+         # 10520.
+         if not cross_compiling:
+             add_dir_to_list(self.compiler.library_dirs, '/usr/local/lib')
+             add_dir_to_list(self.compiler.include_dirs, '/usr/local/include')
+         # only change this for cross builds for 3.3, issues on Mageia
+         if cross_compiling:
+             self.add_gcc_paths()
+-        self.add_multiarch_paths()
++        if not cross_compiling:
++            self.add_multiarch_paths()
+ 
+         # Add paths specified in the environment variables LDFLAGS and
+         # CPPFLAGS for header and library files.
+         # We must get the values from the Makefile and not the environment
+         # directly since an inconsistently reproducible issue comes up where
+         # the environment variable is not set even though the value were passed
+         # into configure and stored in the Makefile (issue found on OS X 10.3).
+         for env_var, arg_name, dir_list in (
