@@ -1,4 +1,6 @@
 [{
     "url": "https://hg.python.org/cpython/",
     "protocol": "hg"
+}, {
+    "url": "https://bugs.python.org/file33393/0001-setup.py-do-not-add-invalid-header-locations.patch"
 }]
