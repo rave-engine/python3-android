@@ -3,4 +3,8 @@
     "protocol": "hg"
 }, {
     "url": "https://bugs.python.org/file33393/0001-setup.py-do-not-add-invalid-header-locations.patch"
+}, {
+    "url": "http://bugs.python.org/file45785/android-locale-utf8.patch"
+}, {
+    "url": "http://bugs.python.org/file45790/ncurses-headers.patch"
 }]
