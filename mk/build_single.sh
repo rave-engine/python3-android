@@ -6,8 +6,21 @@ source "${BASE}/mk/common.sh"
 
 [[ ! -d "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}" ]] && mkdir -p "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}"
 
-TOOL_PREFIX=${ANDROID_NDK}/toolchains/${ANDROID_TOOLCHAIN}/prebuilt/linux-x86_64
-CLANG_PREFIX=${ANDROID_NDK}/toolchains/llvm/prebuilt/linux-x86_64
+UNAME=$(uname -s)
+case $UNAME in
+    Linux)
+        HOST_OS=linux
+        ;;
+    Darwin)
+        HOST_OS=darwin
+        ;;
+    *)
+        echo "Unsupported system $UNAME"
+        exit 1
+esac
+
+TOOL_PREFIX=${ANDROID_NDK}/toolchains/${ANDROID_TOOLCHAIN}/prebuilt/${HOST_OS}-x86_64
+CLANG_PREFIX=${ANDROID_NDK}/toolchains/llvm/prebuilt/${HOST_OS}-x86_64
 export DESTDIR="${ANDROID_PREFIX}/${BUILD_IDENTIFIER}"
 export HOST="${ANDROID_HOST}"
 export TARGET="${ANDROID_TARGET}"
