@@ -30,3 +30,7 @@ install:
 
 script:
   - make
+
+matrix:
+  allow_failures:
+    - env: ANDROID_PLATFORM=mips
