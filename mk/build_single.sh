@@ -28,10 +28,10 @@ export TARGET="${ANDROID_TARGET}"
 SYSROOT="${ANDROID_NDK}/platforms/android-${ANDROID_API_LEVEL}/arch-${ANDROID_PLATFORM}/usr"
 LLVM_BASE_FLAGS="-target ${LLVM_TARGET} -gcc-toolchain ${TOOL_PREFIX} --sysroot=${SYSROOT}"
 
-export CPPFLAGS="-I${DESTDIR}/usr/include -DANDROID ${CPPFLAGS_EXTRA}"
-export CFLAGS="-fPIE ${CPPFLAGS_EXTRA}"
-export CXXFLAGS="-fPIE ${CXXFLAGS} ${CXXFLAGS_EXTRA}"
-export LDFLAGS="-pie -L${DESTDIR}/usr/lib ${LDFLAGS_EXTRA}"
+export CPPFLAGS="-I${DESTDIR}/usr/include"
+export CFLAGS="-fPIE"
+export CXXFLAGS="-fPIE"
+export LDFLAGS="-pie -L${DESTDIR}/usr/lib"
 
 # OpenSSL doesn't work without -fno-integrated-as
 # TODO: figure out flags for other architectures

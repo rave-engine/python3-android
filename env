@@ -11,13 +11,6 @@ fi
 export ANDROID_COMPILER=4.9
 export ANDROID_HOST=x86_64-pc-linux-gnu
 
-# Compile flags.
-export CFLAGS_EXTRA=""
-export CPPFLAGS_EXTRA=""
-export CXXFLAGS_EXTRA=""
-export LDFLAGS_EXTRA=""
-export MAKEOPTS_EXTRA=""
-
 # Python optional modules.
 # Available:
 #  bzip2 - enable the bz2 module and the bzip2 codec
