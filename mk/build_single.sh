@@ -38,7 +38,9 @@ export LDFLAGS="-pie -L${DESTDIR}/usr/lib"
 case "$ANDROID_PLATFORM" in
     arm64)  export CFLAGS="$CFLAGS -fno-integrated-as";;
     arm)    export CFLAGS="$CFLAGS -fno-integrated-as";;
-    mips)   export CFLAGS="$CFLAGS -fno-integrated-as";;
+    # XXX -O2 is a workaround for linker failures on MIPS
+    # See https://github.com/android-ndk/ndk/issues/261
+    mips)   export CFLAGS="$CFLAGS -fno-integrated-as -O2";;
     mips64) export CFLAGS="$CFLAGS -fno-integrated-as";;
 esac
 
