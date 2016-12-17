@@ -1,0 +1,11 @@
+--- zlib-1.2.8/Makefile.in.orig	2016-12-17 21:00:26.862532665 +0800
++++ zlib-1.2.8/Makefile.in	2016-12-17 21:00:39.699199236 +0800
+@@ -26,7 +26,7 @@
+ 
+ SFLAGS=-O
+ LDFLAGS=
+-TEST_LDFLAGS=-L. libz.a
++TEST_LDFLAGS=$(LDFLAGS) -L. libz.a
+ LDSHARED=$(CC)
+ CPP=$(CC) -E
+ 
