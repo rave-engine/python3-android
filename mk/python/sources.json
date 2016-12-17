@@ -1,6 +1,4 @@
 [{
     "url": "https://hg.python.org/cpython/",
     "protocol": "hg"
-}, {
-    "url": "http://bugs.python.org/file45785/android-locale-utf8.patch"
 }]
