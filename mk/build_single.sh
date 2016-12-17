@@ -6,6 +6,11 @@ source "${BASE}/mk/common.sh"
 
 [[ ! -d "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}" ]] && mkdir -p "${ANDROID_PREFIX}/${BUILD_IDENTIFIER}"
 
+[[ -z "$ANDROID_NDK" ]] && {
+    echo Missing \$ANDROID_NDK! Abort...
+    exit 1
+}
+
 UNAME=$(uname -s)
 case $UNAME in
     Linux)
