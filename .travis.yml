@@ -30,3 +30,4 @@ install:
 
 script:
   - make
+  - python ./travis/check_cpython_modules.py
