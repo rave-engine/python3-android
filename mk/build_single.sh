@@ -35,8 +35,8 @@ export UNIFIED_SYSROOT="${ANDROID_NDK}/sysroot/usr"
 LLVM_BASE_FLAGS="-target ${LLVM_TARGET} -gcc-toolchain ${TOOL_PREFIX}"
 
 export CPPFLAGS="--sysroot=${UNIFIED_SYSROOT} -I${UNIFIED_SYSROOT}/include/${ANDROID_TARGET} -D__ANDROID_API__=${ANDROID_API_LEVEL} -I${DESTDIR}/usr/include"
-export CFLAGS="-fPIE"
-export CXXFLAGS="-fPIE"
+export CFLAGS="-fPIC -fno-integrated-as"
+export CXXFLAGS="-fPIC -fno-integrated-as"
 export LDFLAGS="--sysroot=${ARCH_SYSROOT} -pie -L${DESTDIR}/usr/lib"
 
 case "$ANDROID_PLATFORM" in
