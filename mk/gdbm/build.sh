@@ -4,5 +4,5 @@
     --build="${HOST}" \
     --enable-libgdbm-compat \
     --disable-shared
-make
+make V=1
 make install
