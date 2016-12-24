@@ -29,5 +29,5 @@ install:
   - export ANDROID_NDK=$HOME/android-ndk-r14-beta1
 
 script:
-  - python ./pybuild/main.py
+  - python -m pybuild
   - python ./pybuild/check_cpython_modules.py
