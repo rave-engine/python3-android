@@ -62,6 +62,10 @@ class Builder:
                 '-pie',
                 f'-L{self.DESTDIR}/usr/lib'
             ],
+
+            # pkg-config
+            'PKG_CONFIG_LIBDIR': f'{self.DESTDIR}/usr/lib/pkgconfig',
+            'PKG_CONFIG_SYSROOT_DIR': self.DESTDIR,
         })
         if self.ANDROID_PLATFORM == 'mips':
             self.env['CFLAGS'].append('-O2')
