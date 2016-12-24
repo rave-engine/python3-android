@@ -3,3 +3,4 @@
 /src/*
 !/src/.keep
 /clang-bin/
+*.pyc

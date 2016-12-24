@@ -2,6 +2,8 @@ import os.path
 import re
 import sys
 
+from pybuild.builder import Builder
+
 REQUIRED_MODULES = set([
     # Modules with external dependencies
     '_hashlib', '_ssl',             # depends on openssl
@@ -21,12 +23,6 @@ REQUIRED_MODULES = set([
 def main():
     topdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-    env = {}
-    with open('mk/env.mk', 'rt') as f:
-        for line in f:
-            key, val = line.strip().split('=', maxsplit=1)
-            env[key] = val
-
     py_configure_ac = os.path.join(topdir, 'src', 'cpython', 'configure.ac')
     with open(py_configure_ac, 'rt') as f:
         for line in f:
@@ -36,8 +32,7 @@ def main():
                 break
 
     built_modules = set()
-    dynload_dir = os.path.join(env['ANDROID_PREFIX'], env['BUILD_IDENTIFIER'],
-                               'usr', 'lib', 'python' + pyver, 'lib-dynload')
+    dynload_dir = Builder.BUILDDIR / 'target' / 'usr' / 'lib' / f'python{pyver}' / 'lib-dynload'
     for path, children, nodes in os.walk(dynload_dir):
         for node in nodes:
             name = node.split('.')[0]
