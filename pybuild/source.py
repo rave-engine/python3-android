@@ -1,29 +1,29 @@
 import os.path
 import shlex
-import pathlib
 from subprocess import check_call, check_output, run, PIPE
 from typing import Any, Dict, List
 
 from .package import Package
-from .util import tostring
+from .util import BASE, tostring
 
 
 class Source:
-    src_prefix = pathlib.PosixPath('src')
+    src_prefix = BASE / 'src'
 
     def __init__(self, package: Package, source_url: str):
         self.package = package
         self.source_url = source_url
         self.basename = os.path.basename(self.source_url.rstrip('/'))
 
-    @property
-    def source_dir(self):
         folder = self.basename
         for suffix in ('.tar.gz', '.tar.xz', '.tgz'):
             if folder.endswith(suffix):
                 folder = folder[:-len(suffix)]
-        dest = getattr(self, 'alias', folder)
-        return self.src_prefix / dest
+        self.dest = getattr(self, 'alias', folder)
+
+    @property
+    def source_dir(self):
+        return self.src_prefix / self.dest
 
     @staticmethod
     def _run_in_dir(cmd: List[str], cwd: str, env: Dict[str, Any], mode):
@@ -84,7 +84,7 @@ class VCSSource(Source):
 
 class GitSource(VCSSource):
     def checkout(self):
-        self.run_globally(['git', 'clone', self.source_url, self.source_dir])
+        self.run_globally(['git', 'clone', self.source_url, self.dest])
 
     def update(self):
         self.run_in_source_dir(['git', 'fetch', '--tags', 'origin'])
@@ -97,7 +97,7 @@ class GitSource(VCSSource):
 
 class MercurialSource(VCSSource):
     def checkout(self):
-        self.run_globally(['hg', 'clone', self.source_url, self.source_dir])
+        self.run_globally(['hg', 'clone', self.source_url, self.dest])
 
     def update(self):
         self.run_in_source_dir(['hg', 'pull'])
