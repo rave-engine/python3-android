@@ -2,7 +2,7 @@ import os.path
 import re
 import sys
 
-from pybuild.builder import Builder
+from .builder import Builder
 
 REQUIRED_MODULES = set([
     # Modules with external dependencies

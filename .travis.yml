@@ -30,4 +30,4 @@ install:
 
 script:
   - python -m pybuild
-  - python ./pybuild/check_cpython_modules.py
+  - python -m pybuild.check_cpython_modules
