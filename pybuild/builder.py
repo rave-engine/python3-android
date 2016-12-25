@@ -12,11 +12,9 @@ class Builder:
     def __init__(self) -> None:
         self.env = {}
 
-        ndk_path = os.getenv('ANDROID_NDK')
-        if not ndk_path:
-            raise Exception('Requires environment variable $ANDROID_NDK')
-        ANDROID_NDK = pathlib.Path(ndk_path)
         self.DESTDIR = self.BUILDDIR / 'target'
+
+        ANDROID_NDK = self._check_ndk()
 
         HOST_OS = os.uname().sysname.lower()
 
@@ -84,6 +82,17 @@ class Builder:
 
     def run(self, cmd: List[str]) -> None:
         self.source.run_in_source_dir(cmd, env=self.env)
+
+    def _check_ndk(self) -> pathlib.Path:
+        ndk_path = os.getenv('ANDROID_NDK')
+        if not ndk_path:
+            raise Exception('Requires environment variable $ANDROID_NDK')
+        ndk = pathlib.Path(ndk_path)
+
+        if not (ndk / 'sysroot').exists():
+            raise Exception('Requires Android NDK r14 beta1 or above')
+
+        return ndk
 
     def prepare(self):
         raise NotImplementedError
