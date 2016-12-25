@@ -1,15 +1,19 @@
 from ..builder import Builder
 from ..package import Package
-from ..patch import LocalPatch
-from ..source import GitSource
+from ..patch import LocalPatch, RemotePatch
+from ..source import GitSource, URLSource
 
 
 openssl = Package('openssl')
 main_repo = GitSource(openssl, 'https://github.com/openssl/openssl')
-openssl.sources = [main_repo]
+openssl.sources = [
+    main_repo,
+    URLSource(openssl, 'https://github.com/openssl/openssl/pull/2136.patch'),
+]
 openssl.patches = [
     LocalPatch(main_repo, 'fix-cflags'),
     LocalPatch(main_repo, 'destdir'),
+    RemotePatch(main_repo, '2136'),
 ]
 
 
