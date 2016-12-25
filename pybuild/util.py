@@ -27,5 +27,7 @@ def rmtree(path: Path) -> None:
     print(f'Removing {path!r}')
     try:
         shutil.rmtree(path)
+    except NotADirectoryError:
+        os.unlink(path)
     except FileNotFoundError:
         print(f'{path!r} not found, skipping...')
