@@ -39,7 +39,19 @@ python3.7m
 </pre>
    And have fun!
 
+SSL/TLS
+-------
+SSL certificates have old and new naming schemes. Android uses the old scheme yet the latest OpenSSL uses the new one. If you got ```CERTIFICATE_VERIFY_FAILED``` when using SSL/TLS in Python, you need to generating certificate names of the new scheme:
+```
+python3.7m ./python3/tools/c_rehash.py
+```
+Check SSL/TLS functionality with:
+```
+python3.7m ./python3/tools/ssl_test.py
+```
+
+
 Known Issues
 ------------
 
-1. SSL is currently broken (https://github.com/openssl/openssl/issues/2133)
+No big issues! yay
