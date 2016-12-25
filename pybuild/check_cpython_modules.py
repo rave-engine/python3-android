@@ -19,6 +19,12 @@ REQUIRED_MODULES = set([
     '_decimal'
 ])
 
+PROHIBITED_MODULES = set([
+    # Modules that are not applicable on Android
+    '_crypt',                       # Android does not have crypt()
+    'grp',                          # Android does not have getgrent()
+])
+
 
 def main():
     topdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -38,13 +44,22 @@ def main():
             name = node.split('.')[0]
             built_modules.add(name)
 
+    result = 0
     missing_modules = REQUIRED_MODULES - built_modules
     if missing_modules:
         print('Missing modules: ' + ', '.join(sorted(list(missing_modules))))
-        return 1
+        result = 1
     else:
         print('All modules are built')
-        return 0
+
+    evil_modules = built_modules & PROHIBITED_MODULES
+    if evil_modules:
+        print('Found unexpected modules: ' + ', '.join(sorted(list(evil_modules))))
+        result = 1
+    else:
+        print('No unexpected modules found')
+
+    return result
 
 
 if __name__ == '__main__':

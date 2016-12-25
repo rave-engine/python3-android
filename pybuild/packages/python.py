@@ -8,7 +8,7 @@ python = Package('python')
 main_source = MercurialSource(python, 'https://hg.python.org/cpython/')
 python.sources = [main_source]
 python.patches = [
-    LocalPatch(main_source, 'check-crypt'),
+    LocalPatch(main_source, 'prohibit-implicit-function-declarations'),
     LocalPatch(main_source, 'gdbm'),
     LocalPatch(main_source, 'decimal'),
     LocalPatch(main_source, 'ncurses-headers'),
