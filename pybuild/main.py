@@ -1,5 +1,5 @@
-import importlib
 from .env import packages
+from .package import import_package
 
 dependency = {
     'ncurses': ['autoconf_ncurses'],
@@ -16,10 +16,9 @@ def build_package(pkgname: str) -> None:
     for dep in dependency.get(pkgname, []):
         build_package(dep)
 
-    pkgmod = importlib.import_module(f'pybuild.packages.{pkgname}')
-    pkg = getattr(pkgmod, pkgname)
-
     need_prepare = False
+
+    pkg = import_package(pkgname)
 
     for src in pkg.sources:
         src.download()

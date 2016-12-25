@@ -1,5 +1,7 @@
 import os
 import pathlib
+import shutil
+from pathlib import Path
 from typing import List, Union
 
 from .env import target_arch as default_target_arch
@@ -19,3 +21,11 @@ def tostring(value: Union[List[argtype], argtype]) -> str:
 def target_arch() -> arch.Arch:
     platform_name = os.getenv('ANDROID_PLATFORM', default_target_arch)
     return getattr(arch, platform_name)()
+
+
+def rmtree(path: Path) -> None:
+    print(f'Removing {path!r}')
+    try:
+        shutil.rmtree(path)
+    except FileNotFoundError:
+        print(f'{path!r} not found, skipping...')

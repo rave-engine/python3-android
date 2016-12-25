@@ -17,6 +17,9 @@ class Builder:
 
         HOST_OS = os.uname().sysname.lower()
 
+        if HOST_OS not in ('linux', 'darwin'):
+            raise Exception(f'Unsupported system {HOST_OS}')
+
         self.ANDROID_PLATFORM = target_arch().__class__.__name__
 
         TOOL_PREFIX = (ANDROID_NDK / 'toolchains' /
@@ -67,6 +70,9 @@ class Builder:
             'PKG_CONFIG_LIBDIR': f'{self.DESTDIR}/usr/lib/pkgconfig',
             'PKG_CONFIG_SYSROOT_DIR': self.DESTDIR,
         })
+
+        # XXX -O2 is a workaround for linker failures on MIPS
+        # See https://github.com/android-ndk/ndk/issues/261
         if self.ANDROID_PLATFORM == 'mips':
             self.env['CFLAGS'].append('-O2')
 

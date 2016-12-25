@@ -20,6 +20,7 @@ class NCursesBuilder(Builder):
 
     def __init__(self):
         super(NCursesBuilder, self).__init__()
+        # Use Thomas Dickey's patched autoconf
         self.env['PATH'] = f'{self.BUILDDIR}/host/usr/bin' + os.pathsep + os.getenv('PATH')
 
     def prepare(self):

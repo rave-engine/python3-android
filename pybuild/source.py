@@ -4,7 +4,7 @@ from subprocess import check_call, check_output, run, PIPE
 from typing import Any, Dict, List
 
 from .package import Package
-from .util import BASE, tostring
+from .util import BASE, tostring, rmtree
 
 
 class Source:
@@ -15,11 +15,14 @@ class Source:
         self.source_url = source_url
         self.basename = os.path.basename(self.source_url.rstrip('/'))
 
+    @property
+    def dest(self) -> str:
         folder = self.basename
         for suffix in ('.tar.gz', '.tar.xz', '.tgz'):
             if folder.endswith(suffix):
                 folder = folder[:-len(suffix)]
-        self.dest = getattr(self, 'alias', folder)
+
+        return getattr(self, 'alias', folder)
 
     @property
     def source_dir(self):
@@ -51,6 +54,9 @@ class Source:
     def fresh(self):
         raise NotImplementedError
 
+    def clean(self):
+        raise NotImplementedError
+
 
 class URLSource(Source):
     def download(self):
@@ -68,6 +74,9 @@ class URLSource(Source):
                 continue
             return False
         return True
+
+    def clean(self):
+        rmtree(self.source_dir)
 
 
 class VCSSource(Source):
@@ -94,6 +103,10 @@ class GitSource(VCSSource):
         git_status = self.run_in_source_dir(['git', 'status', '--porcelain'], mode='result')
         return git_status.strip() == ''
 
+    def clean(self):
+        self.run_in_source_dir(['git', 'checkout', '.'])
+        self.run_in_source_dir(['git', 'clean', '-dfx'])
+
 
 class MercurialSource(VCSSource):
     def checkout(self):
@@ -106,3 +119,7 @@ class MercurialSource(VCSSource):
     def fresh(self):
         hg_status = self.run_in_source_dir(['hg', 'status'], mode='result')
         return hg_status.strip() == ''
+
+    def clean(self):
+        self.run_in_source_dir(['hg', 'revert', '--all'])
+        self.run_in_source_dir(['hg', 'purge', '--all'])
