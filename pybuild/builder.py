@@ -12,7 +12,10 @@ class Builder:
     def __init__(self) -> None:
         self.env = {}
 
-        ANDROID_NDK = pathlib.Path(os.getenv('ANDROID_NDK'))
+        ndk_path = os.getenv('ANDROID_NDK')
+        if not ndk_path:
+            raise Exception('Requires environment variable $ANDROID_NDK')
+        ANDROID_NDK = pathlib.Path(ndk_path)
         self.DESTDIR = self.BUILDDIR / 'target'
 
         HOST_OS = os.uname().sysname.lower()
