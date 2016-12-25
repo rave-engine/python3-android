@@ -1,15 +1,12 @@
-## Setup.
+PYTHON?=python3.7
 
-PYTHON=python3.7
-
-all: build
-
-## Building.
-
-build:
+all:
 	$(PYTHON) -m pybuild
-
-## Cleaning.
 
 clean:
 	$(PYTHON) -m pybuild.clean
+
+test:
+	$(PYTHON) -m pybuild.check_cpython_modules
+
+.PHONY: all clean test
