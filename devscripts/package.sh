@@ -3,13 +3,9 @@
 set -e
 set -x
 
-source ./env
-
-NAME=${BUILD_IDENTIFIER}
-
 cd build
 
-mkdir -p $NAME/tools
-cp ../devscripts/{c_rehash.py,env.sh,import_all.py} $NAME/tools
+mkdir -p target/tools
+cp ../devscripts/{c_rehash.py,env.sh,import_all.py} target/tools
 
-tar cf ${NAME}.tar $NAME
+tar cf python3-android.tar target
