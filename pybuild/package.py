@@ -14,6 +14,9 @@ class Package:
     def filesdir(self) -> pathlib.Path:
         return BASE / 'mk' / self.name
 
+    def fresh(self) -> bool:
+        return not (self.builder.source.source_dir / 'Makefile').exists()
+
 
 def import_package(pkgname: str) -> Package:
     pkgmod = importlib.import_module(f'pybuild.packages.{pkgname}')

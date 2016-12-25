@@ -9,6 +9,7 @@ from .util import BASE, tostring, rmtree
 
 class Source:
     src_prefix = BASE / 'src'
+    _TAR_SUFFIXES = ('.tar.gz', '.tar.xz', '.tgz')
 
     def __init__(self, package: Package, source_url: str):
         self.package = package
@@ -18,7 +19,7 @@ class Source:
     @property
     def dest(self) -> str:
         folder = self.basename
-        for suffix in ('.tar.gz', '.tar.xz', '.tgz'):
+        for suffix in self._TAR_SUFFIXES:
             if folder.endswith(suffix):
                 folder = folder[:-len(suffix)]
 
@@ -51,9 +52,6 @@ class Source:
     def download(self):
         raise NotImplementedError
 
-    def fresh(self):
-        raise NotImplementedError
-
     def clean(self):
         raise NotImplementedError
 
@@ -61,19 +59,10 @@ class Source:
 class URLSource(Source):
     def download(self):
         self.run_globally(['wget', '--continue', '--timestamping', self.source_url])
-        if self.fresh():
-            self.run_globally(['tar', '-xvf', self.basename])
-
-    def fresh(self):
-        if not self.source_dir.exists():
-            return True
-
-        differs = self.run_globally(['tar', '-df', self.basename], mode='result_noerror')
-        for line in differs.split('\n'):
-            if line == '' or 'Mode differs' in line or 'Uid differs' in line or 'Gid differs' in line:
-                continue
-            return False
-        return True
+        for suffix in self._TAR_SUFFIXES:
+            if self.basename.endswith(suffix):
+                self.run_globally(['tar', '-xvf', self.basename])
+                break
 
     def clean(self):
         rmtree(self.source_dir)
@@ -87,39 +76,38 @@ class VCSSource(Source):
     def download(self):
         if self.already_cloned:
             self.update()
-        else:
             self.checkout()
+        else:
+            self.clone()
 
 
 class GitSource(VCSSource):
-    def checkout(self):
+    def clone(self):
         self.run_globally(['git', 'clone', self.source_url, self.dest])
 
     def update(self):
         self.run_in_source_dir(['git', 'fetch', '--tags', 'origin'])
         self.run_in_source_dir(['git', 'merge', 'origin/master'])
 
-    def fresh(self):
-        git_status = self.run_in_source_dir(['git', 'status', '--porcelain'], mode='result')
-        return git_status.strip() == ''
-
     def clean(self):
-        self.run_in_source_dir(['git', 'checkout', '.'])
+        self.checkout()
         self.run_in_source_dir(['git', 'clean', '-dfx'])
+
+    def checkout(self):
+        self.run_in_source_dir(['git', 'checkout', '.'])
 
 
 class MercurialSource(VCSSource):
-    def checkout(self):
+    def clone(self):
         self.run_globally(['hg', 'clone', self.source_url, self.dest])
 
     def update(self):
         self.run_in_source_dir(['hg', 'pull'])
         self.run_in_source_dir(['hg', 'update', '-v'])
 
-    def fresh(self):
-        hg_status = self.run_in_source_dir(['hg', 'status'], mode='result')
-        return hg_status.strip() == ''
-
     def clean(self):
-        self.run_in_source_dir(['hg', 'revert', '--all'])
+        self.checkout()
         self.run_in_source_dir(['hg', 'purge', '--all'])
+
+    def checkout(self):
+        self.run_in_source_dir(['hg', 'revert', '--all'])

@@ -16,15 +16,12 @@ def build_package(pkgname: str) -> None:
     for dep in dependency.get(pkgname, []):
         build_package(dep)
 
-    need_prepare = False
-
     pkg = import_package(pkgname)
 
-    for src in pkg.sources:
-        src.download()
-        need_prepare = need_prepare or src.fresh()
+    if pkg.fresh():
+        for src in pkg.sources:
+            src.download()
 
-    if need_prepare:
         for patch in getattr(pkg, 'patches', []):
             patch.apply()
         try:
