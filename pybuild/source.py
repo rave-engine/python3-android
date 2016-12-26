@@ -31,7 +31,7 @@ class Source:
 
     @staticmethod
     def _run_in_dir(cmd: List[str], cwd: str, env: Dict[str, Any], mode):
-        print(f'Running in {cwd!r}: ' + ' '.join([shlex.quote(str(arg)) for arg in cmd]))
+        print(f'Running in {cwd!s}: ' + ' '.join([shlex.quote(str(arg)) for arg in cmd]))
         real_env = os.environ.copy()
         for key, value in env.items():
             real_env[key] = tostring(value)

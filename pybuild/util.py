@@ -24,10 +24,10 @@ def target_arch() -> arch.Arch:
 
 
 def rmtree(path: Path) -> None:
-    print(f'Removing {path!r}')
+    print(f'Removing {path!s}')
     try:
         shutil.rmtree(path)
     except NotADirectoryError:
         os.unlink(path)
     except FileNotFoundError:
-        print(f'{path!r} not found, skipping...')
+        print(f'{path!s} not found, skipping...')
