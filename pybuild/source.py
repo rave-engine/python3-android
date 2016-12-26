@@ -58,7 +58,12 @@ class Source:
 
 class URLSource(Source):
     def download(self):
-        self.run_globally(['wget', '--continue', '--timestamping', self.source_url])
+        target_name = self.src_prefix / self.basename
+        if not target_name.exists():
+            self.run_globally(['wget', '--continue', self.source_url])
+        else:
+            print(f'{target_name!s} already exists, skipping downloading...')
+
         for suffix in self._TAR_SUFFIXES:
             if self.basename.endswith(suffix):
                 self.run_globally(['tar', '-xvf', self.basename])
