@@ -29,7 +29,7 @@ diff --git a/configure.ac b/configure.ac
 +
 +    if test $ac_cv_enable_implicit_function_declaration_error = yes
 +    then
-+      BASECFLAGS="$BASECFLAGS -Werror=implicit-function-declaration"
++      CFLAGS_NODIST="$CFLAGS_NODIST -Werror=implicit-function-declaration"
 +    fi
 +
      # if using gcc on alpha, use -mieee to get (near) full IEEE 754
