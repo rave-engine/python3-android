@@ -1,15 +1,17 @@
-language: python
+language: generic
 
-dist: trusty
+os:
+  - linux
+  - osx
+
 sudo: required
+dist: trusty
+osx_image: xcode8.2
 
 addons:
   apt:
     packages:
       - texinfo
-
-python:
-  - "nightly"
 
 env:
   - ANDROID_PLATFORM=arm
@@ -21,10 +23,12 @@ env:
 
 install:
   - cat travis/hgrc >> ~/.hgrc
+  - source ./travis/install-python-nightly.sh
   - |
       pushd $HOME
-      wget https://dl.google.com/android/repository/android-ndk-r14-beta1-linux-x86_64.zip
-      unzip -q android-ndk-r14-beta1-linux-x86_64.zip
+      HOST_OS="$(uname | tr 'A-Z' 'a-z')"
+      wget https://dl.google.com/android/repository/android-ndk-r14-beta1-$HOST_OS-x86_64.zip
+      unzip -q android-ndk-r14-beta1-$HOST_OS-x86_64.zip
       popd
   - export ANDROID_NDK=$HOME/android-ndk-r14-beta1
 
