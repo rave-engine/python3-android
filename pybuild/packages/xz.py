@@ -4,7 +4,7 @@ from ..package import Package
 from ..util import target_arch
 
 xz = Package('xz')
-main_source = URLSource(xz, 'http://tukaani.org/xz/xz-5.2.2.tar.gz')
+main_source = URLSource(xz, 'http://tukaani.org/xz/xz-5.2.3.tar.gz')
 xz.sources = [main_source]
 
 
