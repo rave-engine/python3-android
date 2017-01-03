@@ -60,7 +60,7 @@ class URLSource(Source):
     def download(self):
         target_name = self.src_prefix / self.basename
         if not target_name.exists():
-            self.run_globally(['curl', '-v', '-O', self.source_url])
+            self.run_globally(['curl', '-v', '-L', '-O', self.source_url])
         else:
             print(f'{target_name!s} already exists, skipping downloading...')
 
