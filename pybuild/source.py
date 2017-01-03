@@ -95,6 +95,10 @@ class GitSource(VCSSource):
         self.run_in_source_dir(['git', 'merge', 'origin/master'])
 
     def clean(self):
+        if not self.already_cloned:
+            print(f'{self.dest} not cloned yet, skipping...')
+            return
+
         self.checkout()
         self.run_in_source_dir(['git', 'clean', '-dfx'])
 
