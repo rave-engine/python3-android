@@ -4,7 +4,7 @@ from ..package import Package
 from ..util import target_arch
 
 sqlite = Package('sqlite')
-main_source = URLSource(sqlite, 'https://www.sqlite.org/2016/sqlite-autoconf-3150200.tar.gz')
+main_source = URLSource(sqlite, 'https://www.sqlite.org/2017/sqlite-autoconf-3160000.tar.gz')
 sqlite.sources = [main_source]
 
 
