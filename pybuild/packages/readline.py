@@ -1,19 +1,23 @@
 from ..builder import Builder
-from ..source import GitSource
+from ..source import URLSource
 from ..package import Package
-from ..patch import LocalPatch
+from ..patch import LocalPatch, RemotePatch
 from ..util import target_arch
 
 readline = Package('readline')
-main_repo = GitSource(readline, 'http://git.savannah.gnu.org/r/readline.git')
-readline.sources = [main_repo]
+main_source = URLSource(readline, 'ftp://ftp.cwru.edu/pub/bash/readline-7.0.tar.gz')
+readline.sources = [
+    main_source,
+    URLSource(readline, 'ftp://ftp.cwru.edu/pub/bash/readline-7.0-patches/readline70-001'),
+]
 readline.patches = [
-    LocalPatch(main_repo, 'destdir'),
+    LocalPatch(main_source, 'destdir'),
+    RemotePatch(main_source, 'readline70-001', strip=0),
 ]
 
 
 class ReadlineBuilder(Builder):
-    source = main_repo
+    source = main_source
 
     def prepare(self):
         # See the wcwidth() test in aclocal.m4. Tested on Android 6.0 and it's broken
