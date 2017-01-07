@@ -1,8 +1,8 @@
 diff --git a/Configurations/10-main.conf b/Configurations/10-main.conf
-index 59234a8a5..51ee7c8e0 100644
+index 59234a8a5..968ff3d58 100644
 --- a/Configurations/10-main.conf
 +++ b/Configurations/10-main.conf
-@@ -904,12 +904,12 @@ sub vms_info {
+@@ -904,12 +904,13 @@ sub vms_info {
          # systems are perfectly capable of executing binaries targeting
          # Froyo. Keep in mind that in the nutshell Android builds are
          # about JNI, i.e. shared libraries, not applications.
@@ -10,6 +10,7 @@ index 59234a8a5..51ee7c8e0 100644
 -        bin_cflags       => "-pie",
 +        cflags           => add(picker(default => "-fno-integrated-as -D__ANDROID_API__=\$(ANDROID_API_LEVEL) -fPIC --sysroot=\$(UNIFIED_SYSROOT) -Wa,--noexecstack")),
 +        bin_cflags       => "-pie --sysroot=\$(ARCH_SYSROOT)",
++        shared_ldflag    => "-pie --sysroot=\$(ARCH_SYSROOT)",
      },
      "android-x86" => {
          inherit_from     => [ "android", asm("x86_asm") ],
@@ -18,7 +19,7 @@ index 59234a8a5..51ee7c8e0 100644
          bn_ops           => "BN_LLONG",
          perlasm_scheme   => "android",
      },
-@@ -936,23 +936,27 @@ sub vms_info {
+@@ -936,23 +937,28 @@ sub vms_info {
      #
      "android-armeabi" => {
          inherit_from     => [ "android", asm("armv4_asm") ],
@@ -36,6 +37,7 @@ index 59234a8a5..51ee7c8e0 100644
 -        bin_cflags       => "-pie",
 +        cflags           => add(picker(default => "-fno-integrated-as -D__ANDROID_API__=\$(ANDROID_API_LEVEL) -fPIC --sysroot=\$(UNIFIED_SYSROOT) -Wa,--noexecstack")),
 +        bin_cflags       => "-pie --sysroot=\$(ARCH_SYSROOT)",
++        shared_ldflag    => "-pie --sysroot=\$(ARCH_SYSROOT)",
      },
      "android64-aarch64" => {
          inherit_from     => [ "android64", asm("aarch64_asm") ],
@@ -48,7 +50,7 @@ index 59234a8a5..51ee7c8e0 100644
          perlasm_scheme   => "elf",
      },
      "android64-mips64" => {
-@@ -966,6 +970,7 @@ sub vms_info {
+@@ -966,6 +972,7 @@ sub vms_info {
          # prior versions original MIPS binary code will fail.
          #
          inherit_from     => [ "android64", asm("mips64_asm") ],
