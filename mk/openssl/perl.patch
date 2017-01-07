@@ -1,0 +1,13 @@
+diff --git a/Configurations/unix-Makefile.tmpl b/Configurations/unix-Makefile.tmpl
+index 84ceb7636..7bfd9fef1 100644
+--- a/Configurations/unix-Makefile.tmpl
++++ b/Configurations/unix-Makefile.tmpl
+@@ -187,7 +187,7 @@ DSO_LDFLAGS=$(LIB_LDFLAGS)
+ BIN_CFLAGS={- $target{bin_cflags} -}
+ BIN_CXXFLAGS={- $target{bin_cxxflag} || "" -}
+ 
+-PERL={- $config{perl} -}
++PERL?={- $config{perl} -}
+ 
+ ARFLAGS= {- $target{arflags} -}
+ AR=$(CROSS_COMPILE){- $target{ar} || "ar" -} $(ARFLAGS) r

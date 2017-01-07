@@ -12,6 +12,8 @@ openssl.sources = [
 openssl.patches = [
     LocalPatch(main_repo, 'fix-cflags'),
     LocalPatch(main_repo, 'destdir'),
+    LocalPatch(main_repo, 'sh'),
+    LocalPatch(main_repo, 'perl'),
 ]
 
 
@@ -26,6 +28,12 @@ class OpenSSLBuilder(Builder):
     }
 
     source = main_repo
+
+    def __init__(self):
+        super(OpenSSLBuilder, self).__init__()
+
+        self.env['HASHBANGPERL'] = '/system/bin/env perl'
+        self.env['HASHBANGSH'] = '/system/bin/sh'
 
     def prepare(self):
         openssl_target = self.OPENSSL_TARGETS[self.ANDROID_PLATFORM]
