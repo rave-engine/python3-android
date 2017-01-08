@@ -11,9 +11,7 @@ openssl.sources = [
 ]
 openssl.patches = [
     LocalPatch(main_repo, 'fix-cflags'),
-    LocalPatch(main_repo, 'destdir'),
     LocalPatch(main_repo, 'sh'),
-    LocalPatch(main_repo, 'perl'),
 ]
 
 
@@ -42,7 +40,7 @@ class OpenSSLBuilder(Builder):
 
     def build(self):
         self.run(['make'])
-        self.run(['make', 'install_sw', 'install_ssldirs'])
+        self.run(['make', 'install_sw', 'install_ssldirs', f'DESTDIR={self.DESTDIR}'])
 
 
 openssl.builder = OpenSSLBuilder()
