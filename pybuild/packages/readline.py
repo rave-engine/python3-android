@@ -1,7 +1,7 @@
 from ..builder import Builder
 from ..source import URLSource
 from ..package import Package
-from ..patch import LocalPatch, RemotePatch
+from ..patch import RemotePatch
 from ..util import target_arch
 
 readline = Package('readline')
@@ -11,7 +11,6 @@ readline.sources = [
     URLSource(readline, 'ftp://ftp.cwru.edu/pub/bash/readline-7.0-patches/readline70-001'),
 ]
 readline.patches = [
-    LocalPatch(main_source, 'destdir'),
     RemotePatch(main_source, 'readline70-001', strip=0),
 ]
 
@@ -31,7 +30,7 @@ class ReadlineBuilder(Builder):
 
     def build(self):
         self.run(['make'])
-        self.run(['make', 'install'])
+        self.run(['make', 'install', f'DESTDIR={self.DESTDIR}'])
 
 
 readline.builder = ReadlineBuilder()
