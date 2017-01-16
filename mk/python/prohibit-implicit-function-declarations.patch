@@ -1,7 +1,7 @@
 diff --git a/configure.ac b/configure.ac
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1672,16 +1672,38 @@ yes)
+@@ -1684,16 +1684,36 @@ yes)
          test -z "`$CC --version 2>/dev/null | grep 'Free Software Foundation'`"
      then
        BASECFLAGS="$BASECFLAGS -Wunreachable-code"
@@ -13,7 +13,6 @@ diff --git a/configure.ac b/configure.ac
 +    AC_MSG_CHECKING(if we can make implicit function declaration an error in $CC)
 +     ac_save_cc="$CC"
 +     CC="$CC -Werror=implicit-function-declaration"
-+     save_CFLAGS="$CFLAGS"
 +     AC_CACHE_VAL(ac_cv_enable_implicit_function_declaration_error,
 +       AC_COMPILE_IFELSE(
 +         [
@@ -23,7 +22,6 @@ diff --git a/configure.ac b/configure.ac
 +	 ],[
 +           ac_cv_enable_implicit_function_declaration_error=no
 +	 ]))
-+     CFLAGS="$save_CFLAGS"
 +     CC="$ac_save_cc"
 +    AC_MSG_RESULT($ac_cv_enable_implicit_function_declaration_error)
 +
