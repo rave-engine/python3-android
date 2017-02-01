@@ -93,13 +93,13 @@ diff --git a/Modules/_cursesmodule.c b/Modules/_cursesmodule.c
  #define STRICT_SYSV_CURSES
  #endif
  
-@@ -914,17 +914,17 @@ PyCursesWindow_Box(PyCursesWindowObject 
+@@ -911,17 +911,17 @@ PyCursesWindow_Box(PyCursesWindowObject 
+     default:
          if (!PyArg_ParseTuple(args,"ll;vertint,horint", &ch1, &ch2))
              return NULL;
      }
      box(self->win,ch1,ch2);
-     Py_INCREF(Py_None);
-     return Py_None;
+     Py_RETURN_NONE;
  }
  
 -#if defined(HAVE_NCURSES_H) || defined(MVWDELCH_IS_EXPRESSION)
@@ -112,7 +112,7 @@ diff --git a/Modules/_cursesmodule.c b/Modules/_cursesmodule.c
      /* On HP/UX, mvwdelch already returns. On other systems,
         we may well run into this return statement. */
      return 0;
-@@ -2450,17 +2450,17 @@ PyCurses_InitScr(PyObject *self)
+@@ -2442,17 +2442,17 @@ PyCurses_InitScr(PyObject *self)
      SetDictInt("ACS_LRCORNER",      (ACS_LRCORNER));
      SetDictInt("ACS_LTEE",          (ACS_LTEE));
      SetDictInt("ACS_RTEE",          (ACS_RTEE));
@@ -134,7 +134,7 @@ diff --git a/Modules/_cursesmodule.c b/Modules/_cursesmodule.c
 diff --git a/configure.ac b/configure.ac
 --- a/configure.ac
 +++ b/configure.ac
-@@ -4883,86 +4883,95 @@ st.st_mtimespec.tv_nsec = 1;
+@@ -4930,86 +4930,95 @@ st.st_mtimespec.tv_nsec = 1;
  AC_MSG_RESULT($ac_cv_stat_tv_nsec2)
  if test "$ac_cv_stat_tv_nsec2" = yes
  then
@@ -245,7 +245,7 @@ diff --git a/configure.ac b/configure.ac
 diff --git a/setup.py b/setup.py
 --- a/setup.py
 +++ b/setup.py
-@@ -1345,18 +1345,16 @@ class PyBuildExt(build_ext):
+@@ -1346,18 +1346,16 @@ class PyBuildExt(build_ext):
  
          # Curses support, requiring the System V version of curses, often
          # provided by the ncurses library.

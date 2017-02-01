@@ -9,4 +9,4 @@ index 4dc16ba..cfcaf3b 100644
 -CF_CC_ENV_FLAGS
  ])dnl
  dnl ---------------------------------------------------------------------------
- dnl CF_PROG_CC_C_O version: 4 updated: 2016/05/21 18:08:09
+ dnl CF_PROG_CC_C_O version: 5 updated: 2017/01/21 11:06:25
