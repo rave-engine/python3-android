@@ -9,9 +9,13 @@ main_source = URLSource(readline, 'ftp://ftp.cwru.edu/pub/bash/readline-7.0.tar.
 readline.sources = [
     main_source,
     URLSource(readline, 'ftp://ftp.cwru.edu/pub/bash/readline-7.0-patches/readline70-001'),
+    URLSource(readline, 'ftp://ftp.cwru.edu/pub/bash/readline-7.0-patches/readline70-002'),
+    URLSource(readline, 'ftp://ftp.cwru.edu/pub/bash/readline-7.0-patches/readline70-003'),
 ]
 readline.patches = [
     RemotePatch(main_source, 'readline70-001', strip=0),
+    RemotePatch(main_source, 'readline70-002', strip=0),
+    RemotePatch(main_source, 'readline70-003', strip=0),
 ]
 
 
