@@ -13,6 +13,8 @@ python.patches = [
     LocalPatch(main_source, 'decimal'),
     LocalPatch(main_source, 'ncurses-headers'),
     LocalPatch(main_source, 'distutils-android-sysroot'),
+    LocalPatch(main_source, 'nl_langinfo'),
+    LocalPatch(main_source, 'detect_macros'),
 ]
 
 

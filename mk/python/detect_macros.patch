@@ -1,0 +1,50 @@
+diff --git a/setup.py b/setup.py
+--- a/setup.py
++++ b/setup.py
+@@ -503,17 +503,18 @@ class PyBuildExt(build_ext):
+         # CPPFLAGS for header and library files.
+         # We must get the values from the Makefile and not the environment
+         # directly since an inconsistently reproducible issue comes up where
+         # the environment variable is not set even though the value were passed
+         # into configure and stored in the Makefile (issue found on OS X 10.3).
+         for env_var, arg_name, dir_list in (
+                 ('LDFLAGS', '-R', self.compiler.runtime_library_dirs),
+                 ('LDFLAGS', '-L', self.compiler.library_dirs),
+-                ('CPPFLAGS', '-I', self.compiler.include_dirs)):
++                ('CPPFLAGS', '-I', self.compiler.include_dirs),
++                ('CPPFLAGS', '-D', self.compiler.macros)):
+             env_val = sysconfig.get_config_var(env_var)
+             if env_val:
+                 # To prevent optparse from raising an exception about any
+                 # options in env_val that it doesn't know about we strip out
+                 # all double dashes and any dashes followed by a character
+                 # that is not for the option we are dealing with.
+                 #
+                 # Please note that order of the regex is important!  We must
+@@ -525,18 +526,24 @@ class PyBuildExt(build_ext):
+                 parser = optparse.OptionParser()
+                 # Make sure that allowing args interspersed with options is
+                 # allowed
+                 parser.allow_interspersed_args = True
+                 parser.error = lambda msg: None
+                 parser.add_option(arg_name, dest="dirs", action="append")
+                 options = parser.parse_args(env_val.split())[0]
+                 if options.dirs:
+-                    for directory in reversed(options.dirs):
+-                        add_dir_to_list(dir_list, directory)
++                    if arg_name == '-D':
++                        for macro in options.dirs:
++                            macro_pair = macro.split('=', maxsplit=1)
++                            self.compiler.macros.append((macro_pair[0],
++                                                         macro_pair[1] if len(macro_pair) > 1 else None))
++                    else:
++                        for directory in reversed(options.dirs):
++                            add_dir_to_list(dir_list, directory)
+ 
+         if (not cross_compiling and
+                 os.path.normpath(sys.base_prefix) != '/usr' and
+                 not sysconfig.get_config_var('PYTHONFRAMEWORK')):
+             # OSX note: Don't add LIBDIR and INCLUDEDIR to building a framework
+             # (PYTHONFRAMEWORK is set) to avoid # linking problems when
+             # building a framework with different architectures than
+             # the one that is currently installed (issue #7473)
