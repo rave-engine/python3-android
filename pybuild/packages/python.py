@@ -13,7 +13,7 @@ python.sources = [
     # http://bugs.python.org/issue29436
     URLSource(python, 'http://bugs.python.org/file46503/nl_langinfo.patch'),
     # http://bugs.python.org/issue29440
-    URLSource(python, 'http://bugs.python.org/file46507/gdbm.patch'),
+    URLSource(python, 'http://bugs.python.org/file46517/gdbm.patch'),
 ]
 python.patches = [
     RemotePatch(main_source, 'prohibit-implicit-function-declarations'),
