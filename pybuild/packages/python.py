@@ -22,9 +22,11 @@ python.patches = [
     RemotePatch(main_source, 'gdbm'),
     RemotePatch(main_source, 'decimal'),
     LocalPatch(main_source, 'ncurses-headers'),
-    LocalPatch(main_source, 'distutils-android-sysroot'),
     RemotePatch(main_source, 'nl_langinfo'),
+    # The order of three patches below is important!
+    LocalPatch(main_source, 'setup-argparse'),
     LocalPatch(main_source, 'detect_macros'),
+    LocalPatch(main_source, 'sysroot-flags'),
 ]
 
 

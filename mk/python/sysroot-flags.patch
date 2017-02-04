@@ -1,0 +1,45 @@
+--- a/setup.py	2017-02-04 14:58:41.181335887 +0800
++++ b/setup.py	2017-02-04 14:59:08.721335683 +0800
+@@ -499,6 +499,8 @@
+             self.add_gcc_paths()
+         self.add_multiarch_paths()
+ 
++        header_sysroot = None
++        linking_sysroot = None
+         # Add paths specified in the environment variables LDFLAGS and
+         # CPPFLAGS for header and library files.
+         # We must get the values from the Makefile and not the environment
+@@ -509,6 +511,8 @@
+                 ('LDFLAGS', '-R', self.compiler.runtime_library_dirs),
+                 ('LDFLAGS', '-L', self.compiler.library_dirs),
+                 ('CPPFLAGS', '-I', self.compiler.include_dirs),
++                ('CPPFLAGS', '--sysroot', None),
++                ('LDFLAGS', '--sysroot', None),
+                 ('CPPFLAGS', '-D', self.compiler.macros)):
+             env_val = sysconfig.get_config_var(env_var)
+             if env_val:
+@@ -522,6 +526,11 @@
+                             macro_pair = macro.split('=', maxsplit=1)
+                             self.compiler.macros.append((macro_pair[0],
+                                                          macro_pair[1] if len(macro_pair) > 1 else None))
++                    elif arg_name == '--sysroot':
++                        if env_var == 'CPPFLAGS':
++                            header_sysroot = options.dirs[-1]
++                        elif env_var == 'LDFLAGS':
++                            linking_sysroot = options.dirs[-1]
+                     else:
+                         for directory in reversed(options.dirs):
+                             add_dir_to_list(dir_list, directory)
+@@ -1629,6 +1638,12 @@
+                             define_macros=[('Py_LIMITED_API', '0x03050000')])
+             self.extensions.append(ext)
+ 
++        for ext in self.extensions:
++            if header_sysroot:
++                ext.extra_compile_args.extend(['--sysroot=' + header_sysroot])
++            if linking_sysroot:
++                ext.extra_link_args.extend(['--sysroot=' + linking_sysroot])
++
+         return missing
+ 
+     def detect_tkinter_explicitly(self):
