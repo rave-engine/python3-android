@@ -1,19 +1,29 @@
 from ..builder import Builder
-from ..source import MercurialSource
+from ..source import MercurialSource, URLSource
 from ..package import Package
-from ..patch import LocalPatch
+from ..patch import LocalPatch, RemotePatch
 from ..util import target_arch
 
 python = Package('python')
 main_source = MercurialSource(python, 'https://hg.python.org/cpython/')
-python.sources = [main_source]
+python.sources = [
+    main_source,
+    # http://bugs.python.org/issue27659
+    URLSource(python, 'http://bugs.python.org/file46302/prohibit-implicit-function-declarations.patch'),
+    # http://bugs.python.org/issue29436
+    URLSource(python, 'http://bugs.python.org/file46503/nl_langinfo.patch'),
+    # http://bugs.python.org/issue29439
+    URLSource(python, 'http://bugs.python.org/file46506/decimal.patch'),
+    # http://bugs.python.org/issue29440
+    URLSource(python, 'http://bugs.python.org/file46507/gdbm.patch'),
+]
 python.patches = [
-    LocalPatch(main_source, 'prohibit-implicit-function-declarations'),
-    LocalPatch(main_source, 'gdbm'),
-    LocalPatch(main_source, 'decimal'),
+    RemotePatch(main_source, 'prohibit-implicit-function-declarations'),
+    RemotePatch(main_source, 'gdbm'),
+    RemotePatch(main_source, 'decimal'),
     LocalPatch(main_source, 'ncurses-headers'),
     LocalPatch(main_source, 'distutils-android-sysroot'),
-    LocalPatch(main_source, 'nl_langinfo'),
+    RemotePatch(main_source, 'nl_langinfo'),
     LocalPatch(main_source, 'detect_macros'),
 ]
 
