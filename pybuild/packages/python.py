@@ -12,15 +12,12 @@ python.sources = [
     URLSource(python, 'http://bugs.python.org/file46302/prohibit-implicit-function-declarations.patch'),
     # http://bugs.python.org/issue29436
     URLSource(python, 'http://bugs.python.org/file46503/nl_langinfo.patch'),
-    # http://bugs.python.org/issue29439
-    URLSource(python, 'http://bugs.python.org/file46506/decimal.patch'),
     # http://bugs.python.org/issue29440
     URLSource(python, 'http://bugs.python.org/file46507/gdbm.patch'),
 ]
 python.patches = [
     RemotePatch(main_source, 'prohibit-implicit-function-declarations'),
     RemotePatch(main_source, 'gdbm'),
-    RemotePatch(main_source, 'decimal'),
     LocalPatch(main_source, 'ncurses-headers'),
     RemotePatch(main_source, 'nl_langinfo'),
     # The order of three patches below is important!
