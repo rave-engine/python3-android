@@ -8,15 +8,12 @@ python = Package('python')
 main_source = MercurialSource(python, 'https://hg.python.org/cpython/')
 python.sources = [
     main_source,
-    # http://bugs.python.org/issue27659
-    URLSource(python, 'http://bugs.python.org/file46302/prohibit-implicit-function-declarations.patch'),
     # http://bugs.python.org/issue29436
     URLSource(python, 'http://bugs.python.org/file46503/nl_langinfo.patch'),
     # http://bugs.python.org/issue29440
     URLSource(python, 'http://bugs.python.org/file46517/gdbm.patch'),
 ]
 python.patches = [
-    RemotePatch(main_source, 'prohibit-implicit-function-declarations'),
     RemotePatch(main_source, 'gdbm'),
     LocalPatch(main_source, 'ncurses-headers'),
     RemotePatch(main_source, 'nl_langinfo'),
