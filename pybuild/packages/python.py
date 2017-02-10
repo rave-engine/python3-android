@@ -1,11 +1,11 @@
 from ..builder import Builder
-from ..source import MercurialSource, URLSource
+from ..source import GitSource, URLSource
 from ..package import Package
 from ..patch import LocalPatch, RemotePatch
 from ..util import target_arch
 
 python = Package('python')
-main_source = MercurialSource(python, 'https://hg.python.org/cpython/')
+main_source = GitSource(python, 'https://github.com/python/cpython/')
 python.sources = [
     main_source,
     # http://bugs.python.org/issue29436

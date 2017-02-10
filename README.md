@@ -1,7 +1,7 @@
 Python 3 Android
 ================
 
-This is an experimental set of build scripts that will cross-compile the latest Python 3 hg tip for an Android device.
+This is an experimental set of build scripts that will cross-compile the latest Python 3 git master for an Android device.
 
 Prerequisites
 -------------
@@ -10,7 +10,7 @@ Building requires:
 
 1. Linux or macOS. Ubuntu 14.04, Arch Linux and macOS Sierra tested.
 2. Android NDK r14 beta 1 or above installed and environment variable ``$ANDROID_NDK`` points to its root directory. NDk r13 or below is not supported.
-3. git, hg and python3.7 in $PATH
+3. git and python3.7 in $PATH
 
 Running requires:
 

@@ -104,19 +104,3 @@ class GitSource(VCSSource):
 
     def checkout(self):
         self.run_in_source_dir(['git', 'checkout', '.'])
-
-
-class MercurialSource(VCSSource):
-    def clone(self):
-        self.run_globally(['hg', 'clone', self.source_url, self.dest])
-
-    def update(self):
-        self.run_in_source_dir(['hg', 'pull'])
-        self.run_in_source_dir(['hg', 'update', '-v'])
-
-    def clean(self):
-        self.checkout()
-        self.run_in_source_dir(['hg', 'purge', '--all'])
-
-    def checkout(self):
-        self.run_in_source_dir(['hg', 'revert', '--all'])

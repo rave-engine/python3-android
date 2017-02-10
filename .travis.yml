@@ -22,7 +22,6 @@ env:
   - ANDROID_PLATFORM=x86_64
 
 install:
-  - cat travis/hgrc >> ~/.hgrc
   - source ./travis/install-python-nightly.sh
   - |
       pushd $HOME
