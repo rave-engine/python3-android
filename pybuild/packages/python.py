@@ -17,10 +17,8 @@ python.patches = [
     RemotePatch(main_source, 'gdbm'),
     LocalPatch(main_source, 'ncurses-headers'),
     RemotePatch(main_source, 'nl_langinfo'),
-    # The order of three patches below is important!
-    LocalPatch(main_source, 'setup-argparse'),
-    LocalPatch(main_source, 'detect_macros'),
-    LocalPatch(main_source, 'sysroot-flags'),
+    LocalPatch(main_source, 'cppflags'),
+    LocalPatch(main_source, 'ldflags-last'),
 ]
 
 
