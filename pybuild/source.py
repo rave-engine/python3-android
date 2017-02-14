@@ -92,7 +92,7 @@ class GitSource(VCSSource):
 
     def update(self):
         self.run_in_source_dir(['git', 'fetch', '--tags', 'origin'])
-        self.run_in_source_dir(['git', 'merge', 'origin/master'])
+        self.run_in_source_dir(['git', 'merge', '--ff-only', 'origin/master'])
 
     def clean(self):
         if not self.already_cloned:
