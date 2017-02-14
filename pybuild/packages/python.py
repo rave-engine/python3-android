@@ -17,7 +17,7 @@ python.patches = [
     RemotePatch(main_source, 'gdbm'),
     LocalPatch(main_source, 'ncurses-headers'),
     RemotePatch(main_source, 'nl_langinfo'),
-    LocalPatch(main_source, 'remove-env-hack'),
+    LocalPatch(main_source, 'cppflags'),
     LocalPatch(main_source, 'ldflags-last'),
 ]
 
