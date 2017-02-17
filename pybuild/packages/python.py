@@ -20,6 +20,8 @@ python.patches = [
     LocalPatch(main_source, 'cppflags'),
     LocalPatch(main_source, 'ldflags-last'),
     LocalPatch(main_source, 'skip-build'),
+    # http://bugs.python.org/issue29176
+    LocalPatch(main_source, 'curses-tempfile'),
 ]
 
 
