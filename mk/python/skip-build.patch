@@ -1,0 +1,14 @@
+diff --git a/Makefile.pre.in b/Makefile.pre.in
+index f99e64e0d9..c0fbf96285 100644
+--- a/Makefile.pre.in
++++ b/Makefile.pre.in
+@@ -1436,7 +1436,8 @@ sharedinstall: sharedmods
+ 	   	--prefix=$(prefix) \
+ 		--install-scripts=$(BINDIR) \
+ 		--install-platlib=$(DESTSHARED) \
+-		--root=$(DESTDIR)/
++		--root=$(DESTDIR)/ \
++		--skip-build
+ 	-rm $(DESTDIR)$(DESTSHARED)/_sysconfigdata_$(ABIFLAGS)_$(MACHDEP)_$(MULTIARCH).py
+ 	-rm -r $(DESTDIR)$(DESTSHARED)/__pycache__
+ 
