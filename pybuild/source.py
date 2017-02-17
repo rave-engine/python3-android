@@ -9,7 +9,7 @@ from .util import BASE, tostring, rmtree
 
 class Source:
     src_prefix = BASE / 'src'
-    _TAR_SUFFIXES = ('.tar.gz', '.tar.xz', '.tgz')
+    _TAR_SUFFIXES = ('.tar.gz', '.tar.bz2', '.tar.xz', '.tgz')
 
     def __init__(self, package: Package, source_url: str):
         self.package = package

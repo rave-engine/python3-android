@@ -44,6 +44,7 @@ class PythonBuilder(Builder):
             '--build=x86_64-linux-gnu',
             '--disable-ipv6',
             '--with-system-ffi',
+            '--with-system-expat',
             '--without-ensurepip',
         ])
 

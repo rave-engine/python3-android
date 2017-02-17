@@ -15,6 +15,7 @@ REQUIRED_MODULES = set([
     '_dbm', '_gdbm',                # depends on gdbm
     '_ctypes', '_ctypes_test',      # depends on libffi
     'zlib',                         # depends on zlib
+    'pyexpat',                      # depends on expat
     # fragile modules
     '_decimal'
 ])
