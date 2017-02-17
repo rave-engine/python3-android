@@ -12,7 +12,7 @@ class ReadlineBuilder(Builder):
     source = main_source
 
     def prepare(self):
-        self.run([
+        self.run_with_env([
             './configure',
             '--prefix=/usr',
             '--host=' + target_arch().ANDROID_TARGET,
@@ -21,7 +21,7 @@ class ReadlineBuilder(Builder):
 
     def build(self):
         self.run(['make'])
-        self.run(['make', 'install'])
+        self.run(['make', 'install', f'DESTDIR={self.DESTDIR}'])
 
 
 sqlite.builder = ReadlineBuilder()

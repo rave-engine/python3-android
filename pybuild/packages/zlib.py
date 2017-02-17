@@ -24,7 +24,7 @@ class XZBuilder(Builder):
         })
 
     def prepare(self):
-        self.run([
+        self.run_with_env([
             './configure',
             '--prefix=/usr',
             '--static',
@@ -32,7 +32,7 @@ class XZBuilder(Builder):
 
     def build(self):
         self.run(['make'])
-        self.run(['make', 'install'])
+        self.run(['make', 'install', f'DESTDIR={self.DESTDIR}'])
 
 
 zlib.builder = XZBuilder()

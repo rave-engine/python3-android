@@ -21,7 +21,7 @@ class LibFFIBuilder(Builder):
     def prepare(self):
         self.run(['./autogen.sh'])
 
-        self.run([
+        self.run_with_env([
             './configure',
             '--prefix=/usr',
             '--host=' + target_arch().ANDROID_TARGET,
@@ -30,7 +30,7 @@ class LibFFIBuilder(Builder):
 
     def build(self):
         self.run(['make'])
-        self.run(['make', 'install'])
+        self.run(['make', 'install', f'DESTDIR={self.DESTDIR}'])
 
 
 libffi.builder = LibFFIBuilder()

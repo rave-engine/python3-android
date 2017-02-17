@@ -19,8 +19,8 @@ class BZip2Builder(Builder):
         self.env['CFLAGS'] = self.env['CPPFLAGS'] + self.env['CFLAGS']
 
     def build(self):
-        self.run(['make', 'libbz2.a', 'bzip2', 'bzip2recover'])
-        self.run(['make', 'install', f'PREFIX={self.DESTDIR}/usr'])
+        self.run_with_env(['make', 'libbz2.a', 'bzip2', 'bzip2recover'])
+        self.run_with_env(['make', 'install', f'PREFIX={self.DESTDIR}/usr'])
 
 
 bzip2.builder = BZip2Builder()

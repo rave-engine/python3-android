@@ -33,7 +33,7 @@ class PythonBuilder(Builder):
     def prepare(self):
         self.run(['autoreconf', '--install', '--verbose', '--force'])
 
-        self.run([
+        self.run_with_env([
             './configure',
             '--prefix=/usr',
             '--host=' + target_arch().ANDROID_TARGET,
@@ -46,7 +46,7 @@ class PythonBuilder(Builder):
 
     def build(self):
         self.run(['make'])
-        self.run(['make', 'altinstall'])
+        self.run(['make', 'altinstall', f'DESTDIR={self.DESTDIR}'])
 
 
 python.builder = PythonBuilder()

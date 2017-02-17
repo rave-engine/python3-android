@@ -24,7 +24,7 @@ class ReadlineBuilder(Builder):
 
     def prepare(self):
         # See the wcwidth() test in aclocal.m4. Tested on Android 6.0 and it's broken
-        self.run([
+        self.run_with_env([
             './configure',
             'bash_cv_wcwidth_broken=yes',
             '--prefix=/usr',

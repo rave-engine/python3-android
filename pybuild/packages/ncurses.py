@@ -24,9 +24,9 @@ class NCursesBuilder(Builder):
         self.env['PATH'] = f'{self.BUILDDIR}/host/usr/bin' + os.pathsep + os.getenv('PATH')
 
     def prepare(self):
-        self.run(['autoreconf', '--install', '--verbose', '--force'])
+        self.run_with_env(['autoreconf', '--install', '--verbose', '--force'])
 
-        self.run([
+        self.run_with_env([
             './configure',
             f'--host={target_arch().ANDROID_TARGET}',
             '--without-ada',
@@ -46,7 +46,7 @@ class NCursesBuilder(Builder):
 
     def build(self):
         self.run(['make'])
-        self.run(['make', 'install'])
+        self.run(['make', 'install', f'DESTDIR={self.DESTDIR}'])
 
 
 ncurses.builder = NCursesBuilder()

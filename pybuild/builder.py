@@ -40,7 +40,6 @@ class Builder:
         UNIFIED_SYSROOT = ANDROID_NDK / 'sysroot' / 'usr'
 
         self.env.update({
-            'DESTDIR': self.DESTDIR,
             'ANDROID_API_LEVEL': env.android_api_level,
 
             # Sysroots
@@ -81,6 +80,9 @@ class Builder:
             self.env[prog.upper()] = TOOL_PREFIX / 'bin' / f'{target_arch().ANDROID_TARGET}-{prog}'
 
     def run(self, cmd: List[str]) -> None:
+        self.source.run_in_source_dir(cmd)
+
+    def run_with_env(self, cmd: List[str]) -> None:
         self.source.run_in_source_dir(cmd, env=self.env)
 
     def _check_ndk(self) -> pathlib.Path:

@@ -36,11 +36,15 @@ class OpenSSLBuilder(Builder):
     def prepare(self):
         openssl_target = self.OPENSSL_TARGETS[self.ANDROID_PLATFORM]
 
-        self.run(['./Configure', '--prefix=/usr', '--openssldir=/etc/ssl', openssl_target, 'no-shared'])
+        self.run_with_env(['./Configure', '--prefix=/usr', '--openssldir=/etc/ssl', openssl_target, 'no-shared'])
 
     def build(self):
-        self.run(['make'])
-        self.run(['make', 'install_sw', 'install_ssldirs', f'DESTDIR={self.DESTDIR}'])
+        configure_env = self.env
+        self.env = {}
+        for key in ('ARCH_SYSROOT', 'UNIFIED_SYSROOT', 'ANDROID_API_LEVEL'):
+            self.env[key] = configure_env[key]
+        self.run_with_env(['make'])
+        self.run_with_env(['make', 'install_sw', 'install_ssldirs', f'DESTDIR={self.DESTDIR}'])
 
 
 openssl.builder = OpenSSLBuilder()
