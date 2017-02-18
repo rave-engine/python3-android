@@ -8,15 +8,14 @@ python = Package('python')
 main_source = GitSource(python, 'https://github.com/python/cpython/')
 python.sources = [
     main_source,
-    # http://bugs.python.org/issue29436
-    URLSource(python, 'http://bugs.python.org/file46503/nl_langinfo.patch'),
     # http://bugs.python.org/issue29440
     URLSource(python, 'http://bugs.python.org/file46517/gdbm.patch'),
 ]
 python.patches = [
     RemotePatch(main_source, 'gdbm'),
     LocalPatch(main_source, 'ncurses-headers'),
-    RemotePatch(main_source, 'nl_langinfo'),
+    # http://bugs.python.org/issue29436
+    LocalPatch(main_source, 'nl_langinfo'),
     LocalPatch(main_source, 'cppflags'),
     LocalPatch(main_source, 'ldflags-last'),
     LocalPatch(main_source, 'skip-build'),
