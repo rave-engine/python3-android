@@ -10,19 +10,19 @@ openssl.sources = [
     main_repo,
 ]
 openssl.patches = [
-    LocalPatch(main_repo, 'fix-cflags'),
+    LocalPatch(main_repo, 'ndk-clang-targets'),
     LocalPatch(main_repo, 'sh'),
 ]
 
 
 class OpenSSLBuilder(Builder):
     OPENSSL_TARGETS = {
-        'arm': 'android-armeabi',
-        'arm64': 'android64-aarch64',
-        'x86': 'android-x86',
-        'x86_64': 'android64-x86_64',
-        'mips': 'android-mips',
-        'mips64': 'android64-mips64',
+        'arm': 'android-armeabi-clang',
+        'arm64': 'android64-aarch64-clang',
+        'x86': 'android-x86-clang',
+        'x86_64': 'android64-x86_64-clang',
+        'mips': 'android-mips-clang',
+        'mips64': 'android64-mips64-clang',
     }
 
     source = main_repo
@@ -41,8 +41,12 @@ class OpenSSLBuilder(Builder):
     def build(self):
         configure_env = self.env
         self.env = {}
-        for key in ('ARCH_SYSROOT', 'UNIFIED_SYSROOT', 'ANDROID_API_LEVEL'):
+        for key in ('ARCH_SYSROOT', 'ANDROID_API_LEVEL'):
             self.env[key] = configure_env[key]
+        self.env.update({
+            'CROSS_SYSROOT': configure_env['UNIFIED_SYSROOT'],
+            'GCC_TOOLCHAIN': self.TOOL_PREFIX,
+        })
         self.run_with_env(['make'])
         self.run_with_env(['make', 'install_sw', 'install_ssldirs', f'DESTDIR={self.DESTDIR}'])
 

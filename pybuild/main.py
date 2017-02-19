@@ -2,7 +2,6 @@ from .env import packages
 from .package import import_package
 
 dependency = {
-    'ncurses': ['autoconf_ncurses'],
     'readline': ['ncurses'],
 }
 

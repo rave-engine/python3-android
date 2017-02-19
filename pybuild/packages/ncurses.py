@@ -1,5 +1,3 @@
-import os
-
 from ..builder import Builder
 from ..patch import LocalPatch
 from ..source import GitSource
@@ -18,14 +16,7 @@ ncurses.patches = [
 class NCursesBuilder(Builder):
     source = main_repo
 
-    def __init__(self):
-        super(NCursesBuilder, self).__init__()
-        # Use Thomas Dickey's patched autoconf
-        self.env['PATH'] = f'{self.BUILDDIR}/host/usr/bin' + os.pathsep + os.getenv('PATH')
-
     def prepare(self):
-        self.run_with_env(['autoreconf', '--install', '--verbose', '--force'])
-
         self.run_with_env([
             './configure',
             f'--host={target_arch().ANDROID_TARGET}',
