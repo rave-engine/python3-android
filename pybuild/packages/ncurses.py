@@ -1,5 +1,4 @@
 from ..builder import Builder
-from ..patch import LocalPatch
 from ..source import GitSource
 from ..package import Package
 from ..util import target_arch
@@ -8,9 +7,6 @@ ncurses = Package('ncurses')
 main_repo = GitSource(ncurses, 'https://github.com/ThomasDickey/ncurses-snapshots')
 main_repo.alias = 'ncurses'
 ncurses.sources = [main_repo]
-ncurses.patches = [
-    LocalPatch(main_repo, 'skip-cc-env-check'),
-]
 
 
 class NCursesBuilder(Builder):
