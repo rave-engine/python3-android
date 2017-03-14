@@ -1,7 +1,7 @@
 diff -ru Python-3.3.5/Lib/platform.py Python-3.3.5-android/Lib/platform.py
 --- Python-3.3.5/Lib/platform.py	2014-03-09 09:40:13.000000000 +0100
 +++ Python-3.3.5-android/Lib/platform.py	2014-08-04 22:19:36.000000000 +0200
-@@ -367,6 +367,63 @@
+@@ -367,6 +367,64 @@
                                supported_dists=supported_dists,
                                full_distribution_name=0)
 
@@ -53,6 +53,7 @@ diff -ru Python-3.3.5/Lib/platform.py Python-3.3.5-android/Lib/platform.py
 +            if '=' not in line:
 +                continue
 +            key, val = line.split('=')
++            key, val = line.split('=')[0:2]
 +            key = key.strip()
 +
 +            if not version_obtained and key == _android_version_property:
