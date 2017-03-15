@@ -4,7 +4,7 @@ from ..package import Package
 from ..util import target_arch
 
 gdbm = Package('gdbm')
-main_source = URLSource(gdbm, 'https://ftp.gnu.org/gnu/gdbm/gdbm-1.12.tar.gz')
+main_source = URLSource(gdbm, 'https://ftp.gnu.org/gnu/gdbm/gdbm-1.13.tar.gz')
 gdbm.sources = [
     main_source,
 ]
