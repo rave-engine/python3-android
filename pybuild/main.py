@@ -5,7 +5,7 @@ dependency = {
     'readline': ['ncurses'],
 }
 
-built_packags = set()
+built_packags: set = set()
 
 
 def build_package(pkgname: str) -> None:

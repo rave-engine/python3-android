@@ -1,7 +1,8 @@
 import os.path
 import shlex
+from pathlib import Path
 from subprocess import check_call, check_output, run, PIPE
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Union
 
 from .util import BASE, tostring, rmtree
 
@@ -10,7 +11,7 @@ class Source:
     src_prefix = BASE / 'src'
     _TAR_SUFFIXES = ('.tar.gz', '.tar.bz2', '.tar.xz', '.tgz')
 
-    def __init__(self, source_url: str, alias: str=None):
+    def __init__(self, source_url: str, alias: str=None) -> None:
         self.source_url = source_url
         self.basename = os.path.basename(self.source_url.rstrip('/'))
         self.alias = alias
@@ -32,7 +33,7 @@ class Source:
         return self.src_prefix / self.dest
 
     @staticmethod
-    def _run_in_dir(cmd: List[str], cwd: str, env: Dict[str, Any], mode):
+    def _run_in_dir(cmd: List[str], cwd: Union[str, Path], env: Dict[str, Any], mode):
         print(f'Running in {os.path.relpath(cwd)}: ' + ' '.join([shlex.quote(str(arg)) for arg in cmd]))
         real_env = os.environ.copy()
         for key, value in env.items():

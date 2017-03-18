@@ -5,7 +5,7 @@ from .util import BASE
 
 
 class Patch:
-    def __init__(self, name: str, strip=1):
+    def __init__(self, name: str, strip: int=1) -> None:
         self.name = name
         self.strip = strip
 
@@ -23,7 +23,7 @@ class LocalPatch(Patch):
 
 
 class RemotePatch(Patch):
-    def __init__(self, url: str, *args, **kwargs):
+    def __init__(self, url: str, *args, **kwargs) -> None:
         self.url = url
         name, _ = os.path.splitext(os.path.basename(url))
         super(RemotePatch, self).__init__(name, *args, **kwargs)

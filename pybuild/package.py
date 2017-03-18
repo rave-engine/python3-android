@@ -138,6 +138,9 @@ def import_package(pkgname: str) -> Package:
         if type(symbol) == type and symbol_name.lower() == pkgname:
             return symbol()
 
+    # XXX: mypy asks for an explicit `return`. Is it necessary?
+    return None
+
 
 def enumerate_packages() -> Iterator[Package]:
     for child in (pathlib.Path(__file__).parent / 'packages').iterdir():

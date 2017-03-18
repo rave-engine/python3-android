@@ -1,5 +1,8 @@
 class Arch:
     ANDROID_COMPILER = '4.9'
+    ANDROID_TARGET: str = None
+    LLVM_TARGET: str = None
+    ANDROID_TOOLCHAIN_PREFIX: str = None
 
     @property
     def ANDROID_TOOLCHAIN(self) -> str:
