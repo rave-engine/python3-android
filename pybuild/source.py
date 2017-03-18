@@ -3,7 +3,6 @@ import shlex
 from subprocess import check_call, check_output, run, PIPE
 from typing import Any, Dict, List
 
-from .package import Package
 from .util import BASE, tostring, rmtree
 
 
@@ -11,19 +10,22 @@ class Source:
     src_prefix = BASE / 'src'
     _TAR_SUFFIXES = ('.tar.gz', '.tar.bz2', '.tar.xz', '.tgz')
 
-    def __init__(self, package: Package, source_url: str):
-        self.package = package
+    def __init__(self, source_url: str, alias: str=None):
         self.source_url = source_url
         self.basename = os.path.basename(self.source_url.rstrip('/'))
+        self.alias = alias
 
     @property
     def dest(self) -> str:
+        if self.alias:
+            return self.alias
+
         folder = self.basename
         for suffix in self._TAR_SUFFIXES:
             if folder.endswith(suffix):
                 folder = folder[:-len(suffix)]
 
-        return getattr(self, 'alias', folder)
+        return folder
 
     @property
     def source_dir(self):

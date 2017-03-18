@@ -1,15 +1,10 @@
-from ..builder import Builder
 from ..source import URLSource
 from ..package import Package
 from ..util import target_arch
 
-xz = Package('xz')
-main_source = URLSource(xz, 'http://tukaani.org/xz/xz-5.2.3.tar.gz')
-xz.sources = [main_source]
 
-
-class XZBuilder(Builder):
-    source = main_source
+class XZ(Package):
+    source = URLSource('http://tukaani.org/xz/xz-5.2.3.tar.gz')
 
     def prepare(self):
         self.run_with_env([
@@ -22,6 +17,3 @@ class XZBuilder(Builder):
     def build(self):
         self.run(['make'])
         self.run(['make', 'install', f'DESTDIR={self.DESTDIR}'])
-
-
-xz.builder = XZBuilder()

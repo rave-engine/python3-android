@@ -1,16 +1,10 @@
-from ..builder import Builder
 from ..source import GitSource
 from ..package import Package
 from ..util import target_arch
 
-ncurses = Package('ncurses')
-main_repo = GitSource(ncurses, 'https://github.com/ThomasDickey/ncurses-snapshots')
-main_repo.alias = 'ncurses'
-ncurses.sources = [main_repo]
 
-
-class NCursesBuilder(Builder):
-    source = main_repo
+class NCurses(Package):
+    source = GitSource('https://github.com/ThomasDickey/ncurses-snapshots', alias='ncurses')
 
     def prepare(self):
         self.run_with_env([
@@ -34,6 +28,3 @@ class NCursesBuilder(Builder):
     def build(self):
         self.run(['make'])
         self.run(['make', 'install', f'DESTDIR={self.DESTDIR}'])
-
-
-ncurses.builder = NCursesBuilder()

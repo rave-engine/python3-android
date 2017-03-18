@@ -18,17 +18,17 @@ def build_package(pkgname: str) -> None:
     pkg = import_package(pkgname)
 
     if pkg.fresh():
-        for src in pkg.sources:
+        for src in [pkg.source] + pkg.extra_sources:
             src.download()
 
         for patch in getattr(pkg, 'patches', []):
-            patch.apply()
+            patch.apply(pkg.source)
         try:
-            pkg.builder.prepare()
+            pkg.prepare()
         except NotImplementedError:
             print('Skipping prepare step')
 
-    pkg.builder.build()
+    pkg.build()
 
     built_packags.add(pkgname)
 

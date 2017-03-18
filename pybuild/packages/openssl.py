@@ -1,21 +1,9 @@
-from ..builder import Builder
 from ..package import Package
 from ..patch import LocalPatch
 from ..source import GitSource
 
 
-openssl = Package('openssl')
-main_repo = GitSource(openssl, 'https://github.com/openssl/openssl')
-openssl.sources = [
-    main_repo,
-]
-openssl.patches = [
-    LocalPatch(main_repo, 'ndk-clang-targets'),
-    LocalPatch(main_repo, 'sh'),
-]
-
-
-class OpenSSLBuilder(Builder):
+class OpenSSL(Package):
     OPENSSL_TARGETS = {
         'arm': 'android-armeabi-clang',
         'arm64': 'android64-aarch64-clang',
@@ -25,10 +13,14 @@ class OpenSSLBuilder(Builder):
         'mips64': 'android64-mips64-clang',
     }
 
-    source = main_repo
+    source = GitSource('https://github.com/openssl/openssl')
+    patches = [
+        LocalPatch('ndk-clang-targets'),
+        LocalPatch('sh'),
+    ]
 
     def __init__(self):
-        super(OpenSSLBuilder, self).__init__()
+        super(OpenSSL, self).__init__()
 
         self.env['HASHBANGPERL'] = '/system/bin/env perl'
         self.env['HASHBANGSH'] = '/system/bin/sh'
@@ -49,6 +41,3 @@ class OpenSSLBuilder(Builder):
         })
         self.run_with_env(['make'])
         self.run_with_env(['make', 'install_sw', 'install_ssldirs', f'DESTDIR={self.DESTDIR}'])
-
-
-openssl.builder = OpenSSLBuilder()

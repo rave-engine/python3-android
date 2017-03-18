@@ -1,26 +1,21 @@
-from ..builder import Builder
 from ..source import URLSource
 from ..package import Package
 from ..patch import RemotePatch
 from ..util import target_arch
 
-readline = Package('readline')
-main_source = URLSource(readline, 'ftp://ftp.cwru.edu/pub/bash/readline-7.0.tar.gz')
-readline.sources = [
-    main_source,
-    URLSource(readline, 'ftp://ftp.cwru.edu/pub/bash/readline-7.0-patches/readline70-001'),
-    URLSource(readline, 'ftp://ftp.cwru.edu/pub/bash/readline-7.0-patches/readline70-002'),
-    URLSource(readline, 'ftp://ftp.cwru.edu/pub/bash/readline-7.0-patches/readline70-003'),
-]
-readline.patches = [
-    RemotePatch(main_source, 'readline70-001', strip=0),
-    RemotePatch(main_source, 'readline70-002', strip=0),
-    RemotePatch(main_source, 'readline70-003', strip=0),
-]
 
-
-class ReadlineBuilder(Builder):
-    source = main_source
+class Readline(Package):
+    source = URLSource('ftp://ftp.cwru.edu/pub/bash/readline-7.0.tar.gz')
+    extra_sources = [
+        URLSource('ftp://ftp.cwru.edu/pub/bash/readline-7.0-patches/readline70-001'),
+        URLSource('ftp://ftp.cwru.edu/pub/bash/readline-7.0-patches/readline70-002'),
+        URLSource('ftp://ftp.cwru.edu/pub/bash/readline-7.0-patches/readline70-003'),
+    ]
+    patches = [
+        RemotePatch('readline70-001', strip=0),
+        RemotePatch('readline70-002', strip=0),
+        RemotePatch('readline70-003', strip=0),
+    ]
 
     def prepare(self):
         # See the wcwidth() test in aclocal.m4. Tested on Android 6.0 and it's broken
@@ -35,6 +30,3 @@ class ReadlineBuilder(Builder):
     def build(self):
         self.run(['make'])
         self.run(['make', 'install', f'DESTDIR={self.DESTDIR}'])
-
-
-readline.builder = ReadlineBuilder()

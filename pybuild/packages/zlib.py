@@ -1,22 +1,17 @@
-from ..builder import Builder
 from ..source import URLSource
 from ..package import Package
 from ..patch import LocalPatch
 from ..util import target_arch
 
-zlib = Package('zlib')
-main_source = URLSource(zlib, 'http://zlib.net/zlib-1.2.11.tar.gz')
-zlib.sources = [main_source]
-zlib.patches = [
-    LocalPatch(main_source, 'fix-ldflags'),
-]
 
-
-class XZBuilder(Builder):
-    source = main_source
+class ZLib(Package):
+    source = URLSource('http://zlib.net/zlib-1.2.11.tar.gz')
+    patches = [
+        LocalPatch('fix-ldflags'),
+    ]
 
     def __init__(self):
-        super(XZBuilder, self).__init__()
+        super(ZLib, self).__init__()
 
         self.env.update({
             'CHOST': f'{target_arch().ANDROID_TARGET}-',
@@ -33,6 +28,3 @@ class XZBuilder(Builder):
     def build(self):
         self.run(['make'])
         self.run(['make', 'install', f'DESTDIR={self.DESTDIR}'])
-
-
-zlib.builder = XZBuilder()
