@@ -1,4 +1,4 @@
-from ..source import GitSource, URLSource
+from ..source import GitSource
 from ..package import Package
 from ..patch import LocalPatch, RemotePatch
 from ..util import target_arch
@@ -6,12 +6,9 @@ from ..util import target_arch
 
 class Python(Package):
     source = GitSource('https://github.com/python/cpython/')
-    extra_sources = [
-        # http://bugs.python.org/issue29440
-        URLSource('http://bugs.python.org/file46517/gdbm.patch'),
-    ]
     patches = [
-        RemotePatch('gdbm'),
+        # http://bugs.python.org/issue29440
+        RemotePatch('http://bugs.python.org/file46517/gdbm.patch'),
         LocalPatch('ncurses-headers'),
         # http://bugs.python.org/issue29436
         LocalPatch('nl_langinfo'),

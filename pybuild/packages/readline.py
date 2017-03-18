@@ -6,15 +6,9 @@ from ..util import target_arch
 
 class Readline(Package):
     source = URLSource('ftp://ftp.cwru.edu/pub/bash/readline-7.0.tar.gz')
-    extra_sources = [
-        URLSource('ftp://ftp.cwru.edu/pub/bash/readline-7.0-patches/readline70-001'),
-        URLSource('ftp://ftp.cwru.edu/pub/bash/readline-7.0-patches/readline70-002'),
-        URLSource('ftp://ftp.cwru.edu/pub/bash/readline-7.0-patches/readline70-003'),
-    ]
     patches = [
-        RemotePatch('readline70-001', strip=0),
-        RemotePatch('readline70-002', strip=0),
-        RemotePatch('readline70-003', strip=0),
+        RemotePatch(f'ftp://ftp.cwru.edu/pub/bash/readline-7.0-patches/readline70-{i:03d}', strip=0)
+        for i in range(1, 4)
     ]
 
     def prepare(self):

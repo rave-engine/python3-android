@@ -1,4 +1,4 @@
-from ..source import GitSource, URLSource
+from ..source import GitSource
 from ..package import Package
 from ..patch import RemotePatch
 from ..util import target_arch
@@ -6,11 +6,8 @@ from ..util import target_arch
 
 class LibFFI(Package):
     source = GitSource('https://github.com/libffi/libffi')
-    extra_sources = [
-        URLSource('https://github.com/libffi/libffi/pull/265.patch'),
-    ]
     patches = [
-        RemotePatch('265'),
+        RemotePatch('https://github.com/libffi/libffi/pull/265.patch'),
     ]
 
     def prepare(self):

@@ -18,7 +18,7 @@ def build_package(pkgname: str) -> None:
     pkg = import_package(pkgname)
 
     if pkg.fresh():
-        for src in [pkg.source] + pkg.extra_sources:
+        for src in pkg.sources:
             src.download()
 
         for patch in getattr(pkg, 'patches', []):

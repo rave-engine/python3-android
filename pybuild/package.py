@@ -4,8 +4,8 @@ import pathlib
 from typing import Iterator, List
 
 from . import env
-from .patch import Patch
-from .source import Source
+from .patch import Patch, RemotePatch
+from .source import Source, URLSource
 from .util import BASE, target_arch
 
 
@@ -26,7 +26,9 @@ class Package:
 
     @property
     def sources(self) -> List[Source]:
-        return [self.source] + self.extra_sources
+        return [self.source] + self.extra_sources + [
+            URLSource(patch.url)
+            for patch in self.patches if isinstance(patch, RemotePatch)]
 
     def init_build_env(self):
         self.env = {}

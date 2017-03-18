@@ -1,3 +1,5 @@
+import os.path
+
 from .source import Source
 from .util import BASE
 
@@ -21,5 +23,10 @@ class LocalPatch(Patch):
 
 
 class RemotePatch(Patch):
+    def __init__(self, url: str, *args, **kwargs):
+        self.url = url
+        name, _ = os.path.splitext(os.path.basename(url))
+        super(RemotePatch, self).__init__(name, *args, **kwargs)
+
     def apply(self, source):
         self.apply_file(BASE / Source.src_prefix / self.name, self.package.source)
