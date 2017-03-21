@@ -4,6 +4,7 @@ import pathlib
 from typing import Iterator, List
 
 from . import env
+from .arch import arm, x86, mips, arm64
 from .patch import Patch, RemotePatch
 from .source import Source, URLSource
 from .util import BASE, target_arch
@@ -60,6 +61,10 @@ class Package:
                         f'arch-{self.ANDROID_PLATFORM}' / 'usr')
         UNIFIED_SYSROOT = ANDROID_NDK / 'sysroot' / 'usr'
 
+        cflags = ['-fPIC']
+        if isinstance(target_arch(),  (arm, x86, mips, arm64)):
+            cflags += ['-fno-integrated-as']
+
         self.env.update({
             'ANDROID_API_LEVEL': env.android_api_level,
 
@@ -79,8 +84,8 @@ class Package:
                 f'-D__ANDROID_API__={env.android_api_level}',
                 f'-I{self.DESTDIR}/usr/include',
             ],
-            'CFLAGS': ['-fPIC', '-fno-integrated-as'],
-            'CXXFLAGS': ['-fPIC', '-fno-integrated-as'],
+            'CFLAGS': cflags,
+            'CXXFLAGS': cflags,
             'LDFLAGS': LLVM_BASE_FLAGS + [
                 '--sysroot=' + str(ARCH_SYSROOT),
                 '-pie',
