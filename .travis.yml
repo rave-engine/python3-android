@@ -1,9 +1,12 @@
-language: generic
+language: python
+
+python: nightly
 
 os:
   - linux
+# https://github.com/travis-ci/cpython-builder/pull/3 should be resolved for Mac support
 
-sudo: required
+sudo: false
 dist: trusty
 
 addons:
@@ -23,7 +26,6 @@ env:
     - ANDROID_PLATFORM=x86_64
 
 install:
-  - source ./travis/install-python-nightly.sh
   - |
       pushd $HOME
       HOST_OS="$(uname | tr 'A-Z' 'a-z')"
