@@ -6,10 +6,11 @@ export ANDROID_TOOL_PREFIX="${BASE}/build-tools"
 export ANDROID_TEST_PREFIX="${BASE}/build-vm"
 
 # SDKs and target platforms.
-export NDK_REV=12b
+export NDK_REV=14b
 export SDK_REV=24.4.1
 export NDK_REL=android-ndk-r${NDK_REV}
 export SDK_REL=android-sdk-r${SDK_REV}
+# For Honeywell, we can not go above 23
 export ANDROID_API_LEVEL=23
 export ANDROID_PLATFORM=arm
 #export ANDROID_PLATFORM=arm64
