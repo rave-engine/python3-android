@@ -20,6 +20,7 @@ patch -p1  < "${FILESDIR}/${PACKAGE}-python-misc.patch" || exit 1
 patch -p1  < "${FILESDIR}/${PACKAGE}-android-locale.patch" || exit 1
 patch -Ep1 < "${FILESDIR}/${PACKAGE}-android-libmpdec.patch" || exit 1
 patch -p1  < "${FILESDIR}/${PACKAGE}-android-misc.patch" || exit 1
+#patch -p1  < "${FILESDIR}/${PACKAGE}-android-print.patch" || exit 1
 patch -p1  < "${FILESDIR}/${PACKAGE}-android-extras.patch" || exit 1
 #patch -p1  < "${FILESDIR}/${PACKAGE}-accept4.patch" || exit 1
 
