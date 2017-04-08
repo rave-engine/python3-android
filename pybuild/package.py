@@ -62,7 +62,7 @@ class Package:
         UNIFIED_SYSROOT = ANDROID_NDK / 'sysroot' / 'usr'
 
         cflags = ['-fPIC']
-        if isinstance(target_arch(),  (arm, x86, mips, arm64)):
+        if isinstance(target_arch(), (arm, x86, mips, arm64)):
             cflags += ['-fno-integrated-as']
 
         self.env.update({
