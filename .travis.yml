@@ -16,7 +16,7 @@ addons:
 
 env:
   global:
-    - NDK_VER=r14b
+    - NDK_VER=r15-beta1
   matrix:
     - ANDROID_PLATFORM=arm
     - ANDROID_PLATFORM=arm64
