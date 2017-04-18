@@ -15,7 +15,6 @@ class NCurses(Package):
             '--without-progs',
             '--without-tests',
             '--without-termlib',
-            '--enable-termcap',
             '--enable-widec',
             '--without-shared',
             '--with-normal',
