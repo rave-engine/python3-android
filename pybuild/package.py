@@ -91,10 +91,6 @@ class Package:
                 '-pie',
                 f'-L{self.DESTDIR}/usr/lib'
             ],
-
-            # pkg-config
-            'PKG_CONFIG_LIBDIR': f'{self.DESTDIR}/usr/lib/pkgconfig',
-            'PKG_CONFIG_SYSROOT_DIR': self.DESTDIR,
         })
 
         # XXX -O2 is a workaround for linker failures on MIPS
