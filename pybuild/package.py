@@ -93,11 +93,6 @@ class Package:
             ],
         })
 
-        # XXX -O2 is a workaround for linker failures on MIPS
-        # See https://github.com/android-ndk/ndk/issues/261
-        if self.ANDROID_PLATFORM == 'mips':
-            self.env['CFLAGS'].append('-O2')
-
         for prog in ('ar', 'as', 'ld', 'objcopy', 'objdump', 'ranlib', 'strip', 'readelf'):
             self.env[prog.upper()] = self.TOOL_PREFIX / 'bin' / f'{target_arch().ANDROID_TARGET}-{prog}'
 
