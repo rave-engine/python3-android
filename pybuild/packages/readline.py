@@ -1,6 +1,6 @@
 from ..source import URLSource
 from ..package import Package
-from ..patch import RemotePatch
+from ..patch import LocalPatch, RemotePatch
 from ..util import target_arch
 
 
@@ -9,6 +9,8 @@ class Readline(Package):
     patches = [
         RemotePatch(f'https://ftp.gnu.org/gnu/readline/readline-7.0-patches/readline70-{i:03d}', strip=0)
         for i in range(1, 4)
+    ] + [
+        LocalPatch('strchr'),
     ]
 
     def prepare(self):
