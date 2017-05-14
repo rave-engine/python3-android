@@ -14,9 +14,14 @@ addons:
     packages:
       - texinfo
 
+cache:
+  directories:
+  - $HOME/pybuild-src
+
 env:
   global:
     - NDK_VER=r15-beta1
+    - PYBUILD_SRC=$HOME/pybuild-src
   matrix:
     - ANDROID_PLATFORM=arm
     - ANDROID_PLATFORM=arm64
@@ -35,5 +40,6 @@ install:
   - export ANDROID_NDK=$HOME/android-ndk-$NDK_VER
 
 script:
+  - python -m pybuild.clean --package python
   - make
   - make test
