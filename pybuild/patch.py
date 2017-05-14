@@ -1,8 +1,5 @@
 import os.path
 
-from .source import Source
-from .util import BASE
-
 
 class Patch:
     def __init__(self, name: str, strip: int=1) -> None:
@@ -29,4 +26,4 @@ class RemotePatch(Patch):
         super(RemotePatch, self).__init__(name, *args, **kwargs)
 
     def apply(self, source):
-        self.apply_file(BASE / Source.src_prefix / self.name, self.package.source)
+        self.apply_file(self.package.source.src_prefix / self.name, self.package.source)

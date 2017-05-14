@@ -1,3 +1,4 @@
+import os
 import os.path
 import shlex
 from pathlib import Path
@@ -8,13 +9,22 @@ from .util import BASE, tostring, rmtree
 
 
 class Source:
-    src_prefix = BASE / 'src'
     _TAR_SUFFIXES = ('.tar.gz', '.tar.bz2', '.tar.xz', '.tgz')
 
     def __init__(self, source_url: str, alias: str=None) -> None:
         self.source_url = source_url
         self.basename = os.path.basename(self.source_url.rstrip('/'))
         self.alias = alias
+
+    @property
+    def src_prefix(self) -> str:
+        pybuild_src = os.getenv('PYBUILD_SRC')
+        if pybuild_src:
+            ret = Path(pybuild_src)
+            ret.mkdir(exist_ok=True)
+            return ret
+
+        return BASE / 'src'
 
     @property
     def dest(self) -> str:

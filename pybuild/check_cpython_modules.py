@@ -2,7 +2,7 @@ import os.path
 import re
 import sys
 
-from .package import Package
+from .package import import_package, Package
 
 REQUIRED_MODULES = set([
     # Modules with external dependencies
@@ -28,9 +28,7 @@ PROHIBITED_MODULES = set([
 
 
 def main():
-    topdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-    py_configure_ac = os.path.join(topdir, 'src', 'cpython', 'configure.ac')
+    py_configure_ac = import_package('python').source.source_dir / 'configure.ac'
     with open(py_configure_ac, 'rt') as f:
         for line in f:
             mobj = re.search(r'PYTHON_VERSION,\s*(\d\.\d)', line)
