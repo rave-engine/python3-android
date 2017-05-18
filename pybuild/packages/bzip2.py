@@ -7,6 +7,7 @@ class BZip2(Package):
     source = URLSource('http://www.bzip.org/1.0.6/bzip2-1.0.6.tar.gz')
     patches = [
         LocalPatch('makefiles'),
+        LocalPatch('ndk-issue399'),
     ]
 
     def __init__(self):

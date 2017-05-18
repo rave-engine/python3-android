@@ -1,0 +1,13 @@
+diff --git a/configure.ac b/configure.ac
+index e065ce554b..de794d9faa 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1477,7 +1477,7 @@ then
+                     OPT="-g -O0 -Wall"
+                 fi
+ 	    else
+-		OPT="-g $WRAP -O3 -Wall"
++		OPT="$WRAP -O3 -Wall"
+ 	    fi
+ 	    ;;
+ 	*)

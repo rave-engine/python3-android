@@ -15,6 +15,7 @@ class Python(Package):
         LocalPatch('cppflags'),
         LocalPatch('ldflags-last'),
         LocalPatch('skip-build'),
+        LocalPatch('ndk-issue399'),
     ]
 
     def __init__(self):
