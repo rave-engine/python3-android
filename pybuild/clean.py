@@ -1,4 +1,7 @@
 import argparse
+import os
+import re
+from typing import Iterable
 
 from .package import Package
 from .package import enumerate_packages, import_package
@@ -14,10 +17,22 @@ def parse_args():
     return parser.parse_args()
 
 
+def parse_packages(pkg_specs: str) -> Iterable[str]:
+    for spec in pkg_specs.split(','):
+        if spec == ':COMMIT_MARKER':
+            mobj = re.search(
+                r'pybuild-rebuild=(.+)', os.environ['TRAVIS_COMMIT_MESSAGE'])
+            if mobj:
+                yield from mobj.group(1).split(',')
+        else:
+            yield spec
+
+
 def main():
     args = parse_args()
     if args.package:
-        target_packages = [import_package(args.package)]
+        target_packages = [
+            import_package(pkg) for pkg in parse_packages(args.package)]
     else:
         target_packages = enumerate_packages()
     for pkg in target_packages:

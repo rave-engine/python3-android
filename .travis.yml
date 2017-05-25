@@ -40,6 +40,6 @@ install:
   - export ANDROID_NDK=$HOME/android-ndk-$NDK_VER
 
 script:
-  - python -m pybuild.clean --package python
+  - python -m pybuild.clean --package :COMMIT_MARKER,python
   - make
   - make test
