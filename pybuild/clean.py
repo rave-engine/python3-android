@@ -20,6 +20,8 @@ def parse_args():
 def parse_packages(pkg_specs: str) -> Iterable[str]:
     for spec in pkg_specs.split(','):
         if spec == ':COMMIT_MARKER':
+            if os.getenv('TRAVIS_EVENT_TYPE') == 'cron':
+                continue
             mobj = re.search(
                 r'pybuild-rebuild=(.+)', os.environ['TRAVIS_COMMIT_MESSAGE'])
             if mobj:
