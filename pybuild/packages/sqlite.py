@@ -4,7 +4,7 @@ from ..util import target_arch
 
 
 class SQLite(Package):
-    source = URLSource('https://www.sqlite.org/2017/sqlite-autoconf-3190100.tar.gz')
+    source = URLSource('https://www.sqlite.org/2017/sqlite-autoconf-3190200.tar.gz')
 
     def prepare(self):
         self.run_with_env([
