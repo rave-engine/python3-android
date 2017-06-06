@@ -16,6 +16,7 @@ class Python(Package):
         LocalPatch('ldflags-last'),
         LocalPatch('skip-build'),
         LocalPatch('ndk-issue399'),
+        LocalPatch('android-force-sysmacros'),
     ]
 
     def __init__(self):

@@ -1,0 +1,15 @@
+diff --git a/configure.ac b/configure.ac
+index 5aa52d3ae1..b7e5be9867 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -2084,6 +2084,10 @@ linux/tipc.h linux/random.h spawn.h util.h alloca.h endian.h \
+ sys/endian.h)
+ AC_HEADER_DIRENT
+ AC_HEADER_MAJOR
++if test -n "$ANDROID_API_LEVEL" ; then
++    AC_DEFINE(MAJOR_IN_SYSMACROS, 1,
++              [Define this if major() is defined in sysmacros.h])
++fi
+ 
+ # bluetooth/bluetooth.h has been known to not compile with -std=c99.
+ # http://permalink.gmane.org/gmane.linux.bluez.kernel/22294
