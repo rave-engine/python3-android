@@ -10,7 +10,7 @@ class Readline(Package):
         RemotePatch(f'https://ftp.gnu.org/gnu/readline/readline-7.0-patches/readline70-{i:03d}', strip=0)
         for i in range(1, 4)
     ] + [
-        LocalPatch('strchr'),
+        LocalPatch('strchr', strip=0),
     ]
 
     def prepare(self):
