@@ -25,7 +25,11 @@ def parse_packages(pkg_specs: str) -> Iterable[str]:
             mobj = re.search(
                 r'pybuild-rebuild=(.+)', os.environ['TRAVIS_COMMIT_MESSAGE'])
             if mobj:
-                yield from mobj.group(1).split(',')
+                pkgs = mobj.group(1)
+                if pkgs == 'ALL':
+                    yield from enumerate_packages()
+                else:
+                    yield from pkgs.split(',')
         else:
             yield spec
 
@@ -33,12 +37,11 @@ def parse_packages(pkg_specs: str) -> Iterable[str]:
 def main():
     args = parse_args()
     if args.package:
-        target_packages = [
-            import_package(pkg) for pkg in parse_packages(args.package)]
+        target_packages = parse_packages(args.package)
     else:
         target_packages = enumerate_packages()
     for pkg in target_packages:
-        for src in pkg.sources:
+        for src in import_package(pkg).sources:
             src.clean()
 
     rmtree(Package.BUILDDIR)

@@ -143,4 +143,4 @@ def enumerate_packages() -> Iterator[Package]:
         pkgname, ext = os.path.splitext(os.path.basename(child))
         if ext != '.py':
             continue
-        yield import_package(pkgname)
+        yield pkgname
