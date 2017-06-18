@@ -4,7 +4,7 @@ from ..util import target_arch
 
 
 class Expat(Package):
-    source = URLSource('https://sourceforge.net/projects/expat/files/expat/2.2.0/expat-2.2.0.tar.bz2')
+    source = URLSource('https://sourceforge.net/projects/expat/files/expat/2.2.1/expat-2.2.1.tar.bz2')
 
     def prepare(self):
         self.run_with_env([
