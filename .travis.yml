@@ -20,7 +20,7 @@ cache:
 
 env:
   global:
-    - NDK_VER=r15
+    - NDK_VER=r15b
     - PYBUILD_SRC=$HOME/pybuild-src
   matrix:
     - ANDROID_PLATFORM=arm
