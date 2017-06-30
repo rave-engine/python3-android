@@ -1,0 +1,35 @@
+diff --git a/crypto/store/loader_file.c b/crypto/store/loader_file.c
+index 2b0f213df..c6abfa0f7 100644
+--- a/crypto/store/loader_file.c
++++ b/crypto/store/loader_file.c
+@@ -216,17 +216,17 @@ static OSSL_STORE_INFO *try_decode_PKCS12(const char *pem_name,
+             }
+ 
+             if (PKCS12_parse(p12, pass, &pkey, &cert, &chain)) {
+-                OSSL_STORE_INFO *si_pkey = NULL;
++                OSSL_STORE_INFO *si_pkey_ = NULL;
+                 OSSL_STORE_INFO *si_cert = NULL;
+                 OSSL_STORE_INFO *si_ca = NULL;
+ 
+                 if ((ctx = sk_OSSL_STORE_INFO_new_null()) != NULL
+-                    && (si_pkey = OSSL_STORE_INFO_new_PKEY(pkey)) != NULL
+-                    && sk_OSSL_STORE_INFO_push(ctx, si_pkey) != 0
++                    && (si_pkey_ = OSSL_STORE_INFO_new_PKEY(pkey)) != NULL
++                    && sk_OSSL_STORE_INFO_push(ctx, si_pkey_) != 0
+                     && (si_cert = OSSL_STORE_INFO_new_CERT(cert)) != NULL
+                     && sk_OSSL_STORE_INFO_push(ctx, si_cert) != 0) {
+                     ok = 1;
+-                    si_pkey = NULL;
++                    si_pkey_ = NULL;
+                     si_cert = NULL;
+ 
+                     while(sk_X509_num(chain) > 0) {
+@@ -244,7 +244,7 @@ static OSSL_STORE_INFO *try_decode_PKCS12(const char *pem_name,
+                 if (!ok) {
+                     OSSL_STORE_INFO_free(si_ca);
+                     OSSL_STORE_INFO_free(si_cert);
+-                    OSSL_STORE_INFO_free(si_pkey);
++                    OSSL_STORE_INFO_free(si_pkey_);
+                     sk_OSSL_STORE_INFO_pop_free(ctx, OSSL_STORE_INFO_free);
+                     EVP_PKEY_free(pkey);
+                     X509_free(cert);

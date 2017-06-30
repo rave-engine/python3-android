@@ -17,6 +17,7 @@ class OpenSSL(Package):
     patches = [
         LocalPatch('ndk-clang-targets'),
         LocalPatch('sh'),
+        LocalPatch('si_pkey'),
     ]
 
     def __init__(self):
