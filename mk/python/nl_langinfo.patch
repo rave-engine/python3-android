@@ -84,6 +84,15 @@ index 06030c330a..b0ab515244 100644
      char* codeset = nl_langinfo(CODESET);
      if (!codeset || codeset[0] == '\0') {
          PyErr_SetString(PyExc_ValueError, "CODESET is not set or empty");
+@@ -483,7 +483,7 @@ _Py_CoerceLegacyLocale(void)
+                 const char *new_locale = setlocale(LC_CTYPE,
+                                                    target->locale_name);
+                 if (new_locale != NULL) {
+-#if !defined(__APPLE__) && defined(HAVE_LANGINFO_H) && defined(CODESET)
++#if !defined(__APPLE__) && defined(HAVE_NL_LANGINFO) && defined(CODESET)
+                     /* Also ensure that nl_langinfo works in this locale */
+                     char *codeset = nl_langinfo(CODESET);
+                     if (!codeset || *codeset == '\0') {
 diff --git a/configure.ac b/configure.ac
 index 5610c5759d..bfcfaf4dba 100644
 --- a/configure.ac
