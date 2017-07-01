@@ -100,12 +100,19 @@ class VCSSource(Source):
 
 
 class GitSource(VCSSource):
+    def __init__(self, *args, branch='master', **kwargs):
+        super(GitSource, self).__init__(*args, **kwargs)
+
+        self.branch = branch
+
     def clone(self):
-        self.run_globally(['git', 'clone', self.source_url, self.dest])
+        self.run_globally([
+            'git', 'clone', '-b', self.branch, self.source_url, self.dest])
 
     def update(self):
         self.run_in_source_dir(['git', 'fetch', '--tags', 'origin'])
-        self.run_in_source_dir(['git', 'merge', '--ff-only', 'origin/master'])
+        self.run_in_source_dir([
+            'git', 'merge', '--ff-only', f'origin/{self.branch}'])
 
     def clean(self):
         if not self.already_cloned:
@@ -116,4 +123,5 @@ class GitSource(VCSSource):
         self.run_in_source_dir(['git', 'clean', '-dfx'])
 
     def checkout(self):
+        self.run_in_source_dir(['git', 'checkout', self.branch])
         self.run_in_source_dir(['git', 'checkout', '.'])
