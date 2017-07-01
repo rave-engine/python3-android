@@ -18,6 +18,11 @@ cache:
   directories:
   - $HOME/pybuild-src
 
+branches:
+  only:
+    - master
+    - /^test-.*$/
+
 env:
   global:
     - NDK_VER=r15b
