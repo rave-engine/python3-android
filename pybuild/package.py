@@ -79,7 +79,7 @@ class Package:
 
             # Compiler flags
             'CPPFLAGS': LLVM_BASE_FLAGS + [
-                '--sysroot=' + str(UNIFIED_SYSROOT),
+                '-isysroot', str(UNIFIED_SYSROOT),
                 f'-I{UNIFIED_SYSROOT}/include/{target_arch().ANDROID_TARGET}',
                 f'-D__ANDROID_API__={env.android_api_level}',
                 f'-I{self.DESTDIR}/usr/include',
