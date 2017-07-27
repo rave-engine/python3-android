@@ -1,0 +1,1 @@
+http://artifactory.ops.cld/artifactory/ThirdParty/COTS/openssl/1.0.2k/openssl-1.0.2k.tar.gz
