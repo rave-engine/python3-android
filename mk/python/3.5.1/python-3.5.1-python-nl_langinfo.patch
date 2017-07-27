@@ -72,4 +72,35 @@
 +++ Python3.5.1-android/configure.ac 
 @@ -3223,7 +3223,7 @@ 
   if_nameindex \ 
-index on NDK-14b: fc66636 Default to ARM not arm64
+  initgroups kill killpg lchmod lchown lockf linkat lstat lutimes mmap \ 
+  memrchr mbrtowc mkdirat mkfifo \ 
+- mkfifoat mknod mknodat mktime mremap nice openat pathconf pause pipe2 plock poll \ 
++ mkfifoat mknod mknodat mktime mremap nice nl_langinfo openat pathconf pause pipe2 plock poll \  
+  posix_fallocate posix_fadvise pread \ 
+  pthread_init pthread_kill putenv pwrite readlink readlinkat readv realpath renameat \ 
+  select sem_open sem_timedwait sem_getvalue sem_unlink sendfile setegid seteuid \ 
+--- Python3.5.1/Lib/_bootlocale.py 
++++ Python3.5.1-android/Lib/_bootlocale.py 
+@@ -12,7 +12,7 @@ 
+         return _locale._getdefaultlocale()[1] 
+ else: 
+     try: 
+-        _locale.CODESET 
++        _locale.nl_langinfo, _locale.CODESET 
+     except AttributeError: 
+         def getpreferredencoding(do_setlocale=True): 
+             # This path for legacy systems needs the more complex 
+--- Python3.5.1/Lib/locale.py 
++++ Python3.5.1-android/Lib/locale.py 
+@@ -611,9 +611,9 @@ 
+         import _bootlocale 
+         return _bootlocale.getpreferredencoding(False) 
+ else: 
+-    # On Unix, if CODESET is available, use that. 
++    # On Unix, if both nl_langinfo and CODESET are available, use them. 
+     try: 
+-        CODESET 
++        nl_langinfo, CODESET 
+     except NameError: 
+         # Fall back to parsing environment variables :-( 
+         def getpreferredencoding(do_setlocale = True):
