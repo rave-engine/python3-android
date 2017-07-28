@@ -6,7 +6,7 @@ export ANDROID_TOOL_PREFIX="${BASE}/build-tools"
 export ANDROID_TEST_PREFIX="${BASE}/build-vm"
 
 # SDKs and target platforms.
-export NDK_REV=14b
+export NDK_REV=15b
 export SDK_REV=25.2.4
 export NDK_REL=android-ndk-r${NDK_REV}
 export SDK_REL=android-sdk-r${SDK_REV}
@@ -16,14 +16,14 @@ export ANDROID_API_LEVEL=22
 export ANDROID_PLATFORM=arm
 #export ANDROID_PLATFORM=arm64
 #export ANDROID_PLATFORM=x86
-export ANDROID_COMPILER=4.9
+export ANDROID_COMPILER=clang
 
 case "${NDK_REV}" in
   10*)
     export ANDROID_COMPILER64=clang3.6
     ;;
   *)
-    export ANDROID_COMPILER64=4.9
+    export ANDROID_COMPILER64=clang
     ;;
 esac
 
