@@ -25,7 +25,7 @@ branches:
 
 env:
   global:
-    - NDK_VER=r15b
+    - NDK_VER=r15c
     - PYBUILD_SRC=$HOME/pybuild-src
   matrix:
     - ANDROID_PLATFORM=arm
