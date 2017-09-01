@@ -83,7 +83,7 @@ class Package:
                 '-isystem', f'{UNIFIED_SYSROOT}/include',
                 '-isystem', f'{UNIFIED_SYSROOT}/include/{target_arch().ANDROID_TARGET}',
                 f'-D__ANDROID_API__={env.android_api_level}',
-                f'-isystem', f'{self.DESTDIR}/usr/include',
+                f'-I{self.DESTDIR}/usr/include',
             ],
             'CFLAGS': cflags,
             'CXXFLAGS': cflags,
