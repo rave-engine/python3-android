@@ -13,10 +13,8 @@ class Python(Package):
         # http://bugs.python.org/issue29436
         LocalPatch('nl_langinfo'),
         LocalPatch('cppflags'),
-        LocalPatch('ldflags-last'),
         LocalPatch('skip-build'),
         LocalPatch('ndk-issue399'),
-        LocalPatch('android-force-sysmacros'),
     ]
 
     def __init__(self):
