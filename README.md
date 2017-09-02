@@ -11,8 +11,8 @@ Prerequisites
 Building requires:
 
 1. Linux or macOS. Ubuntu 14.04, Arch Linux and macOS Sierra tested.
-2. Android NDK r14 beta 1 or above installed and environment variable ``$ANDROID_NDK`` points to its root directory. NDk r13 or below is not supported.
-3. git and python3.7 in $PATH
+2. Android NDK r16 beta 1 installed and environment variable ``$ANDROID_NDK`` points to its root directory. NDK r14 or r15 may work yet not fully tested. NDk r13 or below is not supported.
+3. git and python3.7 in $PATH. It's recommended to use the latest git-master to build python3.7.
 
 Running requires:
 
