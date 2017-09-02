@@ -136,7 +136,7 @@ index 000000000..ce11a5ae3
 +        # Froyo. Keep in mind that in the nutshell Android builds are
 +        # about JNI, i.e. shared libraries, not applications.
 +        cflags           => add(picker(default => "-fPIC --sysroot=\$(CROSS_SYSROOT) -Wa,--noexecstack")),
-+        bin_cflags       => "-pie",
++        lflags           => "-pie",
 +    },
 +    "android-x86-base" => {
 +        inherit_from     => [ asm("x86_asm") ],
@@ -180,7 +180,7 @@ index 000000000..ce11a5ae3
 +        inherit_from     => [ "linux-generic64" ],
 +        template         => 1,
 +        cflags           => add(picker(default => "-fPIC --sysroot=\$(CROSS_SYSROOT) -Wa,--noexecstack")),
-+        bin_cflags       => "-pie",
++        lflags           => "-pie",
 +    },
 +    "android64-aarch64-base" => {
 +        inherit_from     => [ asm("aarch64_asm") ],
