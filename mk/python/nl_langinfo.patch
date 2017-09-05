@@ -105,7 +105,7 @@ index 5610c5759d..bfcfaf4dba 100644
 + mkfifoat mknod mknodat mktime mremap nice nl_langinfo openat pathconf pause pipe2 plock poll \
   posix_fallocate posix_fadvise pread \
   pthread_init pthread_kill putenv pwrite readlink readlinkat readv realpath renameat \
-  select sem_open sem_timedwait sem_getvalue sem_unlink sendfile setegid seteuid \
+  sem_open sem_timedwait sem_getvalue sem_unlink sendfile setegid seteuid \
 diff --git a/Lib/_bootlocale.py b/Lib/_bootlocale.py
 index 0c61b0d3a0..b54a6020fe 100644
 --- a/Lib/_bootlocale.py
