@@ -7,10 +7,10 @@ from ..util import target_arch
 class Python(Package):
     source = GitSource('https://github.com/python/cpython/')
     patches = [
-        # http://bugs.python.org/issue29440
-        RemotePatch('http://bugs.python.org/file46517/gdbm.patch'),
+        # https://bugs.python.org/issue29440
+        RemotePatch('https://bugs.python.org/file46517/gdbm.patch'),
         LocalPatch('ncurses-headers'),
-        # http://bugs.python.org/issue29436
+        # https://bugs.python.org/issue29436
         LocalPatch('nl_langinfo'),
         LocalPatch('cppflags'),
         LocalPatch('skip-build'),

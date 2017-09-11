@@ -4,7 +4,7 @@ from ..util import target_arch
 
 
 class XZ(Package):
-    source = URLSource('http://tukaani.org/xz/xz-5.2.3.tar.gz')
+    source = URLSource('https://tukaani.org/xz/xz-5.2.3.tar.gz')
 
     def prepare(self):
         self.run_with_env([
