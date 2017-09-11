@@ -1,8 +1,10 @@
 import os
 import pathlib
+import shlex
 import shutil
 from pathlib import Path
-from typing import List, Union
+from subprocess import check_call, check_output, run, PIPE
+from typing import Any, Dict, List, Union
 
 from .env import target_arch as default_target_arch
 from . import arch
@@ -31,3 +33,20 @@ def rmtree(path: Path) -> None:
         os.unlink(path)
     except FileNotFoundError:
         print(f'{os.path.relpath(path)} not found, skipping...')
+
+
+def run_in_dir(cmd: List[str], cwd: Union[str, Path], env: Dict[str, Any]=None, mode='run'):
+    print(f'Running in {os.path.relpath(cwd)}: ' + ' '.join([shlex.quote(str(arg)) for arg in cmd]))
+
+    real_env = os.environ.copy()
+    if env is not None:
+        for key, value in env.items():
+            real_env[key] = tostring(value)
+
+    if mode == 'run':
+        check_call(cmd, cwd=cwd, env=real_env)
+    elif mode == 'result':
+        return check_output(cmd, cwd=cwd, env=real_env).decode('utf-8')
+    elif mode == 'result_noerror':
+        p = run(cmd, stdout=PIPE, stderr=PIPE, cwd=cwd, env=real_env)
+        return (b'\n'.join([p.stderr + p.stdout])).decode('utf-8')

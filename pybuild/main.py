@@ -26,6 +26,8 @@ def build_package(pkgname: str) -> None:
 
     pkg.build()
 
+    pkg.create_tarball()
+
     built_packags.add(pkgname)
 
 

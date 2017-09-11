@@ -7,7 +7,7 @@ from . import env
 from .arch import arm, x86, mips, arm64
 from .patch import Patch, RemotePatch
 from .source import Source, URLSource
-from .util import BASE, target_arch
+from .util import BASE, run_in_dir, target_arch
 
 
 class Package:
@@ -33,7 +33,7 @@ class Package:
             for patch in self.patches if isinstance(patch, RemotePatch)]
 
     @classmethod
-    def destdir(cls) -> str:
+    def destdir(cls) -> pathlib.Path:
         return cls.BUILDDIR / 'target' / cls.__name__.lower()
 
     def init_build_env(self):
@@ -132,6 +132,17 @@ class Package:
 
     def build(self):
         raise NotImplementedError
+
+    def create_tarball(self):
+        tarball_name = f'{self.name}.tar.bz2'
+        dist_path = (self.BUILDDIR / 'dist')
+
+        print(f'Creating {tarball_name} in {dist_path}...')
+
+        dist_path.mkdir(exist_ok=True)
+        run_in_dir(
+            ['tar', '-jcf', dist_path / tarball_name, '.'],
+            cwd=self.destdir())
 
 
 def import_package(pkgname: str) -> Package:

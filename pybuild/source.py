@@ -1,11 +1,9 @@
 import os
 import os.path
-import shlex
 from pathlib import Path
-from subprocess import check_call, check_output, run, PIPE
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List
 
-from .util import BASE, tostring, rmtree
+from .util import BASE, rmtree, run_in_dir
 
 
 class Source:
@@ -42,25 +40,11 @@ class Source:
     def source_dir(self):
         return self.src_prefix / self.dest
 
-    @staticmethod
-    def _run_in_dir(cmd: List[str], cwd: Union[str, Path], env: Dict[str, Any], mode):
-        print(f'Running in {os.path.relpath(cwd)}: ' + ' '.join([shlex.quote(str(arg)) for arg in cmd]))
-        real_env = os.environ.copy()
-        for key, value in env.items():
-            real_env[key] = tostring(value)
-        if mode == 'run':
-            check_call(cmd, cwd=cwd, env=real_env)
-        elif mode == 'result':
-            return check_output(cmd, cwd=cwd, env=real_env).decode('utf-8')
-        elif mode == 'result_noerror':
-            p = run(cmd, stdout=PIPE, stderr=PIPE, cwd=cwd, env=real_env)
-            return (b'\n'.join([p.stderr + p.stdout])).decode('utf-8')
+    def run_in_source_dir(self, cmd: List[str], env: Dict[str, Any]=None, mode='run'):
+        return run_in_dir(cmd, self.source_dir, env, mode)
 
-    def run_in_source_dir(self, cmd: List[str], env: Dict[str, Any]={}, mode='run'):
-        return self._run_in_dir(cmd, self.source_dir, env, mode)
-
-    def run_globally(self, cmd: List[str], env: Dict[str, str]={}, mode='run'):
-        return self._run_in_dir(cmd, self.src_prefix, env, mode)
+    def run_globally(self, cmd: List[str], env: Dict[str, str]=None, mode='run'):
+        return run_in_dir(cmd, self.src_prefix, env, mode)
 
     def download(self):
         raise NotImplementedError
