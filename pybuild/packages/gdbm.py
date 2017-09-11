@@ -17,4 +17,4 @@ class GDBM(Package):
 
     def build(self):
         self.run(['make', 'V=1'])
-        self.run(['make', 'install', f'DESTDIR={self.DESTDIR}'])
+        self.run(['make', 'install', f'DESTDIR={self.destdir()}'])

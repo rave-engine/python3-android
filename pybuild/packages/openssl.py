@@ -41,4 +41,4 @@ class OpenSSL(Package):
             'GCC_TOOLCHAIN': self.TOOL_PREFIX,
         })
         self.run_with_env(['make'])
-        self.run_with_env(['make', 'install_sw', 'install_ssldirs', f'DESTDIR={self.DESTDIR}'])
+        self.run_with_env(['make', 'install_sw', 'install_ssldirs', f'DESTDIR={self.destdir()}'])

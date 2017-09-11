@@ -6,6 +6,7 @@ from ..util import target_arch
 class Readline(Package):
     source = GitSource('https://git.savannah.gnu.org/git/readline.git',
                        alias='readline', branch='devel')
+    dependencies = ['ncurses']
 
     def prepare(self):
         # See the wcwidth() test in aclocal.m4. Tested on Android 6.0 and it's broken
@@ -19,4 +20,4 @@ class Readline(Package):
 
     def build(self):
         self.run(['make'])
-        self.run(['make', 'install', f'DESTDIR={self.DESTDIR}'])
+        self.run(['make', 'install', f'DESTDIR={self.destdir()}'])

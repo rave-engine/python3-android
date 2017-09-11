@@ -16,6 +16,7 @@ class Package:
     source: Source = None
     extra_sources: List[Source] = []
     patches: List[Patch] = []
+    dependencies = []
 
     def __init__(self):
         self.name = type(self).__name__.lower()
@@ -31,10 +32,12 @@ class Package:
             URLSource(patch.url)
             for patch in self.patches if isinstance(patch, RemotePatch)]
 
+    @classmethod
+    def destdir(cls) -> str:
+        return cls.BUILDDIR / 'target' / cls.__name__.lower()
+
     def init_build_env(self):
         self.env = {}
-
-        self.DESTDIR = self.BUILDDIR / 'target'
 
         ANDROID_NDK = self._check_ndk()
 
@@ -83,16 +86,19 @@ class Package:
                 '-isystem', f'{UNIFIED_SYSROOT}/include',
                 '-isystem', f'{UNIFIED_SYSROOT}/include/{target_arch().ANDROID_TARGET}',
                 f'-D__ANDROID_API__={env.android_api_level}',
-                f'-I{self.DESTDIR}/usr/include',
             ],
             'CFLAGS': cflags,
             'CXXFLAGS': cflags,
             'LDFLAGS': LLVM_BASE_FLAGS + [
                 '--sysroot=' + str(ARCH_SYSROOT),
                 '-pie',
-                f'-L{self.DESTDIR}/usr/lib'
             ],
         })
+
+        for dep in self.dependencies:
+            dep_pkg = import_package(dep)
+            self.env['CPPFLAGS'].extend(['-I', f'{dep_pkg.destdir()}/usr/include'])
+            self.env['LDFLAGS'].extend(['-L', f'{dep_pkg.destdir()}/usr/lib'])
 
         for prog in ('ar', 'as', 'ld', 'objcopy', 'objdump', 'ranlib', 'strip', 'readelf'):
             self.env[prog.upper()] = self.TOOL_PREFIX / 'bin' / f'{target_arch().ANDROID_TARGET}-{prog}'

@@ -16,4 +16,4 @@ class BZip2(Package):
 
     def build(self):
         self.run_with_env(['make', 'libbz2.a', 'bzip2', 'bzip2recover'])
-        self.run_with_env(['make', 'install', f'PREFIX={self.DESTDIR}/usr'])
+        self.run_with_env(['make', 'install', f'PREFIX={self.destdir()}/usr'])

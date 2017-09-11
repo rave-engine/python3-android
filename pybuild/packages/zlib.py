@@ -27,4 +27,4 @@ class ZLib(Package):
 
     def build(self):
         self.run(['make'])
-        self.run(['make', 'install', f'DESTDIR={self.DESTDIR}'])
+        self.run(['make', 'install', f'DESTDIR={self.destdir()}'])

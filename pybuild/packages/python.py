@@ -17,6 +17,8 @@ class Python(Package):
         LocalPatch('ndk-issue399'),
     ]
 
+    dependencies = ['bzip2', 'expat', 'gdbm', 'libffi', 'ncurses', 'openssl', 'readline', 'sqlite', 'xz', 'zlib']
+
     def __init__(self):
         super(Python, self).__init__()
 
@@ -39,4 +41,4 @@ class Python(Package):
 
     def build(self):
         self.run(['make'])
-        self.run(['make', 'altinstall', f'DESTDIR={self.DESTDIR}'])
+        self.run(['make', 'altinstall', f'DESTDIR={self.destdir()}'])
