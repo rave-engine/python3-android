@@ -17,8 +17,18 @@ export cross="${ANDROID_TARGET}-"
 
 
 case "${NDK_REV}" in
-  15*)
-      export CFLAGS="--sysroot ${TOOL_PREFIX}/sysroot -I${TOOL_PREFIX}/include -DANDROID -mandroid ${CFLAGS_EXTRA} -isystem ${TOOL_PREFIX}/sysroot/usr/include/${ANDROID_TARGET} -D__ANDROID_API__=${ANDROID_API_LEVEL}" 
+  16*)
+	   export NDK_SYS_ROOT="${NDK_ROOT}/sysroot"
+	   ;;
+	*)
+	   export NDK_SYS_ROOT="${TOOL_PREFIX}/sysroot"
+	   ;;
+esac	   
+
+
+case "${NDK_REV}" in
+  15*|16*)
+      export CFLAGS="--sysroot ${NDK_SYS_ROOT} -I${TOOL_PREFIX}/include -DANDROID -mandroid ${CFLAGS_EXTRA} -isystem ${TOOL_PREFIX}/sysroot/usr/include/${ANDROID_TARGET} -D__ANDROID_API__=${ANDROID_API_LEVEL}" 
       ;;
   *)
 	  export CFLAGS="--sysroot ${TOOL_PREFIX}/sysroot -I${PREFIX}/include -I${TOOL_PREFIX}/include -DANDROID -mandroid ${CFLAGS_EXTRA}" 
