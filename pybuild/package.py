@@ -6,13 +6,14 @@ from typing import Iterator, List
 from . import env
 from .arch import arm, x86, mips, arm64
 from .patch import Patch, RemotePatch
-from .source import Source, URLSource
+from .source import Source, GitSource, URLSource
 from .util import BASE, run_in_dir, target_arch
 
 
 class Package:
     BUILDDIR = BASE / 'build'
 
+    version: str = None
     source: Source = None
     extra_sources: List[Source] = []
     patches: List[Patch] = []
@@ -20,6 +21,9 @@ class Package:
 
     def __init__(self):
         self.name = type(self).__name__.lower()
+
+        if self.version is None and isinstance(self.source, GitSource):
+            self.version = 'git'
 
         self.init_build_env()
 
@@ -134,7 +138,7 @@ class Package:
         raise NotImplementedError
 
     def create_tarball(self):
-        tarball_name = f'{self.name}.tar.bz2'
+        tarball_name = f'{self.name}-{self.version}.tar.bz2'
         dist_path = (self.BUILDDIR / 'dist')
 
         print(f'Creating {tarball_name} in {dist_path}...')

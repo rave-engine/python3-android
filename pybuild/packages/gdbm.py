@@ -4,7 +4,8 @@ from ..util import target_arch
 
 
 class GDBM(Package):
-    source = URLSource('https://ftp.gnu.org/gnu/gdbm/gdbm-1.13.tar.gz')
+    version = '1.13'
+    source = URLSource(f'https://ftp.gnu.org/gnu/gdbm/gdbm-{version}.tar.gz')
 
     def prepare(self):
         self.run_with_env([
