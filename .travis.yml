@@ -14,10 +14,6 @@ addons:
     packages:
       - texinfo
 
-cache:
-  directories:
-  - $HOME/pybuild-src
-
 branches:
   only:
     - master
@@ -27,6 +23,9 @@ env:
   global:
     - NDK_VER=r16-beta1
     - PYBUILD_SRC=$HOME/pybuild-src
+      # $BINTRAY_USERNAME and $BINTRAY_API_KEY
+    - secure: "dwtXjsfng48zOo0p/zSeFgEpkXNAyx1mImxFtceCBJuSY9FmGn2h3xqZbOimbzovAqu3QQlrBAj7q//dn2xv+6bI37ydkemc7JUW78AZs7xaqiB6HgFNe6xBbico+DBaO3XtxZA8TWJxIgFLwOjuFl7nH5JUo0pbXddkpC9twtpv0n+j/YfHUTfwALq7OX1IE096nB0/1zo3zx24Lsup11H6TH1KfQYJO13LZ00/Oq3VBfy2aAI8S/GJeWQUvF2qrR28x+s3qCdrtNpoikiJn6mSadpY/OG0jLqV2wqkQohxDy2r84dnENJOA+KHDyGy0k1ztRAa+BWyCO+NqKnANWJlivI874c0te6XHJQcQ9s5yUwcY2x9sg4XSbzxkJtyPVM1VWWF828ZiHJzhcKOiCO7VsspHmHSU7/3Kah6GtlUMwX7k0A4/ePQRWDdUQNQRiTgR/nVm3HZX1zC6rZ9PBDwK1lH6K0k2w3HI/XEsOp4EDOEOKw6wyvISJqjSTK7OKN7fd3aOwUsHIHAmGX4oXl+5x/g1VbeoPEcdZTlUHyOxgNuR7Nny3361en3QVriJnNmFexsbB4dxnA7rVs1lC8IZy+NN0ZjUshYtaPZJ5l/qwqK+XuteGMWW2almzyLz3AEJaprt62mVp3uDbithX/MQmdRFjvf2QDgZX9R6xw="
+
   matrix:
     - ANDROID_PLATFORM=arm
     - ANDROID_PLATFORM=arm64
@@ -36,6 +35,7 @@ env:
     - ANDROID_PLATFORM=x86_64
 
 install:
+  - pip install requests
   - |
       pushd $HOME
       HOST_OS="$(uname | tr 'A-Z' 'a-z')"

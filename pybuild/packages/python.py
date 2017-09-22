@@ -19,6 +19,8 @@ class Python(Package):
 
     dependencies = ['bzip2', 'expat', 'gdbm', 'libffi', 'ncurses', 'openssl', 'readline', 'sqlite', 'xz', 'zlib']
 
+    skip_uploading = True
+
     def __init__(self):
         super(Python, self).__init__()
 

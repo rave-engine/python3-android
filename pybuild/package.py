@@ -3,6 +3,8 @@ import os.path
 import pathlib
 from typing import Iterator, List
 
+import requests
+
 from . import env
 from .arch import arm, x86, mips, arm64
 from .patch import Patch, RemotePatch
@@ -12,15 +14,18 @@ from .util import BASE, run_in_dir, target_arch
 
 class Package:
     BUILDDIR = BASE / 'build'
+    DIST_PATH = BUILDDIR / 'dist'
 
     version: str = None
     source: Source = None
     extra_sources: List[Source] = []
     patches: List[Patch] = []
     dependencies = []
+    skip_uploading: bool = False
 
     def __init__(self):
         self.name = type(self).__name__.lower()
+        self.arch = target_arch().__class__.__name__
 
         if self.version is None and isinstance(self.source, GitSource):
             self.version = 'git'
@@ -29,6 +34,9 @@ class Package:
 
         for patch in self.patches:
             patch.package = self
+
+        self.BUILDDIR.mkdir(exist_ok=True)
+        self.DIST_PATH.mkdir(exist_ok=True)
 
     @property
     def sources(self) -> List[Source]:
@@ -50,8 +58,6 @@ class Package:
         if HOST_OS not in ('linux', 'darwin'):
             raise Exception(f'Unsupported system {HOST_OS}')
 
-        self.ANDROID_PLATFORM = target_arch().__class__.__name__
-
         self.TOOL_PREFIX = (ANDROID_NDK / 'toolchains' /
                             target_arch().ANDROID_TOOLCHAIN /
                             'prebuilt' / f'{HOST_OS}-x86_64')
@@ -65,7 +71,7 @@ class Package:
 
         ARCH_SYSROOT = (ANDROID_NDK / 'platforms' /
                         f'android-{env.android_api_level}' /
-                        f'arch-{self.ANDROID_PLATFORM}' / 'usr')
+                        f'arch-{self.arch}' / 'usr')
         UNIFIED_SYSROOT = ANDROID_NDK / 'sysroot' / 'usr'
 
         cflags = ['-fPIC']
@@ -138,15 +144,40 @@ class Package:
         raise NotImplementedError
 
     def create_tarball(self):
-        tarball_name = f'{self.name}-{self.version}.tar.bz2'
-        dist_path = (self.BUILDDIR / 'dist')
+        tarball_name = f'{self.name}-{self.arch}-{self.version}.tar.bz2'
 
-        print(f'Creating {tarball_name} in {dist_path}...')
+        print(f'Creating {tarball_name} in {self.DIST_PATH}...')
 
-        dist_path.mkdir(exist_ok=True)
         run_in_dir(
-            ['tar', '-jcf', dist_path / tarball_name, '.'],
+            ['tar', '-jcf', self.DIST_PATH / tarball_name, '.'],
             cwd=self.destdir())
+
+    def upload_tarball(self):
+        if self.skip_uploading:
+            print(f'Skipping uploading for package {self.name}')
+            return
+
+        bintray_version = f'{self.arch}-{self.version}'
+        filename = f'{self.name}-{bintray_version}.tar.bz2'
+
+        bintray_username = os.environ['BINTRAY_USERNAME']
+        bintray_api_key = os.environ['BINTRAY_API_KEY']
+
+        print(f'Uploading {filename} to Bintray...')
+
+        with open(f'{self.DIST_PATH}/{filename}', 'rb') as pkg:
+            r = requests.put(
+                f'https://bintray.com/api/v1/content/{bintray_username}/cpython-bin-deps-android/{filename}',
+                data=pkg,
+                auth=(bintray_username, bintray_api_key),
+                headers={
+                    'X-Bintray-Package': self.name,
+                    'X-Bintray-Version': bintray_version,
+                    'X-Bintray-Publish': '1',
+                    'X-Bintray-Override': '1',
+                })
+
+            print(f'Uploading result: {r.text}')
 
 
 def import_package(pkgname: str) -> Package:
