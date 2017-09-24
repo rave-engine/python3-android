@@ -2,6 +2,8 @@ import importlib
 import os.path
 import pathlib
 from typing import Iterator, List
+import urllib.request
+import urllib.error
 
 import requests
 
@@ -35,8 +37,8 @@ class Package:
         for patch in self.patches:
             patch.package = self
 
-        self.BUILDDIR.mkdir(exist_ok=True)
-        self.DIST_PATH.mkdir(exist_ok=True)
+        for directory in (self.DIST_PATH, self.destdir()):
+            directory.mkdir(exist_ok=True, parents=True)
 
     @property
     def sources(self) -> List[Source]:
@@ -144,40 +146,73 @@ class Package:
         raise NotImplementedError
 
     def create_tarball(self):
-        tarball_name = f'{self.name}-{self.arch}-{self.version}.tar.bz2'
-
-        print(f'Creating {tarball_name} in {self.DIST_PATH}...')
+        print(f'Creating {self.tarball_name} in {self.DIST_PATH}...')
 
         run_in_dir(
-            ['tar', '-jcf', self.DIST_PATH / tarball_name, '.'],
+            ['tar', '-jcf', self.DIST_PATH / self.tarball_name, '.'],
             cwd=self.destdir())
+
+    @property
+    def bintray_version(self):
+        return f'{self.arch}-{self.version}'
+
+    @property
+    def bintray_path(self):
+        return '/'.join((env.bintray_username, env.bintray_repo, self.tarball_name))
+
+    @property
+    def tarball_name(self):
+        return f'{self.name}-{self.bintray_version}.tar.bz2'
 
     def upload_tarball(self):
         if self.skip_uploading:
             print(f'Skipping uploading for package {self.name}')
             return
 
-        bintray_version = f'{self.arch}-{self.version}'
-        filename = f'{self.name}-{bintray_version}.tar.bz2'
+        bintray_api_key = os.getenv('BINTRAY_API_KEY')
+        if not bintray_api_key:
+            print(f'No Bintray API key found. Skipping uploading {self.tarball_name}...')
+            return
 
-        bintray_username = os.environ['BINTRAY_USERNAME']
-        bintray_api_key = os.environ['BINTRAY_API_KEY']
+        print(f'Uploading {self.tarball_name} to Bintray...')
 
-        print(f'Uploading {filename} to Bintray...')
-
-        with open(f'{self.DIST_PATH}/{filename}', 'rb') as pkg:
+        with open(self.DIST_PATH / self.tarball_name, 'rb') as pkg:
             r = requests.put(
-                f'https://bintray.com/api/v1/content/{bintray_username}/cpython-bin-deps-android/{filename}',
+                f'https://bintray.com/api/v1/content/{self.bintray_path}',
                 data=pkg,
-                auth=(bintray_username, bintray_api_key),
+                auth=(env.bintray_username, bintray_api_key),
                 headers={
                     'X-Bintray-Package': self.name,
-                    'X-Bintray-Version': bintray_version,
+                    'X-Bintray-Version': self.bintray_version,
                     'X-Bintray-Publish': '1',
                     'X-Bintray-Override': '1',
                 })
 
             print(f'Uploading result: {r.text}')
+
+    def fetch_tarball(self):
+        if self.skip_uploading:
+            print(f'Skipping fetching package {self.name}')
+            return
+
+        tarball_url = f'https://dl.bintray.com/{self.bintray_path}'
+        try:
+            print(f'Downloading {tarball_url}...')
+            urllib.request.urlretrieve(
+                tarball_url,
+                filename=self.DIST_PATH / self.tarball_name)
+        except urllib.error.HTTPError as err:
+            if err.code == 404:
+                print(f'{tarball_url} is missing. Skipping...')
+                return False
+
+            raise
+
+        run_in_dir(
+            ['tar', '-jxf', self.DIST_PATH / self.tarball_name, '.'],
+            cwd=self.destdir())
+
+        return True
 
 
 def import_package(pkgname: str) -> Package:

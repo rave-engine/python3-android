@@ -10,6 +10,10 @@ def build_package(pkgname: str) -> None:
 
     pkg = import_package(pkgname)
 
+    if pkg.fetch_tarball():
+        built_packags.add(pkgname)
+        return
+
     for dep in pkg.dependencies:
         build_package(dep)
 
