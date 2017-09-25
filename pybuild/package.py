@@ -209,7 +209,7 @@ class Package:
             raise
 
         run_in_dir(
-            ['tar', '-jxf', self.DIST_PATH / self.tarball_name, '.'],
+            ['tar', '-jxf', self.DIST_PATH / self.tarball_name],
             cwd=self.destdir())
 
         return True
