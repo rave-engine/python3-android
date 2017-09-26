@@ -15,6 +15,7 @@ class Python(Package):
         LocalPatch('cppflags'),
         LocalPatch('skip-build'),
         LocalPatch('ndk-issue399'),
+        RemotePatch('https://github.com/python/cpython/pull/139.patch'),
     ]
 
     dependencies = ['bzip2', 'expat', 'gdbm', 'libffi', 'ncurses', 'openssl', 'readline', 'sqlite', 'xz', 'zlib']
