@@ -30,6 +30,9 @@ class Readline(Package):
 
     def prepare(self):
         # See the wcwidth() test in aclocal.m4. Tested on Android 6.0 and it's broken
+        # XXX: wcwidth() is implemented in [1], which may be in Android P
+        # Need a conditional configuration then?
+        # [1] https://android.googlesource.com/platform/bionic/+/c41b560f5f624cbf40febd0a3ec0b2a3f74b8e42
         self.run_with_env([
             './configure',
             'bash_cv_wcwidth_broken=yes',
