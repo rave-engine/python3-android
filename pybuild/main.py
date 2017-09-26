@@ -37,6 +37,4 @@ def build_package(pkgname: str) -> None:
 
 
 def main():
-    for pkgname in packages:
-        build_package(pkgname)
     build_package('python')

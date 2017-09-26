@@ -1,3 +1,4 @@
+from .. import env
 from ..source import GitSource
 from ..package import Package
 from ..patch import LocalPatch, RemotePatch
@@ -18,7 +19,7 @@ class Python(Package):
         RemotePatch('https://github.com/python/cpython/pull/139.patch'),
     ]
 
-    dependencies = ['bzip2', 'expat', 'gdbm', 'libffi', 'ncurses', 'openssl', 'readline', 'sqlite', 'xz', 'zlib']
+    dependencies = list(env.packages)
 
     skip_uploading = True
 
