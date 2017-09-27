@@ -5,8 +5,6 @@ from typing import Iterator, List
 import urllib.request
 import urllib.error
 
-import requests
-
 from . import env
 from .arch import arm, x86, mips, arm64
 from .patch import Patch, RemotePatch
@@ -177,6 +175,7 @@ class Package:
         print(f'Uploading {self.tarball_name} to Bintray...')
 
         with open(self.DIST_PATH / self.tarball_name, 'rb') as pkg:
+            import requests
             r = requests.put(
                 f'https://bintray.com/api/v1/content/{self.bintray_path}',
                 data=pkg,
