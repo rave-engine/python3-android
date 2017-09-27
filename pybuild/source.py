@@ -26,19 +26,22 @@ class Source:
 
     @property
     def dest(self) -> str:
+        '''
+        Return the name of the directory extracted from tarballs
+        '''
         if self.alias:
             return self.alias
 
-        folder = self.basename
-        for suffix in self._TAR_SUFFIXES:
-            if folder.endswith(suffix):
-                folder = folder[:-len(suffix)]
+        return self._dest
 
-        return folder
+    @property
+    def _dest(self) -> str:
+        raise NotImplementedError
 
     @property
     def source_dir(self):
-        return self.src_prefix / self.dest
+        if self.dest:
+            return self.src_prefix / self.dest
 
     def run_in_source_dir(self, cmd: List[str], env: Dict[str, Any]=None, mode='run'):
         return run_in_dir(cmd, self.source_dir, env, mode)
@@ -54,6 +57,15 @@ class Source:
 
 
 class URLSource(Source):
+    @property
+    def _dest(self) -> str:
+        folder = self.basename
+        for suffix in self._TAR_SUFFIXES:
+            if folder.endswith(suffix):
+                return folder[:-len(suffix)]
+
+        return None
+
     def download(self):
         target_name = self.src_prefix / self.basename
         if not target_name.exists():
@@ -67,10 +79,15 @@ class URLSource(Source):
                 break
 
     def clean(self):
-        rmtree(self.source_dir)
+        if self.source_dir:  # Don't remove standalone files (patches, etc.)
+            rmtree(self.source_dir)
 
 
 class VCSSource(Source):
+    @property
+    def _dest(self) -> str:
+        return self.basename
+
     @property
     def already_cloned(self):
         return os.path.isdir(self.source_dir)
