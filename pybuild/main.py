@@ -1,4 +1,4 @@
-from .env import packages
+from .env import use_bintray
 from .package import import_package
 
 built_packags: set = set()
@@ -10,7 +10,7 @@ def build_package(pkgname: str) -> None:
 
     pkg = import_package(pkgname)
 
-    if pkg.fetch_tarball():
+    if use_bintray and pkg.fetch_tarball():
         built_packags.add(pkgname)
         return
 

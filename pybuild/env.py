@@ -15,5 +15,6 @@ android_api_level = 21
 #  expat - enable the pyexpat module
 packages = ('openssl', 'ncurses', 'readline', 'sqlite', 'bzip2', 'xz', 'gdbm', 'libffi', 'zlib', 'expat')
 
+use_bintray = True
 bintray_username = 'yan12125'
 bintray_repo = 'cpython-bin-deps-android'
