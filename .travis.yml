@@ -13,6 +13,9 @@ addons:
   apt:
     packages:
       - texinfo
+cache:
+  directories:
+  - $HOME/pybuild-src
 
 branches:
   only:
@@ -48,3 +51,6 @@ script:
   - python -m pybuild.clean --package :COMMIT_MARKER,python
   - make
   - make test
+
+after_script:
+  - make clean
