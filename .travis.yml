@@ -52,5 +52,5 @@ script:
   - make
   - make test
 
-after_script:
+before_cache:
   - make clean
