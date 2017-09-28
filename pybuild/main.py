@@ -1,7 +1,29 @@
+import os
+import re
+from typing import Iterable
+
 from .env import use_bintray
-from .package import import_package
+from .package import enumerate_packages, import_package
 
 built_packags: set = set()
+need_rebuild: set = set()
+
+
+def parse_packages(pkg_specs: str) -> Iterable[str]:
+    for spec in pkg_specs.split(','):
+        if spec == ':COMMIT_MARKER':
+            if os.getenv('TRAVIS_EVENT_TYPE') == 'cron':
+                continue
+            mobj = re.search(
+                r'pybuild-rebuild=(.+)', os.getenv('TRAVIS_COMMIT_MESSAGE', ''))
+            if mobj:
+                pkgs = mobj.group(1)
+                if pkgs == 'ALL':
+                    yield from enumerate_packages()
+                else:
+                    yield from pkgs.split(',')
+        else:
+            yield spec
 
 
 def build_package(pkgname: str) -> None:
@@ -10,7 +32,7 @@ def build_package(pkgname: str) -> None:
 
     pkg = import_package(pkgname)
 
-    if use_bintray and pkg.fetch_tarball():
+    if use_bintray and pkgname not in need_rebuild and pkg.fetch_tarball():
         built_packags.add(pkgname)
         return
 
@@ -37,4 +59,7 @@ def build_package(pkgname: str) -> None:
 
 
 def main():
+    # TODO: Make this configurable
+    need_rebuild.update(parse_packages(':COMMIT_MARKER'))
+    print(f'Packages to rebuild: {need_rebuild}')
     build_package('python')
