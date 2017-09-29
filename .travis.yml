@@ -13,9 +13,6 @@ addons:
   apt:
     packages:
       - texinfo
-cache:
-  directories:
-  - $HOME/pybuild-src
 
 branches:
   only:
@@ -51,6 +48,3 @@ script:
   - python -m pybuild.clean
   - make
   - make test
-
-before_cache:
-  - make clean
