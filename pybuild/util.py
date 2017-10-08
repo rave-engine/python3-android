@@ -35,7 +35,11 @@ def rmtree(path: Path) -> None:
         print(f'{os.path.relpath(path)} not found, skipping...')
 
 
-def run_in_dir(cmd: List[str], cwd: Union[str, Path], env: Dict[str, Any]=None, mode='run'):
+# XXX: renamed to run? cwd is no longer required
+def run_in_dir(cmd: List[str], cwd: Union[str, Path]=None, env: Dict[str, Any]=None, mode='run'):
+    if cwd is None:
+        cwd = BASE
+
     print(f'Running in {os.path.relpath(cwd)}: ' + ' '.join([shlex.quote(str(arg)) for arg in cmd]))
 
     real_env = os.environ.copy()

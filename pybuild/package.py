@@ -1,3 +1,4 @@
+import bz2
 import importlib
 import os.path
 import pathlib
@@ -18,7 +19,6 @@ class Package:
 
     version: str = None
     source: Source = None
-    extra_sources: List[Source] = []
     patches: List[Patch] = []
     dependencies = []
     skip_uploading: bool = False
@@ -40,9 +40,13 @@ class Package:
 
     @property
     def sources(self) -> List[Source]:
-        return [self.source] + self.extra_sources + [
+        ret = []
+        if self.source:
+            ret.append(self.source)
+        ret.extend([
             URLSource(patch.url)
-            for patch in self.patches if isinstance(patch, RemotePatch)]
+            for patch in self.patches if isinstance(patch, RemotePatch)])
+        return ret
 
     @classmethod
     def destdir(cls) -> pathlib.Path:
@@ -118,6 +122,8 @@ class Package:
         return BASE / 'mk' / self.name
 
     def fresh(self) -> bool:
+        if not self.source:
+            return
         return not (self.source.source_dir / 'Makefile').exists()
 
     def run(self, cmd: List[str]) -> None:
@@ -146,9 +152,7 @@ class Package:
     def create_tarball(self):
         print(f'Creating {self.tarball_name} in {self.DIST_PATH}...')
 
-        run_in_dir(
-            ['tar', '-jcf', self.DIST_PATH / self.tarball_name, '.'],
-            cwd=self.destdir())
+        run_in_dir(['tar', '-cf', self.tarball_path, '.'], cwd=self.destdir())
 
     @property
     def bintray_version(self):
@@ -156,11 +160,15 @@ class Package:
 
     @property
     def bintray_path(self):
-        return '/'.join((env.bintray_username, env.bintray_repo, self.tarball_name))
+        return f'{env.bintray_username}/{env.bintray_repo}/{self.tarball_name}.bz2'
 
     @property
     def tarball_name(self):
-        return f'{self.name}-{self.bintray_version}.tar.bz2'
+        return f'{self.name}-{self.bintray_version}.tar'
+
+    @property
+    def tarball_path(self):
+        return self.DIST_PATH / self.tarball_name
 
     def upload_tarball(self):
         if self.skip_uploading:
@@ -174,11 +182,11 @@ class Package:
 
         print(f'Uploading {self.tarball_name} to Bintray...')
 
-        with open(self.DIST_PATH / self.tarball_name, 'rb') as pkg:
+        with open(self.tarball_path, 'rb') as pkg:
             import requests
             r = requests.put(
                 f'https://bintray.com/api/v1/content/{self.bintray_path}',
-                data=pkg,
+                data=bz2.compress(pkg.read()),
                 auth=(env.bintray_username, bintray_api_key),
                 headers={
                     'X-Bintray-Package': self.name,
@@ -194,12 +202,14 @@ class Package:
             print(f'Skipping fetching package {self.name}')
             return
 
+        if self.tarball_path.exists():
+            print(f'Skipping already downloaded {self.tarball_path}...')
+            return True
+
         tarball_url = f'https://dl.bintray.com/{self.bintray_path}'
         try:
             print(f'Downloading {tarball_url}...')
-            urllib.request.urlretrieve(
-                tarball_url,
-                filename=self.DIST_PATH / self.tarball_name)
+            req = urllib.request.urlopen(tarball_url)
         except urllib.error.HTTPError as err:
             if err.code == 404:
                 print(f'{tarball_url} is missing. Skipping...')
@@ -207,8 +217,11 @@ class Package:
 
             raise
 
+        with open(self.tarball_path, 'wb') as f:
+            f.write(bz2.decompress(req.read()))
+
         run_in_dir(
-            ['tar', '-jxf', self.DIST_PATH / self.tarball_name],
+            ['tar', '-xf', self.tarball_path],
             cwd=self.destdir())
 
         return True

@@ -9,4 +9,7 @@ clean:
 test:
 	$(PYTHON) -m pybuild.check_cpython_modules
 
-.PHONY: all clean test
+send:
+	$(PYTHON) -m pybuild.send
+
+.PHONY: all clean test send
