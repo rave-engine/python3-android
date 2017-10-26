@@ -1,6 +1,4 @@
-language: python
-
-python: nightly
+language: generic
 
 os:
   - linux
@@ -35,6 +33,7 @@ env:
     - ANDROID_PLATFORM=x86_64
 
 install:
+  - pyenv install 3.7-dev && pyenv global 3.7-dev
   - pip install requests
   - |
       pushd $HOME
