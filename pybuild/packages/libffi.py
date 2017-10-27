@@ -1,10 +1,14 @@
 from ..source import GitSource
 from ..package import Package
+from ..patch import RemotePatch
 from ..util import target_arch
 
 
 class LibFFI(Package):
     source = GitSource('https://github.com/libffi/libffi')
+    patches = [
+        RemotePatch('https://github.com/libffi/libffi/pull/384.patch'),
+    ]
 
     def prepare(self):
         self.run(['./autogen.sh'])
