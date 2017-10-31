@@ -9,20 +9,15 @@ class NCurses(Package):
     def prepare(self):
         self.run_with_env([
             './configure',
+            '--prefix=/usr',
             f'--host={target_arch().ANDROID_TARGET}',
             '--without-ada',
-            '--without-manpages',
-            '--without-progs',
-            '--without-tests',
-            '--without-termlib',
-            '--enable-termcap',
             '--enable-widec',
             '--without-shared',
             '--with-normal',
             '--without-debug',
             '--without-cxx-binding',
-            '--without-curses-h',
-            '--with-warnings',
+            '--enable-warnings',
         ])
 
     def build(self):

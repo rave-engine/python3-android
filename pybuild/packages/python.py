@@ -10,7 +10,6 @@ class Python(Package):
     patches = [
         # https://bugs.python.org/issue29440
         RemotePatch('https://bugs.python.org/file46517/gdbm.patch'),
-        LocalPatch('ncurses-headers'),
         # https://bugs.python.org/issue29436
         LocalPatch('nl_langinfo'),
         LocalPatch('cppflags'),
