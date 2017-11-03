@@ -14,7 +14,6 @@ class Python(Package):
         LocalPatch('nl_langinfo'),
         LocalPatch('cppflags'),
         LocalPatch('skip-build'),
-        LocalPatch('ndk-issue399'),
         RemotePatch('https://github.com/python/cpython/pull/139.patch'),
     ]
 

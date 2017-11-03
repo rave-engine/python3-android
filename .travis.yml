@@ -27,8 +27,6 @@ env:
   matrix:
     - ANDROID_PLATFORM=arm
     - ANDROID_PLATFORM=arm64
-    - ANDROID_PLATFORM=mips
-    - ANDROID_PLATFORM=mips64
     - ANDROID_PLATFORM=x86
     - ANDROID_PLATFORM=x86_64
 

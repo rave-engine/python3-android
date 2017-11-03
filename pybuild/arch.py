@@ -21,18 +21,6 @@ class arm64(Arch):
     ANDROID_TOOLCHAIN_PREFIX = 'aarch64-linux-android-'
 
 
-class mips(Arch):
-    ANDROID_TARGET = 'mipsel-linux-android'
-    LLVM_TARGET = 'mipsel-none-linux-android'
-    ANDROID_TOOLCHAIN_PREFIX = 'mipsel-linux-android-'
-
-
-class mips64(Arch):
-    ANDROID_TARGET = 'mips64el-linux-android'
-    LLVM_TARGET = 'mips64el-none-linux-android'
-    ANDROID_TOOLCHAIN_PREFIX = 'mips64el-linux-android-'
-
-
 class x86(Arch):
     ANDROID_TARGET = 'i686-linux-android'
     LLVM_TARGET = 'i686-none-linux-android'

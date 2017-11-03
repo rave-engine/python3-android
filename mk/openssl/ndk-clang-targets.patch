@@ -105,7 +105,7 @@ new file mode 100644
 index 000000000..ce11a5ae3
 --- /dev/null
 +++ b/Configurations/20-android.conf
-@@ -0,0 +1,177 @@
+@@ -0,0 +1,142 @@
 +#### Android: linux-* but without pointers to headers and libs.
 +
 +%targets = (
@@ -170,11 +170,6 @@ index 000000000..ce11a5ae3
 +        inherit_from     => [ asm("armv4_asm") ],
 +        template         => 1,
 +    },
-+    "android-mips-base" => {
-+        inherit_from     => [ asm("mips32_asm") ],
-+        template         => 1,
-+        perlasm_scheme   => "o32",
-+    },
 +
 +    "android64-base" => {
 +        inherit_from     => [ "linux-generic64" ],
@@ -192,20 +187,6 @@ index 000000000..ce11a5ae3
 +        template         => 1,
 +        perlasm_scheme   => "elf",
 +    },
-+    "android64-mips64-base" => {
-+        ############################################################
-+        # You are more than likely have to specify target processor
-+        # on ./Configure command line. Trouble is that toolchain's
-+        # default is MIPS64r6 (at least in r10d), but there are no
-+        # such processors around (or they are too rare to spot one).
-+        # Actual problem is that MIPS64r6 is binary incompatible
-+        # with previous MIPS ISA versions, in sense that unlike
-+        # prior versions original MIPS binary code will fail.
-+        #
-+        inherit_from     => [ asm("mips64_asm") ],
-+        template         => 1,
-+        perlasm_scheme   => "64",
-+    },
 +
 +    # GCC targets
 +    "android" => {
@@ -218,9 +199,6 @@ index 000000000..ce11a5ae3
 +    "android-armeabi" => {
 +        inherit_from     => [ "android", "android-armeabi-base" ],
 +    },
-+    "android-mips" => {
-+        inherit_from     => [ "android", "android-mips-base" ],
-+    },
 +    "android64" => {
 +        inherit_from     => [ "android64-base" ],
 +        cflags           => add(picker(default => "-mandroid")),
@@ -230,9 +208,6 @@ index 000000000..ce11a5ae3
 +    },
 +    "android64-x86_64" => {
 +        inherit_from     => [ "android64", "android64-x86_64-base" ],
-+    },
-+    "android64-mips64" => {
-+        inherit_from     => [ "android64", "android64-mips64-base" ],
 +    },
 +
 +    # Clang targets
@@ -254,11 +229,6 @@ index 000000000..ce11a5ae3
 +        cflags           => add(picker(default => "-target armv7-none-linux-androideabi -I\$(CROSS_SYSROOT)/include/arm-linux-androideabi -fno-integrated-as")),
 +        lflags           => add(picker(default => "-target armv7-none-linux-androideabi")),
 +    },
-+    "android-mips-clang" => {
-+        inherit_from     => [ "android-clang", "android-mips-base" ],
-+        cflags           => add(picker(default => "-target mipsel-none-linux-android -I\$(CROSS_SYSROOT)/include/mipsel-linux-android -fno-integrated-as")),
-+        lflags           => add(picker(default => "-target mipsel-none-linux-android")),
-+    },
 +    "android64-clang" => {
 +        inherit_from     => [ "android64-base" ],
 +        cc               => "clang",
@@ -276,10 +246,5 @@ index 000000000..ce11a5ae3
 +        inherit_from     => [ "android64-clang", "android64-x86_64-base" ],
 +        cflags           => add(picker(default => "-target x86_64-none-linux-android -I\$(CROSS_SYSROOT)/include/x86_64-linux-android")),
 +        lflags           => add(picker(default => "-target x86_64-none-linux-android")),
-+    },
-+    "android64-mips64-clang" => {
-+        inherit_from     => [ "android64-clang", "android64-mips64-base" ],
-+        cflags           => add(picker(default => "-target mips64el-none-linux-android -I\$(CROSS_SYSROOT)/include/mips64el-linux-android")),
-+        lflags           => add(picker(default => "-target mips64el-none-linux-android")),
 +    },
 +);

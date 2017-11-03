@@ -9,8 +9,6 @@ class OpenSSL(Package):
         'arm64': 'android64-aarch64-clang',
         'x86': 'android-x86-clang',
         'x86_64': 'android64-x86_64-clang',
-        'mips': 'android-mips-clang',
-        'mips64': 'android64-mips64-clang',
     }
 
     source = GitSource('https://github.com/openssl/openssl')

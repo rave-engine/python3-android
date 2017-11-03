@@ -7,7 +7,7 @@ import urllib.request
 import urllib.error
 
 from . import env
-from .arch import arm, x86, mips, arm64
+from .arch import arm
 from .patch import Patch, RemotePatch
 from .source import Source, GitSource, URLSource
 from .util import BASE, run_in_dir, target_arch
@@ -79,7 +79,7 @@ class Package:
         UNIFIED_SYSROOT = ANDROID_NDK / 'sysroot' / 'usr'
 
         cflags = ['-fPIC']
-        if isinstance(target_arch(), (arm, x86, mips, arm64)):
+        if isinstance(target_arch(), arm):
             cflags += ['-fno-integrated-as']
 
         self.env.update({
