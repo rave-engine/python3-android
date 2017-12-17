@@ -108,7 +108,7 @@ index 000000000..ce11a5ae3
 @@ -0,0 +1,142 @@
 +#### Android: linux-* but without pointers to headers and libs.
 +
-+%targets = (
++my %targets = (
 +    #
 +    # It takes pair of prior-set environment variables to make it work:
 +    #
