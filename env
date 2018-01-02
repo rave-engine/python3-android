@@ -6,7 +6,7 @@ export ANDROID_TOOL_PREFIX="${BASE}/build-tools"
 export ANDROID_TEST_PREFIX="${BASE}/build-vm"
 
 # SDKs and target platforms.
-export NDK_REV=16-beta1
+export NDK_REV=16b
 export SDK_REV=25.2.4
 export NDK_REL=android-ndk-r${NDK_REV}
 export SDK_REL=android-sdk-r${SDK_REV}
@@ -16,14 +16,14 @@ export ANDROID_API_LEVEL=22
 export ANDROID_PLATFORM=arm
 #export ANDROID_PLATFORM=arm64
 #export ANDROID_PLATFORM=x86
-export ANDROID_COMPILER=clang
+export ANDROID_COMPILER=4.9
 
 case "${NDK_REV}" in
   10*)
     export ANDROID_COMPILER64=clang3.6
     ;;
   *)
-    export ANDROID_COMPILER64=clang
+    export ANDROID_COMPILER64=4.9
     ;;
 esac
 
@@ -59,18 +59,22 @@ export PYTHON_OPTIONAL_MODULES="bz2 lzma ssl"
 case "${ANDROID_PLATFORM}" in
   arm)
       export ANDROID_TARGET=arm-linux-androideabi
+      export LLVM_TARGET=armv7-none-linux-androideabi
       export ANDROID_TOOLCHAIN="arm-linux-androideabi-${ANDROID_COMPILER}"
       ;;
   arm64)
       export ANDROID_TARGET=aarch64-linux-android
+      export LLVM_TARGET=aarch64-none-linux-android 
       export ANDROID_TOOLCHAIN="aarch64-linux-android-${ANDROID_COMPILER64}"
       ;;
   mips)
       export ANDROID_TARGET=mipsel-linux-android
+      export LLVM_TARGET=mipsel-none-linux-android
       export ANDROID_TOOLCHAIN="mipsel-linu-android-${ANDROID_COMPILER}"
       ;;
   x86)
       export ANDROID_TARGET=i686-linux-android
+      export LLVM_TARGET=i686-none-linux-android
       export ANDROID_TOOLCHAIN="x86-${ANDROID_COMPILER}"
       ;;
   *)
