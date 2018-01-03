@@ -31,7 +31,10 @@ case "${NDK_REV}" in
 	   ;;
 esac	   
 
-export NEW_SYSROOT="${NDK_ROOT}/platforms/android-${ANDROID_API_LEVEL}/arch-x86_64/usr"
+##export NEW_SYSROOT="${NDK_ROOT}/platforms/android-${ANDROID_API_LEVEL}/arch-x86_64/usr"
+#export NEW_SYSROOT="${NDK_ROOT}/platforms/android-${ANDROID_API_LEVEL}/arch-${ANDROID_PLATFORM}/usr"
+export NEW_SYSROOT="${NDK_ROOT}/sysroot/usr"
+
 
 
 # case "${NDK_REV}" in
@@ -49,10 +52,10 @@ export LLVM_BASE_FLAGS="-target ${LLVM_TARGET} -gcc-toolchain ${TOOL_PREFIX}"
 
 
 ##export CPPFLAGS="${LLVM_BASE_FLAGS} --sysroot ${NEW_SYSROOT} -I${SYSROOT_INCLUDE}/usr/include/${ANDROID_TARGET} -I${PREFIX}/include -DANDROID ${CPPFLAGS_EXTRA}"
-export CPPFLAGS="${LLVM_BASE_FLAGS} --sysroot ${NEW_SYSROOT} -I${NEW_SYSROOT}/include -I${PREFIX}/include -DANDROID ${CPPFLAGS_EXTRA} -D__ANDROID_API__=${ANDROID_API_LEVEL}"
+export CPPFLAGS="${LLVM_BASE_FLAGS} --sysroot ${NEW_SYSROOT} -I${NEW_SYSROOT}/include -I${NEW_SYSROOT}/include/arm-linux-androideabi -I${PREFIX}/include -DANDROID ${CPPFLAGS_EXTRA} -D__ANDROID_API__=${ANDROID_API_LEVEL}"
 #export CXXFLAGS="--sysroot ${SYSROOT}"
 ##export CFLAGS="${LLVM_BASE_FLAGS} -I${SYSROOT_INCLUDE}/usr/include -I${SYSROOT_INCLUDE}/usr/include/${ANDROID_TARGET} -D__ANDROID_API__=${ANDROID_API_LEVEL} -Werror=implicit-function-declaration"
-export CFLAGS="${LLVM_BASE_FLAGS}  -I${NEW_SYSROOT}/include -Werror=implicit-function-declaration"
+export CFLAGS="${LLVM_BASE_FLAGS}  -I${NEW_SYSROOT}/include -I${NEW_SYSROOT}/include/arm-linux-androideabi -Werror=implicit-function-declaration"
 if [ "$ANDROID_API_LEVEL" -ge 21 ] ; then	
     export CFLAGS="$CFLAGS -fPIE"
 fi
@@ -71,9 +74,9 @@ echo "SYSROOT_INCLUDE IS ${NEW_SYSROOT}"
 # export CC="${ANDROID_TARGET}-gcc"
 # export CXX="${ANDROID_TARGET}-g++"
 # export CPP="${ANDROID_TARGET}-cpp"
-export CC="${CLANG_PREFIX}/bin/cc"
-export CXX="${CLANG_PREFIX}/bin/c++"
-export CPP="${CLANG_PREFIX}/bin/cpp"
+export CC="${CLANG_PREFIX}/bin/clang"
+export CXX="${CLANG_PREFIX}/bin/clang++"
+export CPP="${CLANG_PREFIX}/bin/clang++"
 
 chmod +x "${CC}" "${CXX}" "${CPP}"
 

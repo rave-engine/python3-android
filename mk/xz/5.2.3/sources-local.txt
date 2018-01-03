@@ -1,0 +1,1 @@
+http://artifactory.ops.cld/artifactory/ThirdParty/COTS/xz/5.2.3/xz-5.2.3.tar.xz

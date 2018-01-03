@@ -23,7 +23,7 @@ case "${NDK_REV}" in
     export ANDROID_COMPILER64=clang3.6
     ;;
   *)
-    export ANDROID_COMPILER64=4.9
+    export ANDROID_COMPILER64=llvm
     ;;
 esac
 
