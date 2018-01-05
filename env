@@ -14,8 +14,8 @@ export SDK_REL=android-sdk-r${SDK_REV}
 # For Zebra we can not go above 22
 export ANDROID_API_LEVEL=22
 
-#export ANDROID_PLATFORM=arm
-export ANDROID_PLATFORM=arm64
+export ANDROID_PLATFORM=arm
+#export ANDROID_PLATFORM=arm64
 
 #export ANDROID_PLATFORM=x86
 #export ANDROID_COMPILER=4.9

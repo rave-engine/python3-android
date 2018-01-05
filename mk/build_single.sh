@@ -20,7 +20,9 @@ export UNIFIED_SYSROOT="${NDK_ROOT}/sysroot/usr"
 
 export CC="${CLANG_PREFIX}/bin/clang"
 export CXX="${CLANG_PREFIX}/bin/clang++"
-export CPP="${CLANG_PREFIX}/bin/clang"
+export CPP="${CC} -E"
+
+chmod +x "${CC}" "${CXX}"
 
 export CPPFLAGS="${LLVM_BASE_FLAGS} --sysroot=${ARCH_SYSROOT} -isystem ${UNIFIED_SYSROOT}/include -isystem ${UNIFIED_SYSROOT}/include/${ANDROID_TARGET} -D__ANDROID_API__=${ANDROID_API_LEVEL}"
 
@@ -59,8 +61,6 @@ export READELF="${TOOL_PREFIX}/bin/${ANDROID_TARGET}-readelf"
 export PATH="${TOOL_PREFIX}/${ANDROID_TARGET}/bin:${PATH}"
 
 
-chmod +x "${CC}" "${CXX}" "${CPP}"
-#chmod -R +x * "${NDK_ROOT}"
 
 
 export NAME="$1"
