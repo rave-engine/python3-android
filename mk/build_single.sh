@@ -12,6 +12,9 @@ export TARGET="${ANDROID_TARGET}"
 
 export NDK_ROOT="${BASE}/sdk/${NDK_REL}"
 
+# This should give us darwin or linux
+export BUILD_OS="$(uname | tr '[A-Z]' '[a-z'])"
+
 export TOOL_PREFIX="${NDK_ROOT}/toolchains/${ANDROID_TOOLCHAIN}/prebuilt/linux-x86_64"
 export CLANG_PREFIX="${NDK_ROOT}/toolchains/llvm/prebuilt/linux-x86_64"
 export LLVM_BASE_FLAGS="-target ${LLVM_TARGET} -gcc-toolchain ${TOOL_PREFIX}"
@@ -28,11 +31,12 @@ export CPPFLAGS="${LLVM_BASE_FLAGS} --sysroot=${ARCH_SYSROOT} -isystem ${UNIFIED
 
 export CFLAGS="-fPIC"
 
-case "${ANDROID_PLATFORM}" in
-  arm)
-      export CFLAGS="${CFLAGS} -fno-integrated-as" 
-      ;;
-esac
+## This doesn't seem to work, but did for other project
+# case "${ANDROID_PLATFORM}" in
+#   arm)
+#       export CFLAGS="${CFLAGS} -fno-integrated-as" 
+#       ;;
+# esac
 
 
 export CXXFLAGS="${CFLAGS}"
