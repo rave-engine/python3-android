@@ -37,7 +37,7 @@ $(eval $(call formula,python,3.5.1))
 python_modules: $(foreach mod,$(subst ',,$(PYTHON_OPTIONAL_MODULES)),python_$(mod))
 
 # Python lzma support.
-$(eval $(call formula,xz,5.2.1))
+$(eval $(call formula,xz,5.2.3))
 python_lzma: xz
 
 # Python bzip2 support.
@@ -57,7 +57,7 @@ $(eval $(call formula,ncurses,6.0))
 python_curses: ncurses
 
 # Python SQLite support.
-$(eval $(call formula,sqlite,3.8.10.2))
+$(eval $(call formula,sqlite,3.21.0))
 python_sqlite3: sqlite
 
 # Python (g)dbm support.
