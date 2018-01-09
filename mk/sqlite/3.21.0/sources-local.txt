@@ -1,0 +1,1 @@
+http://artifactory.ops.cld/artifactory/ThirdParty/COTS/sqlite-autoconf/3081001/sqlite-autoconf-3081001.tar.gz
