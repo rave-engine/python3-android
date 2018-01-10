@@ -1,0 +1,22 @@
+diff U3 openssl-1.1.0/Configure openssl-1.1.0-android/Configure
+--- openssl-1.1.0/Configure	Thu May 25 07:46:17 2017
++++ openssl-1.1.0-android/Configure.patch	Wed Jan 10 09:17:27 2018
+@@ -963,6 +963,7 @@
+ $config{perl} =    $ENV{'PERL'}    || ($^O ne "VMS" ? $^X : "perl");
+ $config{hashbangperl} =
+     $ENV{'HASHBANGPERL'}           || $ENV{'PERL'}     || "/usr/bin/env perl";
++$config{hashbangsh} = env('HASHBANGSH') || "/bin/sh";
+ $target{cc} =      $ENV{'CC'}      || $target{cc}      || "cc";
+ $target{ranlib} =  $ENV{'RANLIB'}  || $target{ranlib}  ||
+                    (which("$config{cross_compile_prefix}ranlib") ?
+diff U3 openssl-1.1.0/util/shlib_wrap.sh.in openssl-1.1.0-android/util/shlib_wrap.sh.in
+--- openssl-1.1.0/util/shlib_wrap.sh.in	Thu May 25 07:46:21 2017
++++ openssl-1.1.0-android/util/shlib_wrap.sh.in.patch	Wed Jan 10 09:18:21 2018
+@@ -1,5 +1,6 @@
+ #!/bin/sh
+-
++#!{- $config{hashbangsh} -}
++ 
+ [ $# -ne 0 ] || set -x		# debug mode without arguments:-)
+ 
+ THERE="`echo $0 | sed -e 's|[^/]*$||' 2>/dev/null`.."

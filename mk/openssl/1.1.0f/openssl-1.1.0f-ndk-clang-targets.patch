@@ -1,0 +1,130 @@
+diff U3 openssl-1.1.0/Configurations/10-main.conf openssl-1.1.0-android/Configurations/10-main.conf
+--- openssl-1.1.0/Configurations/10-main.conf	Thu May 25 07:46:17 2017
++++ openssl-1.1.0-android/Configurations/10-main.conf.patch	Wed Jan 10 09:03:45 2018
+@@ -899,8 +899,9 @@
+     # CROSS_COMPILE=arm-linux-adroideabi-
+     # PATH=$ANDROID_NDK/toolchains/arm-linux-androideabi-4.8/prebuild/linux-x86_64/bin
+     #
+-    "android" => {
++    "android-base" => {
+         inherit_from     => [ "linux-generic32" ],
++        template         => 1,
+         # Special note about unconditional -fPIC and -pie. The underlying
+         # reason is that Lollipop refuses to run non-PIE. But what about
+         # older systems and NDKs? -fPIC was never problem, so the only
+@@ -910,11 +911,12 @@
+         # systems are perfectly capable of executing binaries targeting
+         # Froyo. Keep in mind that in the nutshell Android builds are
+         # about JNI, i.e. shared libraries, not applications.
+-        cflags           => add(picker(default => "-mandroid -fPIC --sysroot=\$(CROSS_SYSROOT) -Wa,--noexecstack")),
+-        bin_cflags       => "-pie",
++        cflags           => add(picker(default => "-fPIC --sysroot=\$(CROSS_SYSROOT) -Wa,--noexecstack")),
++        lflags           => "-pie",
+     },
+-    "android-x86" => {
+-        inherit_from     => [ "android", asm("x86_asm") ],
++    "android-x86-base" => {
++        inherit_from     => [ asm("x86_asm") ],
++        template         => 1,
+         cflags           => add(picker(release => "-fomit-frame-pointer")),
+         bn_ops           => "BN_LLONG",
+         perlasm_scheme   => "android",
+@@ -940,24 +942,88 @@
+     # in order to build "universal" binary and allow OpenSSL take
+     # advantage of NEON when it's available.
+     #
+-    "android-armeabi" => {
+-        inherit_from     => [ "android", asm("armv4_asm") ],
++    "android-armeabi-base" => {
++        inherit_from     => [ asm("armv4_asm") ],
++        template         => 1,
+     },
+-    "android-mips" => {
+-        inherit_from     => [ "android", asm("mips32_asm") ],
+-        perlasm_scheme   => "o32",
++
++    "android64-base" => {
++        inherit_from     => [ "linux-generic64" ],
++        template         => 1,
++        cflags           => add(picker(default => "-fPIC --sysroot=\$(CROSS_SYSROOT) -Wa,--noexecstack")),
++        lflags           => "-pie",
++    },
++    "android64-aarch64-base" => {
++        inherit_from     => [ asm("aarch64_asm") ],
++        template         => 1,
++        perlasm_scheme   => "linux64",
++    },
++    "android64-x86_64-base" => {
++        inherit_from     => [ asm("x86_64_asm") ],
++        template         => 1,
++        perlasm_scheme   => "elf",
+     },
+ 
++    # GCC targets
++    "android" => {
++        inherit_from     => [ "android-base" ],
++        cflags           => add(picker(default => "-mandroid")),
++    },
++    "android-x86" => {
++        inherit_from     => [ "android", "android-x86-base" ],
++    },
++    "android-armeabi" => {
++        inherit_from     => [ "android", "android-armeabi-base" ],
++    },
+     "android64" => {
+-        inherit_from     => [ "linux-generic64" ],
+-        cflags           => add(picker(default => "-mandroid -fPIC --sysroot=\$(CROSS_SYSROOT) -Wa,--noexecstack")),
+-        bin_cflags       => "-pie",
++        inherit_from     => [ "android64-base" ],
++        cflags           => add(picker(default => "-mandroid")),
+     },
+     "android64-aarch64" => {
+-        inherit_from     => [ "android64", asm("aarch64_asm") ],
+-        perlasm_scheme   => "linux64",
++        inherit_from     => [ "android64", "android64-aarch64-base" ],
++    },
++    "android64-x86_64" => {
++        inherit_from     => [ "android64", "android64-x86_64-base" ],
+     },
+ 
++    # Clang targets
++    "android-clang" => {
++        inherit_from     => [ "android-base" ],
++        cc               => "clang",
++        cxx              => "clang++",
++        cflags           => add(picker(default => "-gcc-toolchain \$(GCC_TOOLCHAIN) -D__ANDROID_API__=\$(ANDROID_API_LEVEL)")),
++        lflags           => add(picker(default => "-gcc-toolchain \$(GCC_TOOLCHAIN) --sysroot=\$(ARCH_SYSROOT)")),
++        shared_ldflag    => add(picker(default => "-pie --sysroot=\$(ARCH_SYSROOT)")),
++    },
++    "android-x86-clang" => {
++        inherit_from     => [ "android-clang", "android-x86-base" ],
++        cflags           => add(picker(default => "-target i686-none-linux-android -I\$(CROSS_SYSROOT)/include/i686-linux-android -fno-integrated-as")),
++        lflags           => add(picker(default => "-target i686-none-linux-android")),
++    },
++    "android-armeabi-clang" => {
++        inherit_from     => [ "android-clang", "android-armeabi-base" ],
++        cflags           => add(picker(default => "-target armv7-none-linux-androideabi -I\$(CROSS_SYSROOT)/include/arm-linux-androideabi -fno-integrated-as")),
++        lflags           => add(picker(default => "-target armv7-none-linux-androideabi")),
++    },
++    "android64-clang" => {
++        inherit_from     => [ "android64-base" ],
++        cc               => "clang",
++        cxx              => "clang++",
++        cflags           => add(picker(default => "-gcc-toolchain \$(GCC_TOOLCHAIN) -D__ANDROID_API__=\$(ANDROID_API_LEVEL)")),
++        lflags           => add(picker(default => "-gcc-toolchain \$(GCC_TOOLCHAIN) --sysroot=\$(ARCH_SYSROOT)")),
++        shared_ldflag    => add(picker(default => "-pie --sysroot=\$(ARCH_SYSROOT)")),
++    },
++    "android64-aarch64-clang" => {
++        inherit_from     => [ "android64-clang", "android64-aarch64-base" ],
++        cflags           => add(picker(default => "-target aarch64-none-linux-android -I\$(CROSS_SYSROOT)/include/aarch64-linux-android -fno-integrated-as")),
++        lflags           => add(picker(default => "-target aarch64-none-linux-android")),
++    },
++    "android64-x86_64-clang" => {
++        inherit_from     => [ "android64-clang", "android64-x86_64-base" ],
++        cflags           => add(picker(default => "-target x86_64-none-linux-android -I\$(CROSS_SYSROOT)/include/x86_64-linux-android")),
++        lflags           => add(picker(default => "-target x86_64-none-linux-android")),
++    },
++    
+ #### *BSD
+     "BSD-generic32" => {
+         # As for thread cflag. Idea is to maintain "collective" set of
