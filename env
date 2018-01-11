@@ -6,7 +6,7 @@ export ANDROID_TOOL_PREFIX="${BASE}/build-tools"
 export ANDROID_TEST_PREFIX="${BASE}/build-vm"
 
 # SDKs and target platforms.
-export NDK_REV=15b
+export NDK_REV=16b
 export SDK_REV=25.2.4
 export NDK_REL=android-ndk-r${NDK_REV}
 export SDK_REL=android-sdk-r${SDK_REV}

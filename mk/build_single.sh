@@ -17,7 +17,7 @@ export cross="${ANDROID_TARGET}-"
 
 
 case "${NDK_REV}" in
-  15*)
+  [15-16]*)
       export CFLAGS="--sysroot ${TOOL_PREFIX}/sysroot -I${TOOL_PREFIX}/include -DANDROID -mandroid ${CFLAGS_EXTRA} -isystem ${TOOL_PREFIX}/sysroot/usr/include/${ANDROID_TARGET} -D__ANDROID_API__=${ANDROID_API_LEVEL}" 
       ;;
   *)

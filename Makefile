@@ -37,7 +37,7 @@ $(eval $(call formula,python,3.5.1))
 python_modules: $(foreach mod,$(subst ',,$(PYTHON_OPTIONAL_MODULES)),python_$(mod))
 
 # Python lzma support.
-$(eval $(call formula,xz,5.2.1))
+$(eval $(call formula,xz,5.2.3))
 python_lzma: xz
 
 # Python bzip2 support.
@@ -45,7 +45,7 @@ $(eval $(call formula,bzip2,1.0.6))
 python_bz2: bzip2
 
 # Python readline support.
-$(eval $(call formula,readline,6.3))
+$(eval $(call formula,readline,7.0))
 python_readline: readline
 
 # Python SSL support.
@@ -53,15 +53,15 @@ $(eval $(call formula,openssl,1.0.2k))
 python_ssl: openssl
 
 # Python curses support.
-$(eval $(call formula,ncurses,5.9))
+$(eval $(call formula,ncurses,6.0))
 python_curses: ncurses
 
 # Python SQLite support.
-$(eval $(call formula,sqlite,3.8.10.2))
+$(eval $(call formula,sqlite,3.21.0))
 python_sqlite3: sqlite
 
 # Python (g)dbm support.
-$(eval $(call formula,gdbm,1.11))
+$(eval $(call formula,gdbm,1.14))
 python_gdbm: gdbm
 
 
