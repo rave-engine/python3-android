@@ -21,6 +21,13 @@ export LLVM_BASE_FLAGS="-target ${LLVM_TARGET} -gcc-toolchain ${TOOL_PREFIX}"
 export ARCH_SYSROOT="${NDK_ROOT}/platforms/android-${ANDROID_API_LEVEL}/arch-${ANDROID_PLATFORM}/usr"
 export UNIFIED_SYSROOT="${NDK_ROOT}/sysroot/usr"
 
+
+# SSH Needed?
+export CROSS_SYSROOT="${UNIFIED_SYSROOT}"
+export GCC_TOOLCHAIN="${TOOL_PREFIX}"
+
+
+
 export CC="${CLANG_PREFIX}/bin/clang"
 export CXX="${CLANG_PREFIX}/bin/clang++"
 export CPP="${CC} -E"
