@@ -101,7 +101,7 @@ diff U3 openssl-1.1.0/Configurations/10-main.conf openssl-1.1.0-android/Configur
 +        cflags           => add(picker(default => "-target i686-none-linux-android -I\$(CROSS_SYSROOT)/include/i686-linux-android -fno-integrated-as")),
 +        lflags           => add(picker(default => "-target i686-none-linux-android")),
 +    },
-+    "android-armeabi-clang" => {
++    "arm-linux-androideabi-clang" => {
 +        inherit_from     => [ "android-clang", "android-armeabi-base" ],
 +        cflags           => add(picker(default => "-target armv7-none-linux-androideabi -I\$(CROSS_SYSROOT)/include/arm-linux-androideabi -fno-integrated-as")),
 +        lflags           => add(picker(default => "-target armv7-none-linux-androideabi")),
@@ -114,7 +114,7 @@ diff U3 openssl-1.1.0/Configurations/10-main.conf openssl-1.1.0-android/Configur
 +        lflags           => add(picker(default => "-gcc-toolchain \$(GCC_TOOLCHAIN) --sysroot=\$(ARCH_SYSROOT)")),
 +        shared_ldflag    => add(picker(default => "-pie --sysroot=\$(ARCH_SYSROOT)")),
 +    },
-+    "android64-aarch64-clang" => {
++    "aarch64-linux-android-clang" => {
 +        inherit_from     => [ "android64-clang", "android64-aarch64-base" ],
 +        cflags           => add(picker(default => "-target aarch64-none-linux-android -I\$(CROSS_SYSROOT)/include/aarch64-linux-android -fno-integrated-as")),
 +        lflags           => add(picker(default => "-target aarch64-none-linux-android")),

@@ -11,10 +11,18 @@ pushd "Python-${VERSION}" >/dev/null
 # echo "here are som values prefix=${PREFIX} host=${TARGET} build=${HOST} "
 # sleep 15
 
-#echo "Step 1"
-#AR=ar AS=as CC=clang CFLAGS= CPP="clang -E" CPPFLAGS= CXX=clang++ CXXFLAGS= LD=ld LDFLAGS= RANLIB=ranlib ./configure || exit 1
-#echo "Step 2"
+echo "Step 1"
+##AR=ar AS=as CC=clang CFLAGS= CPP="clang -E" CPPFLAGS= CXX=clang++ CXXFLAGS= LD=ld LDFLAGS= RANLIB=ranlib ./configure || exit 1
+
+
+#AR=ar AS=as CC=clang CFLAGS= CPP="clang -E" CPPFLAGS= CXX=clang++ CXXFLAGS= LD=ld LDFLAGS= RANLIB=ranlib ./configure --host="${HOST}" --build="${HOST}" --target="${TARGET}" || exit 1
+
+#AR="${AR}" AS="${AS}" CC="${CC}" CFLAGS="${CFLAGS}" CPP="${CPP}" CPPFLAGS="${CPPFLAGS}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" LD="${LD}" LDFLAGS="${LDFLAGS}" RANLIB="${RANLIB}" ./configure --host="${HOST}" --build="${HOST}" --target="${TARGET}" || exit 1
+
+
+echo "Step 2"
 #AR=ar AS=as CC=clang CFLAGS= CPP="clang -E" CPPFLAGS= CXX=clang++ CXXFLAGS= LD=ld LDFLAGS= RANLIB=ranlib make BUILDPYTHON=hostpython hostpython PGEN=Parser/hostpgen Parser/hostpgen || exit 1
+#$AR="${AR}" AS="${AS}" CC="${CC}" CFLAGS="${CFLAGS}" CPP="${CPP}" CPPFLAGS="${CPPFLAGS}" CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" LD="${LD}" LDFLAGS="${LDFLAGS}" RANLIB="${RANLIB}" make BUILDPYTHON=hostpython hostpython PGEN=Parser/hostpgen Parser/hostpgen || exit 1
 
 echo "Step 3"
 #make distclean || exit 1
@@ -26,7 +34,8 @@ cat > config.site <<-SITE
 	ac_cv_file__dev_ptmx=no
 	ac_cv_file__dev_ptc=no
 SITE
-ln -sf "${TOOL_PREFIX}/sysroot/usr/include/"{linux,sys}"/soundcard.h"
+#ln -sf "${TOOL_PREFIX}/sysroot/usr/include/"{linux,sys}"/soundcard.h"
+patch -p1  < "${FILESDIR}/${PACKAGE}-setup.patch" || exit 1
 patch -p1  < "${FILESDIR}/${PACKAGE}-cross-compile.patch" || exit 1
 patch -p1  < "${FILESDIR}/${PACKAGE}-python-misc.patch" || exit 1
 patch -p1  < "${FILESDIR}/${PACKAGE}-android-locale.patch" || exit 1
@@ -38,24 +47,20 @@ patch -p1  < "${FILESDIR}/${PACKAGE}-android-extras.patch" || exit 1
 patch -p1  < "${FILESDIR}/${PACKAGE}-python-nl_langinfo.patch" || exit 1 
 
 
+#./configure CROSS_COMPILE_TARGET=yes HOSTPYTHON="$(pwd)/hostpython" CONFIG_SITE=config.site --prefix="${PREFIX}" --host="${TARGET}" --build="${HOST}" --disable-ipv6 --enable-shared --without-ensurepip || exit 1 
 echo "Step 5"
-sleep 1m
-
 ./configure CROSS_COMPILE_TARGET=yes HOSTPYTHON="$(pwd)/hostpython" CONFIG_SITE=config.site --prefix="${PREFIX}" --host="${TARGET}" --build="${HOST}" --disable-ipv6 --enable-shared --without-ensurepip || exit 1 
-
 # ./configure CROSS_COMPILE_TARGET=yes HOSTPYTHON="$(pwd)/hostpython" CONFIG_SITE=config.site \
-#     --prefix="${PREFIX}" \
-#     --host="${HOST}" \
-#     --build="${HOST}" \
-#     --disable-ipv6 \
-#     --target="${TARGET}"
-#     #--enable-shared \
-#     # --prefix=/usr \
-#     # --host="${ANDROID_TARGET}" \
-#     # --build=x86_64-linux-gnu \
-#     # --with-system-ffi \
-#     # --with-system-expat \
-#     --without-ensurepip || exit 1
+#      --prefix="${PREFIX}" \
+#      --host="${TARGET}" \
+#      --build="${HOST}" \
+#      --disable-ipv6 \
+# #     --target="${TARGET}" \
+# ##     --enable-shared \
+# #     --with-system-ffi \
+# #     --with-system-expat \
+# ##     --without-ensurepip \
+#      || exit 1
 
 
 make CROSS_COMPILE_TARGET=yes HOSTPYTHON="$(pwd)/hostpython" HOSTPGEN="$(pwd)/Parser/hostpgen" || exit 1
