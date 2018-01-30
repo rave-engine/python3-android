@@ -14,7 +14,6 @@ class OpenSSL(Package):
     source = GitSource('https://github.com/openssl/openssl')
     patches = [
         LocalPatch('ndk-clang-targets'),
-        LocalPatch('sh'),
         LocalPatch('si_pkey'),
     ]
 
@@ -22,7 +21,6 @@ class OpenSSL(Package):
         super(OpenSSL, self).__init__()
 
         self.env['HASHBANGPERL'] = '/system/bin/env perl'
-        self.env['HASHBANGSH'] = '/system/bin/sh'
 
     def prepare(self):
         openssl_target = self.OPENSSL_TARGETS[self.arch]
