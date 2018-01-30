@@ -13,10 +13,10 @@ def send_package(pkgname):
 
     # Most stock Android ROM does not come with a tar that support bz2, so
     # use the uncompressed version
-    target_tarball_path = f'/sdcard/{pkg.tarball_name}'
+    target_tarball_path = f'/data/local/tmp/{pkg.tarball_name}'
     run_in_dir(['adb', 'shell', 'rm', pkg.tarball_name])
     run_in_dir(['adb', 'push', pkg.tarball_path, target_tarball_path])
-    run_in_dir(['adb', 'shell', 'tar', 'xvf', target_tarball_path, '-C', target_destdir])
+    run_in_dir(['adb', 'shell', '/data/local/tmp/busybox', 'tar', 'jxvf', target_tarball_path, '-C', target_destdir])
 
 
 def main():

@@ -22,6 +22,7 @@ Running requires:
 
 1. Android 5.0 (Lollipop, API 21) or above
 2. arm, arm64, x86 or x86-64
+3. A `busybox` binary at /data/local/tmp/busybox
 
 Build
 -----

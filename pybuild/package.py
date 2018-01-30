@@ -152,7 +152,7 @@ class Package:
     def create_tarball(self):
         print(f'Creating {self.tarball_name} in {self.DIST_PATH}...')
 
-        run_in_dir(['tar', '-cf', self.tarball_path, '.'], cwd=self.destdir())
+        run_in_dir(['tar', '-jcf', self.tarball_path, '.'], cwd=self.destdir())
 
     @property
     def bintray_version(self):
@@ -164,7 +164,7 @@ class Package:
 
     @property
     def tarball_name(self):
-        return f'{self.name}-{self.bintray_version}.tar'
+        return f'{self.name}-{self.bintray_version}.tar.bz2'
 
     @property
     def tarball_path(self):
@@ -221,7 +221,7 @@ class Package:
             f.write(bz2.decompress(req.read()))
 
         run_in_dir(
-            ['tar', '-xf', self.tarball_path],
+            ['tar', '-jxf', self.tarball_path],
             cwd=self.destdir())
 
         return True
