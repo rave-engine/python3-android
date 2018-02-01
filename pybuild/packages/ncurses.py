@@ -18,6 +18,7 @@ class NCurses(Package):
             '--without-debug',
             '--without-cxx-binding',
             '--enable-warnings',
+            '--disable-stripping',
         ])
 
     def build(self):
