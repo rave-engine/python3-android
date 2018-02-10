@@ -59,3 +59,4 @@ rm -vf $NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++
 ln -s clang $NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++
 
 rm -rvf $NDK/toolchains/*-4.9/prebuilt/linux-x86_64/lib/lib64/{libc++,libLLVM}.so
+rm -rvf $NDK/toolchains/*-4.9/prebuilt/linux-x86_64/lib/bfd-plugins/LLVMgold.so
