@@ -1,6 +1,6 @@
 from ..package import Package
 from ..patch import LocalPatch
-from ..source import GitSource
+from ..source import URLSource
 
 
 class OpenSSL(Package):
@@ -11,7 +11,8 @@ class OpenSSL(Package):
         'x86_64': 'android64-x86_64-clang',
     }
 
-    source = GitSource('https://github.com/openssl/openssl')
+    version = '1.1.1-pre1'
+    source = URLSource(f'https://www.openssl.org/source/openssl-{version}.tar.gz')
     patches = [
         LocalPatch('ndk-clang-targets'),
         LocalPatch('si_pkey'),
