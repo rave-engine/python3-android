@@ -15,6 +15,7 @@ rm -rvf $NDK/sources
 
 rm -rvf $NDK/platforms/android-*/arch-*/usr/include
 rm -rvf $NDK/platforms/android-*/arch-*/usr/lib*/*.a
+rm -rvf $NDK/sysroot/usr/lib/*/*.a
 
 rm -rvf $NDK/toolchains/mips*
 rm -rvf $NDK/sysroot/usr/include/mips*
@@ -45,18 +46,15 @@ rm -rvf $NDK/python-packages
 
 rm -rvf $NDK/platforms/android-{9,1*}
 
-clang_version=$(cat $NDK/toolchains/llvm/prebuilt/linux-x86_64/AndroidVersion.txt)
-clang_version_no_patch=$(echo $clang_version | sed 's/\.[0-9]\{1,\}$//')
-rm -rvf $NDK/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/$clang_version_no_patch
-ln -s $clang_version $NDK/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/$clang_version_no_patch
+clang_version=$(head -n 1 $NDK/toolchains/llvm/prebuilt/linux-x86_64/AndroidVersion.txt)
 
 rm -rvf $NDK/toolchains/llvm/prebuilt/linux-x86_64/test
 rm -rvf $NDK/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/$clang_version/lib/linux/*{asan,tsan,ubsan}*
 rm -rvf $NDK/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/$clang_version/lib/linux/*/{libFuzzer,libomp}.a
-rm -vf $NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/{clang-format,clang-tidy,sancov}
+rm -vf $NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/{clang-format,clang-tidy*,sancov}
 # libffi requires CXXCPP
 rm -vf $NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++
 ln -s clang $NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++
 
-rm -rvf $NDK/toolchains/*-4.9/prebuilt/linux-x86_64/lib/lib64/{libc++,libLLVM}.so
+rm -rvf $NDK/toolchains/*-4.9/prebuilt/linux-x86_64/lib/lib64/{libc++,libLLVM}.so*
 rm -rvf $NDK/toolchains/*-4.9/prebuilt/linux-x86_64/lib/bfd-plugins/LLVMgold.so
