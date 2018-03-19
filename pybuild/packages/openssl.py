@@ -1,41 +1,44 @@
+import copy
+import os
+
+from .. import env
 from ..package import Package
-from ..patch import LocalPatch
 from ..source import URLSource
+from ..util import target_arch
 
 
 class OpenSSL(Package):
-    OPENSSL_TARGETS = {
-        'arm': 'android-armeabi-clang',
-        'arm64': 'android64-aarch64-clang',
-        'x86': 'android-x86-clang',
-        'x86_64': 'android64-x86_64-clang',
-    }
-
-    version = '1.1.1-pre1'
+    version = '1.1.1-pre3'
     source = URLSource(f'https://www.openssl.org/source/openssl-{version}.tar.gz')
-    patches = [
-        LocalPatch('ndk-clang-targets'),
-        LocalPatch('si_pkey'),
-    ]
 
     def __init__(self):
         super(OpenSSL, self).__init__()
 
+        # OpenSSL handles NDK internal paths by itself, so don't use CC, CFLAGS, ...
+        # from pybuild
+        old_env = copy.deepcopy(self.env)
+        newpath = os.pathsep.join((
+            # OpenSSL requires NDK's clang in $PATH to enable usage of clang
+            os.path.dirname(old_env['CC']),
+            # and it requires unprefixed binutils, too
+            str(self.TOOL_PREFIX / target_arch().ANDROID_TARGET / 'bin'),
+            os.environ['PATH'],
+        ))
+
+        print(f'$PATH for OpenSSL: {newpath}')
+
+        self.env = {
+            'PATH': newpath,
+            'CPPFLAGS': f'-D__ANDROID_API__={env.android_api_level}',
+        }
+
         self.env['HASHBANGPERL'] = '/system/bin/env perl'
 
     def prepare(self):
-        openssl_target = self.OPENSSL_TARGETS[self.arch]
+        openssl_target = 'android-' + self.arch
 
         self.run_with_env(['./Configure', '--prefix=/usr', '--openssldir=/etc/ssl', openssl_target, 'no-shared'])
 
     def build(self):
-        configure_env = self.env
-        self.env = {}
-        for key in ('ARCH_SYSROOT', 'ANDROID_API_LEVEL'):
-            self.env[key] = configure_env[key]
-        self.env.update({
-            'CROSS_SYSROOT': configure_env['UNIFIED_SYSROOT'],
-            'GCC_TOOLCHAIN': self.TOOL_PREFIX,
-        })
         self.run_with_env(['make'])
         self.run_with_env(['make', 'install_sw', 'install_ssldirs', f'DESTDIR={self.destdir()}'])
