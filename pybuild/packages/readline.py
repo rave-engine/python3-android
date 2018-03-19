@@ -11,7 +11,7 @@ class Readline(Package):
     version = f'{_MAJOR}.{_MINOR}.{_PATCHLEVEL:03d}'
 
     _common = f'https://ftp.gnu.org/gnu/readline/readline-{_MAJOR}.{_MINOR}'
-    source = URLSource(f'{_common}.tar.gz')
+    source = URLSource(f'{_common}.tar.gz', sig_suffix='.sig')
     dependencies = ['ncurses']
 
     # Use property as list comprehension creates a new scope not mixing with
@@ -24,7 +24,7 @@ class Readline(Package):
             self._patches = [
                 RemotePatch(
                     f'{self._common}-patches/readline{self._MAJOR}{self._MINOR}-{patch:03d}',
-                    strip=0)
+                    strip=0, sig_suffix='.sig')
                 for patch in range(1, self._PATCHLEVEL + 1)]
         return self._patches
 

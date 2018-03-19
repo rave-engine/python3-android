@@ -44,7 +44,7 @@ class Package:
         if self.source:
             ret.append(self.source)
         ret.extend([
-            URLSource(patch.url)
+            URLSource(patch.url, sig_suffix=patch.sig_suffix)
             for patch in self.patches if isinstance(patch, RemotePatch)])
         return ret
 

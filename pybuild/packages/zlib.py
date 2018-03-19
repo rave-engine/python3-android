@@ -6,7 +6,7 @@ from ..util import target_arch
 
 class ZLib(Package):
     version = '1.2.11'
-    source = URLSource(f'https://zlib.net/zlib-{version}.tar.gz')
+    source = URLSource(f'https://zlib.net/zlib-{version}.tar.gz', sig_suffix='.asc')
     patches = [
         LocalPatch('fix-ldflags'),
     ]

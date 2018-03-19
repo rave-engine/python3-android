@@ -5,7 +5,7 @@ from ..util import target_arch
 
 class XZ(Package):
     version = '5.2.3'
-    source = URLSource(f'https://tukaani.org/xz/xz-{version}.tar.gz')
+    source = URLSource(f'https://tukaani.org/xz/xz-{version}.tar.gz', sig_suffix='.sig')
 
     def prepare(self):
         self.run_with_env([

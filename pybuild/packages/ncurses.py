@@ -1,10 +1,11 @@
-from ..source import GitSource
+from ..source import URLSource
 from ..package import Package
 from ..util import target_arch
 
 
 class NCurses(Package):
-    source = GitSource('https://github.com/ThomasDickey/ncurses-snapshots', alias='ncurses')
+    version = '6.1-20180317'
+    source = URLSource(f'http://invisible-mirror.net/archives/ncurses/current/ncurses-{version}.tgz', sig_suffix='.asc')
 
     def prepare(self):
         self.run_with_env([

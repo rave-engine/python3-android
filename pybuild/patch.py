@@ -23,6 +23,11 @@ class RemotePatch(Patch):
     def __init__(self, url: str, *args, **kwargs) -> None:
         self.url = url
         name, _ = os.path.splitext(os.path.basename(url))
+        self.sig_suffix = kwargs.get('sig_suffix')
+        try:
+            del kwargs['sig_suffix']
+        except KeyError:
+            pass
         super(RemotePatch, self).__init__(name, *args, **kwargs)
 
     def apply(self, source):

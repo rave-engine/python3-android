@@ -1,3 +1,4 @@
+import logging
 import os
 import re
 from typing import Iterable
@@ -42,6 +43,8 @@ def build_package(pkgname: str) -> None:
     if pkg.fresh():
         for src in pkg.sources:
             src.download()
+            src.verify()
+            src.extract()
 
         for patch in getattr(pkg, 'patches', []):
             patch.apply(pkg.source)
@@ -59,6 +62,8 @@ def build_package(pkgname: str) -> None:
 
 
 def main():
+    logging.basicConfig(level=logging.DEBUG)
+
     # TODO: Make this configurable
     need_rebuild.update(parse_packages(':COMMIT_MARKER'))
     print(f'Packages to rebuild: {need_rebuild}')

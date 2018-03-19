@@ -9,7 +9,7 @@ from ..util import target_arch
 
 class OpenSSL(Package):
     version = '1.1.1-pre3'
-    source = URLSource(f'https://www.openssl.org/source/openssl-{version}.tar.gz')
+    source = URLSource(f'https://www.openssl.org/source/openssl-{version}.tar.gz', sig_suffix='.asc')
 
     def __init__(self):
         super(OpenSSL, self).__init__()

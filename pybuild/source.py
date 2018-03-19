@@ -3,16 +3,28 @@ import os.path
 from pathlib import Path
 from typing import Any, Dict, List
 
+import gnupg
+
 from .util import BASE, rmtree, run_in_dir
+
+gpg = gnupg.GPG()
+# python-gnupg uses latin-1 by default, which breaks localized date strings in
+# gpg command outputs
+gpg.encoding = 'utf-8'
+
+
+class VerificationFailure(Exception):
+    pass
 
 
 class Source:
     _TAR_SUFFIXES = ('.tar.gz', '.tar.bz2', '.tar.xz', '.tgz')
 
-    def __init__(self, source_url: str, alias: str=None) -> None:
+    def __init__(self, source_url: str, alias: str=None, sig_suffix: str=None) -> None:
         self.source_url = source_url
         self.basename = os.path.basename(self.source_url.rstrip('/'))
         self.alias = alias
+        self.sig_suffix = sig_suffix
 
     @property
     def src_prefix(self) -> str:
@@ -43,6 +55,10 @@ class Source:
         if self.dest:
             return self.src_prefix / self.dest
 
+    @property
+    def target(self):
+        return self.src_prefix / self.basename
+
     def run_in_source_dir(self, cmd: List[str], env: Dict[str, Any]=None, mode='run'):
         return run_in_dir(cmd, self.source_dir, env, mode)
 
@@ -51,6 +67,20 @@ class Source:
 
     def download(self):
         raise NotImplementedError
+
+    def extract(self):
+        raise NotImplementedError
+
+    def verify(self):
+        if not self.sig_suffix:
+            return
+
+        URLSource(self.source_url + self.sig_suffix).download()
+        with open(self.target, 'rb') as f:
+            data = f.read()
+        verify_result = gpg.verify_data(str(self.target) + self.sig_suffix, data)
+        if verify_result.status not in ('signature good', 'signature valid'):
+            raise VerificationFailure(verify_result.status)
 
     def clean(self):
         raise NotImplementedError
@@ -67,12 +97,12 @@ class URLSource(Source):
         return None
 
     def download(self):
-        target_name = self.src_prefix / self.basename
-        if not target_name.exists():
+        if not self.target.exists():
             self.run_globally(['curl', '-v', '-L', '-O', self.source_url])
         else:
-            print(f'{target_name!s} already exists, skipping downloading...')
+            print(f'{self.target!s} already exists, skipping downloading...')
 
+    def extract(self):
         for suffix in self._TAR_SUFFIXES:
             if self.basename.endswith(suffix):
                 self.run_globally(['tar', '-xvf', self.basename])
@@ -98,6 +128,9 @@ class VCSSource(Source):
             self.checkout()
         else:
             self.clone()
+
+    def extract(self):
+        pass
 
 
 class GitSource(VCSSource):
@@ -128,4 +161,5 @@ class GitSource(VCSSource):
 
     def checkout(self):
         self.run_in_source_dir(['git', 'checkout', self.branch])
+        self.run_in_source_dir(['git', 'reset', '.'])
         self.run_in_source_dir(['git', 'checkout', '.'])
