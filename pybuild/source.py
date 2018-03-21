@@ -3,18 +3,7 @@ import os.path
 from pathlib import Path
 from typing import Any, Dict, List
 
-import gnupg
-
-from .util import BASE, rmtree, run_in_dir
-
-gpg = gnupg.GPG()
-# python-gnupg uses latin-1 by default, which breaks localized date strings in
-# gpg command outputs
-gpg.encoding = 'utf-8'
-
-
-class VerificationFailure(Exception):
-    pass
+from .util import BASE, gpg_verify_data, rmtree, run_in_dir
 
 
 class Source:
@@ -78,9 +67,7 @@ class Source:
         URLSource(self.source_url + self.sig_suffix).download()
         with open(self.target, 'rb') as f:
             data = f.read()
-        verify_result = gpg.verify_data(str(self.target) + self.sig_suffix, data)
-        if verify_result.status not in ('signature good', 'signature valid'):
-            raise VerificationFailure(verify_result.status)
+        gpg_verify_data(str(self.target) + self.sig_suffix, data)
 
     def clean(self):
         raise NotImplementedError

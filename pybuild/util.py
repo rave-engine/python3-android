@@ -1,3 +1,4 @@
+import logging
 import os
 import pathlib
 import shlex
@@ -6,10 +7,12 @@ from pathlib import Path
 from subprocess import check_call, check_output, run, PIPE
 from typing import Any, Dict, List, Union
 
-from .env import target_arch as default_target_arch
+from .env import target_arch as default_target_arch, verify_source
 from . import arch
 
 BASE = pathlib.Path(__file__).parents[1]
+
+logger = logging.getLogger(__name__)
 
 argtype = Union[pathlib.Path, str]
 
@@ -54,3 +57,28 @@ def run_in_dir(cmd: List[str], cwd: Union[str, Path]=None, env: Dict[str, Any]=N
     elif mode == 'result_noerror':
         p = run(cmd, stdout=PIPE, stderr=PIPE, cwd=cwd, env=real_env)
         return (b'\n'.join([p.stderr + p.stdout])).decode('utf-8')
+
+
+class VerificationFailure(Exception):
+    pass
+
+
+def gpg_verify_data(sig_filename, data):
+    if not verify_source:
+        return
+
+    try:
+        import gnupg
+    except ImportError:
+        logger.error('Failed to import gnupg. Please install python-gnupg or '
+                     'set verify_source = False in pybuild/env.py')
+        raise SystemExit
+
+    gpg = gnupg.GPG()
+    # python-gnupg uses latin-1 by default, which breaks localized date
+    # strings in gpg command outputs
+    gpg.encoding = 'utf-8'
+
+    verify_result = gpg.verify_data(sig_filename, data)
+    if verify_result.status not in ('signature good', 'signature valid'):
+        raise VerificationFailure(verify_result.status)

@@ -19,3 +19,6 @@ packages = ('openssl', 'ncurses', 'readline', 'sqlite', 'bzip2', 'xz', 'gdbm', '
 use_bintray = True
 bintray_username = 'yan12125'
 bintray_repo = 'cpython-bin-deps-android'
+
+# Enable GPG signature verification on source tarballs and patches?
+verify_source = True
