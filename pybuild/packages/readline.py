@@ -12,6 +12,7 @@ class Readline(Package):
 
     _common = f'https://ftp.gnu.org/gnu/readline/readline-{_MAJOR}.{_MINOR}'
     source = URLSource(f'{_common}.tar.gz', sig_suffix='.sig')
+    validpgpkeys = ['7C0135FB088AAF6C66C650B9BB5869F064EA74AB']
     dependencies = ['ncurses']
 
     # Use property as list comprehension creates a new scope not mixing with

@@ -10,6 +10,7 @@ from ..util import target_arch
 class OpenSSL(Package):
     version = '1.1.1-pre3'
     source = URLSource(f'https://www.openssl.org/source/openssl-{version}.tar.gz', sig_suffix='.asc')
+    validpgpkeys = ['8657ABB260F056B1E5190839D9C4D26D0E604491']
 
     def __init__(self):
         super(OpenSSL, self).__init__()

@@ -67,7 +67,8 @@ class Source:
         URLSource(self.source_url + self.sig_suffix).download()
         with open(self.target, 'rb') as f:
             data = f.read()
-        gpg_verify_data(str(self.target) + self.sig_suffix, data)
+        gpg_verify_data(str(self.target) + self.sig_suffix, data,
+                        self.package.validpgpkeys)
 
     def clean(self):
         raise NotImplementedError

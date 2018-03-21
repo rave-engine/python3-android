@@ -63,7 +63,7 @@ class VerificationFailure(Exception):
     pass
 
 
-def gpg_verify_data(sig_filename, data):
+def gpg_verify_data(sig_filename, data, validpgpkeys):
     if not verify_source:
         return
 
@@ -82,3 +82,7 @@ def gpg_verify_data(sig_filename, data):
     verify_result = gpg.verify_data(sig_filename, data)
     if verify_result.status not in ('signature good', 'signature valid'):
         raise VerificationFailure(verify_result.status)
+
+    if verify_result.fingerprint not in validpgpkeys:
+        raise VerificationFailure(f'Signing key {verify_result.fingerprint} '
+                                  f'not in validpgpkeys {validpgpkeys}')

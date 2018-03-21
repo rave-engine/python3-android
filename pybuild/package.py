@@ -32,8 +32,8 @@ class Package:
 
         self.init_build_env()
 
-        for patch in self.patches:
-            patch.package = self
+        for source in self.sources:
+            source.package = self
 
         for directory in (self.DIST_PATH, self.destdir()):
             directory.mkdir(exist_ok=True, parents=True)
