@@ -10,13 +10,21 @@ Prerequisites
 
 Building requires:
 
-1. Linux or macOS. Ubuntu 14.04, Arch Linux and macOS Sierra tested.
-2. Android NDK r16 beta 2 installed and environment variable ``$ANDROID_NDK`` points to its root directory. NDK r14 or r15 may work yet not fully tested. NDk r13 or below is not supported.
+1. Linux or macOS. Arch Linux and macOS High Sierra tested.
+2. Android NDK r17 beta 1 installed and environment variable ``$ANDROID_NDK`` points to its root directory. NDK r14 to r16 may work yet not fully tested. NDk r13 or below is not supported.
 3. git and python3.8 in $PATH. It's recommended to use the latest git-master to build python3.8. Here are some ways to install the python3.8:
 * For Arch Linux users, install [python-git](https://aur.archlinux.org/packages/python-git) package from AUR
 * For Homebrew users, run ```brew install python3 --HEAD```
 * For MacPorts users, add [my MacPorts overlay](https://github.com/yan12125/macports-overlay) to ``sources.conf`` and run ```sudo port install python37```
 * For other users, install 3.8 from [pyenv](https://github.com/yyuu/pyenv)
+4. (Optional yet highly recommended) Vinay Sajip's [python-gnupg](https://bitbucket.org/vinay.sajip/python-gnupg) package for verifying PGP signatures of source tarballs and patches. You can install it with the following command:
+```
+python3.8 -m pip install --user python-gnupg
+```
+If pip is not installed, the ensurepip module is your friend:
+```
+python3.8 -m ensurepip --user
+```
 
 Running requires:
 
@@ -29,7 +37,7 @@ Build
 
 1. `make clean` for good measure.
 2. For every API Level/architecture combination you wish to build for:
-   * Edit `env` to match your (desired) configuration.
+   * Edit `pybuild/env.py` to match your (desired) configuration.
    * `make` to build everything!
 
 
