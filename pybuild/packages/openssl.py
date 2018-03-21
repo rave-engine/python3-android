@@ -1,10 +1,13 @@
 import copy
+import logging
 import os
 
 from .. import env
 from ..package import Package
 from ..source import URLSource
 from ..util import target_arch
+
+logger = logging.getLogger(__name__)
 
 
 class OpenSSL(Package):
@@ -26,7 +29,7 @@ class OpenSSL(Package):
             os.environ['PATH'],
         ))
 
-        print(f'$PATH for OpenSSL: {newpath}')
+        logger.debug(f'$PATH for OpenSSL: {newpath}')
 
         self.env = {
             'PATH': newpath,
