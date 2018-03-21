@@ -1,16 +1,12 @@
 language: generic
 
 os:
-  - linux
-# https://github.com/travis-ci/cpython-builder/pull/3 should be resolved for Mac support
+  - osx
+# https://github.com/travis-ci/cpython-builder/pull/3 should be resolved for better Python support on macOS
+
+osx_image: xcode9.3beta
 
 sudo: false
-dist: trusty
-
-addons:
-  apt:
-    packages:
-      - texinfo
 
 branches:
   only:
@@ -21,8 +17,6 @@ env:
   global:
     - NDK_VER=r17-beta1
     - PYBUILD_SRC=$HOME/pybuild-src
-      # $BINTRAY_API_KEY
-    - secure: "H6sTN+6bPeQSgO/hhBF/SPPS1Yys8c/gNNBJBCxBMs8kqYfMLIfxtt8bmZtAcIR/9fH3BglGOecuH0Q7ili7K1xf7imW7s4T52jvjxtfWfXs384/Dr4DFH/iGn/jaebkwxz/inb6cAMk6Qn1ODxhbGwzLfe9YM8osNdST3unysXF3kQkIp/c0JXcLAUQhqQPeF9SuWJi7hrWi2fxiAZVFHPH8WszRDylFG/7YgqacPiEtvBkhaB7YNTw2nm6nXKlYAwAKca99Pndm2yPo/9gsIcc2NRvRJFzqnTEfw33w7SO8+NlZXq8fxbtae1YbnBfRyax0jZ/DunJne8T7Zsqh4z9YXBYfORO6+67AZb5XvlSuPpZLV7lHQ/Yz5NKHjl19gu+ZQWDDHQg2K9PepFvaCgTTiHFaWjZ1/9cLvyaQkR6YRJmK/l0fNffEcT9BowfL1b8/VkJ8/4NC7VE1UpI8ETVGsJwucrbkIfsx599zjfk/mM2RbyxGBWPG2u4QaU4hUkekDRb7Hh0xs2jY1SjZKsqzRHF7pPIaKkJ/dmCPrWzPzaxdHIYHxNjBXLehDdtRJsc782995TWX28vCoknED7qwTGo4UkZXe5p3mFnBV8UJsHwAgyRSJ/EFp448pkCEGm84F2uNmUGt1JW4I6Tcjg6a0Tdh9LX2OHuqs/C1x0="
 
   matrix:
     - ANDROID_PLATFORM=arm
@@ -31,8 +25,19 @@ env:
     - ANDROID_PLATFORM=x86_64
 
 install:
-  - pyenv install 3.8-dev && pyenv global 3.8-dev
-  - pip install requests
+  - |
+      export COLUMNS=80
+      curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
+      chmod +x ./macports-ci
+      ./macports-ci install
+  - PATH="/opt/local/bin:$PATH"
+  - |
+      git clone https://gitlab.com/yan12125/macports-overlay
+      ./macports-ci localports $(pwd)/macports-overlay
+  - |
+      sudo port -N install python38  # trace mode (-t) seems not working
+      python3.8 -m ensurepip --user
+      python3.8 -m pip install --user requests python-gnupg
   - |
       pushd $HOME
       HOST_OS="$(uname | tr 'A-Z' 'a-z')"
@@ -40,9 +45,11 @@ install:
       unzip -q android-ndk-$NDK_VER-$HOST_OS-x86_64.zip
       popd
   - export ANDROID_NDK=$HOME/android-ndk-$NDK_VER
-  - gpg --debug ipc --recv-keys $(python -m pybuild.pgp_keys)
+  - gpg --debug ipc --keyserver hkp://pool.sks-keyservers.net --recv-keys $(python3.8 -m pybuild.pgp_keys)
+  # bintray uses GeoTrust's cert ... not trusted by Travis CI's images?
+  - sed -i .bak -e 's#use_bintray = True#use_bintray = False#' pybuild/env.py
 
 script:
-  - python -m pybuild.clean
+  - python3.8 -m pybuild.clean
   - make
   - make test
