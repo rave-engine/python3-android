@@ -5,7 +5,7 @@ import shlex
 import shutil
 from pathlib import Path
 from subprocess import check_call, check_output, run, PIPE
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Text, Union
 
 from .env import target_arch as default_target_arch, verify_source
 from . import arch
@@ -14,13 +14,13 @@ BASE = pathlib.Path(__file__).parents[1]
 
 logger = logging.getLogger(__name__)
 
-argtype = Union[pathlib.Path, str]
+_PathType = Union[bytes, Text, os.PathLike]
 
 
-def tostring(value: Union[List[argtype], argtype]) -> str:
+def tostring(value: Union[List[_PathType], _PathType]) -> str:
     if isinstance(value, list):
-        value = ' '.join(map(str, value))
-    return str(value)
+        value = ' '.join(map(os.fspath, value))
+    return os.fspath(value)
 
 
 def target_arch() -> arch.Arch:
@@ -39,7 +39,7 @@ def rmtree(path: Path) -> None:
 
 
 # XXX: renamed to run? cwd is no longer required
-def run_in_dir(cmd: List[str], cwd: Union[str, Path]=None, env: Dict[str, Any]=None, mode='run'):
+def run_in_dir(cmd: List[str], cwd: _PathType=None, env: Dict[str, Any]=None, mode='run'):
     if cwd is None:
         cwd = BASE
 

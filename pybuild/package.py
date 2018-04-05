@@ -1,5 +1,6 @@
 import bz2
 import importlib
+import itertools
 import os.path
 import pathlib
 from typing import Iterator, List
@@ -8,7 +9,7 @@ import urllib.error
 
 from . import env
 from .arch import arm
-from .patch import Patch, RemotePatch
+from .patch import Patch
 from .source import Source, GitSource, URLSource
 from .util import BASE, run_in_dir, target_arch
 
@@ -20,7 +21,7 @@ class Package:
     version: str = None
     source: Source = None
     patches: List[Patch] = []
-    dependencies = []
+    dependencies: List[str] = []
     skip_uploading: bool = False
 
     def __init__(self):
@@ -32,8 +33,8 @@ class Package:
 
         self.init_build_env()
 
-        for source in self.sources:
-            source.package = self
+        for f in itertools.chain(self.sources, self.patches):
+            f.package = self
 
         for directory in (self.DIST_PATH, self.destdir()):
             directory.mkdir(exist_ok=True, parents=True)
@@ -41,11 +42,12 @@ class Package:
     @property
     def sources(self) -> List[Source]:
         ret = []
-        if self.source:
-            ret.append(self.source)
-        ret.extend([
-            URLSource(patch.url, sig_suffix=patch.sig_suffix)
-            for patch in self.patches if isinstance(patch, RemotePatch)])
+        for source in itertools.chain([self.source], self.patches):
+            if source and isinstance(source, Source):
+                ret.append(source)
+                if source.sig_suffix:
+                    ret.append(URLSource(
+                        source.source_url + source.sig_suffix))
         return ret
 
     @classmethod
@@ -121,9 +123,9 @@ class Package:
     def filesdir(self) -> pathlib.Path:
         return BASE / 'mk' / self.name
 
-    def fresh(self) -> bool:
+    def need_download(self) -> bool:
         if not self.source:
-            return
+            return False
         return not (self.source.source_dir / 'Makefile').exists()
 
     def run(self, cmd: List[str]) -> None:
@@ -238,7 +240,7 @@ def import_package(pkgname: str) -> Package:
     return None
 
 
-def enumerate_packages() -> Iterator[Package]:
+def enumerate_packages() -> Iterator[str]:
     for child in (pathlib.Path(__file__).parent / 'packages').iterdir():
         pkgname, ext = os.path.splitext(os.path.basename(child))
         if ext != '.py':

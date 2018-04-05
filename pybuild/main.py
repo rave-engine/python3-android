@@ -40,9 +40,12 @@ def build_package(pkgname: str) -> None:
     for dep in pkg.dependencies:
         build_package(dep)
 
-    if pkg.fresh():
+    if pkg.need_download():
         for src in pkg.sources:
             src.download()
+
+        # All signatures should be downloaded first so that sources can be verified
+        for src in pkg.sources:
             src.verify()
             src.extract()
 

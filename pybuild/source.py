@@ -16,7 +16,7 @@ class Source:
         self.sig_suffix = sig_suffix
 
     @property
-    def src_prefix(self) -> str:
+    def src_prefix(self) -> Path:
         pybuild_src = os.getenv('PYBUILD_SRC')
         if pybuild_src:
             ret = Path(pybuild_src)
@@ -64,7 +64,6 @@ class Source:
         if not self.sig_suffix:
             return
 
-        URLSource(self.source_url + self.sig_suffix).download()
         with open(self.target, 'rb') as f:
             data = f.read()
         gpg_verify_data(str(self.target) + self.sig_suffix, data,

@@ -1,5 +1,7 @@
 import os.path
 
+from .source import URLSource
+
 
 class Patch:
     def __init__(self, name: str, strip: int=1) -> None:
@@ -19,16 +21,13 @@ class LocalPatch(Patch):
         self.apply_file(self.package.filesdir / self.name, self.package.source)
 
 
-class RemotePatch(Patch):
+class RemotePatch(Patch, URLSource):
     def __init__(self, url: str, *args, **kwargs) -> None:
         self.url = url
         name, _ = os.path.splitext(os.path.basename(url))
-        self.sig_suffix = kwargs.get('sig_suffix')
-        try:
-            del kwargs['sig_suffix']
-        except KeyError:
-            pass
-        super(RemotePatch, self).__init__(name, *args, **kwargs)
+        sig_suffix = kwargs.pop('sig_suffix', None)
+        Patch.__init__(self, name, *args, **kwargs)
+        URLSource.__init__(self, url, sig_suffix=sig_suffix)
 
     def apply(self, source):
         self.apply_file(self.package.source.src_prefix / self.name, self.package.source)
