@@ -16,7 +16,7 @@ def send_package(pkgname):
     target_tarball_path = f'/data/local/tmp/{pkg.tarball_name}'
     run_in_dir(['adb', 'shell', 'rm', pkg.tarball_name])
     run_in_dir(['adb', 'push', pkg.tarball_path, target_tarball_path])
-    run_in_dir(['adb', 'shell', '/data/local/tmp/busybox', 'tar', 'jxvf', target_tarball_path, '-C', target_destdir])
+    run_in_dir(['adb', 'shell', 'busybox', 'tar', 'jxvf', target_tarball_path, '-C', target_destdir])
 
 
 def main():
