@@ -11,7 +11,7 @@ from . import env
 from .arch import arm
 from .patch import Patch
 from .source import Source, GitSource, URLSource
-from .util import BASE, run_in_dir, target_arch
+from .util import BASE, run_in_dir, target_arch, _PathType
 
 
 class Package:
@@ -27,6 +27,7 @@ class Package:
     def __init__(self):
         self.name = type(self).__name__.lower()
         self.arch = target_arch().__class__.__name__
+        self.env: Dict[str, _PathType] = {}
 
         if self.version is None and isinstance(self.source, GitSource):
             self.version = 'git'
@@ -55,7 +56,6 @@ class Package:
         return cls.BUILDDIR / 'target' / cls.__name__.lower()
 
     def init_build_env(self):
-        self.env = {}
 
         ANDROID_NDK = self._check_ndk()
 
@@ -85,7 +85,7 @@ class Package:
             cflags += ['-fno-integrated-as']
 
         self.env.update({
-            'ANDROID_API_LEVEL': env.android_api_level,
+            'ANDROID_API_LEVEL': str(env.android_api_level),
 
             # Sysroots
             'ARCH_SYSROOT': ARCH_SYSROOT,
