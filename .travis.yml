@@ -45,7 +45,7 @@ install:
       unzip -q android-ndk-$NDK_VER-$HOST_OS-x86_64.zip
       popd
   - export ANDROID_NDK=$HOME/android-ndk-$NDK_VER
-  - gpg --debug ipc --keyserver hkp://pool.sks-keyservers.net --recv-keys $(python3.8 -m pybuild.pgp_keys)
+  - gpg --debug ipc --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys $(python3.8 -m pybuild.pgp_keys)
   # bintray uses GeoTrust's cert ... not trusted by Travis CI's images?
   - sed -i .bak -e 's#use_bintray = True#use_bintray = False#' pybuild/env.py
 
