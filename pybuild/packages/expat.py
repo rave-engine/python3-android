@@ -5,7 +5,7 @@ from ..util import target_arch
 
 class Expat(Package):
     version = '2.2.5'
-    source = URLSource(f'https://sourceforge.net/projects/expat/files/expat/{version}/expat-{version}.tar.bz2')
+    source = URLSource(f'https://github.com/libexpat/libexpat/releases/download/R_{version.replace(".", "_")}/expat-{version}.tar.bz2')
 
     def prepare(self):
         self.run_with_env([
