@@ -1,14 +1,13 @@
-from ..source import GitSource
+from ..source import URLSource
 from ..package import Package
 from ..util import target_arch
 
 
 class LibFFI(Package):
-    source = GitSource('https://github.com/libffi/libffi')
+    version = '3.3-rc0'
+    source = URLSource(f'https://github.com/libffi/libffi/releases/download/v{version}/libffi-{version}.tar.gz')
 
     def prepare(self):
-        self.run(['./autogen.sh'])
-
         self.run_with_env([
             './configure',
             '--prefix=/usr',
