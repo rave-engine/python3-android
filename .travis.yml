@@ -4,7 +4,7 @@ os:
   - osx
 # https://github.com/travis-ci/cpython-builder/pull/3 should be resolved for better Python support on macOS
 
-osx_image: xcode9.3beta
+osx_image: xcode9.3
 
 sudo: false
 
@@ -15,7 +15,7 @@ branches:
 
 env:
   global:
-    - NDK_VER=r17-beta1
+    - NDK_VER=r17-beta2
     - PYBUILD_SRC=$HOME/pybuild-src
 
   matrix:
