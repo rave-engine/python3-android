@@ -3,7 +3,7 @@ import importlib
 import itertools
 import os.path
 import pathlib
-from typing import Iterator, List
+from typing import Dict, Iterator, List
 import urllib.request
 import urllib.error
 
@@ -32,8 +32,6 @@ class Package:
         if self.version is None and isinstance(self.source, GitSource):
             self.version = 'git'
 
-        self.init_build_env()
-
         for f in itertools.chain(self.sources, self.patches):
             f.package = self
 
@@ -55,7 +53,9 @@ class Package:
     def destdir(cls) -> pathlib.Path:
         return cls.BUILDDIR / 'target' / cls.__name__.lower()
 
-    def init_build_env(self):
+    def init_build_env(self) -> bool:
+        if self.env:
+            return False
 
         ANDROID_NDK = self._check_ndk()
 
@@ -119,6 +119,8 @@ class Package:
         for prog in ('ar', 'as', 'ld', 'objcopy', 'objdump', 'ranlib', 'strip', 'readelf'):
             self.env[prog.upper()] = self.TOOL_PREFIX / 'bin' / f'{target_arch().ANDROID_TARGET}-{prog}'
 
+        return True
+
     @property
     def filesdir(self) -> pathlib.Path:
         return BASE / 'mk' / self.name
@@ -132,6 +134,7 @@ class Package:
         self.source.run_in_source_dir(cmd)
 
     def run_with_env(self, cmd: List[str]) -> None:
+        self.init_build_env()
         self.source.run_in_source_dir(cmd, env=self.env)
 
     def _check_ndk(self) -> pathlib.Path:

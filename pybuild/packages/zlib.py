@@ -12,13 +12,16 @@ class ZLib(Package):
         LocalPatch('fix-ldflags'),
     ]
 
-    def __init__(self):
-        super(ZLib, self).__init__()
+    def init_build_env(self) -> bool:
+        if not super().init_build_env():
+            return False
 
         self.env.update({
             'CHOST': f'{target_arch().ANDROID_TARGET}-',
             'CFLAGS': self.env['CPPFLAGS'] + self.env['CFLAGS'],
         })
+
+        return True
 
     def prepare(self):
         self.run_with_env([

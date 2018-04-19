@@ -10,9 +10,13 @@ class BZip2(Package):
         LocalPatch('makefiles'),
     ]
 
-    def __init__(self):
-        super(BZip2, self).__init__()
+    def init_build_env(self) -> bool:
+        if not super().init_build_env():
+            return False
+
         self.env['CFLAGS'] = self.env['CPPFLAGS'] + self.env['CFLAGS']
+
+        return True
 
     def build(self):
         self.run_with_env(['make', 'libbz2.a', 'bzip2', 'bzip2recover'])

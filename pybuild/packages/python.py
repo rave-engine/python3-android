@@ -19,10 +19,13 @@ class Python(Package):
 
     skip_uploading = True
 
-    def __init__(self):
-        super(Python, self).__init__()
+    def init_build_env(self) -> bool:
+        if not super().init_build_env():
+            return False
 
         self.env['CONFIG_SITE'] = self.filesdir / 'config.site'
+
+        return True
 
     def prepare(self):
         self.run(['autoreconf', '--install', '--verbose', '--force'])
