@@ -15,7 +15,6 @@ branches:
 
 env:
   global:
-    - NDK_VER=r17-beta2
     - PYBUILD_SRC=$HOME/pybuild-src
 
   matrix:
@@ -40,9 +39,9 @@ install:
       python3.8 -m pip install --user requests python-gnupg
   - |
       pushd $HOME
-      "$TRAVIS_BUILD_DIR"/devscripts/prepare-ndk.sh $NDK_VER
+      "$TRAVIS_BUILD_DIR"/devscripts/prepare-ndk.sh
       popd
-  - export ANDROID_NDK=$HOME/android-ndk-$NDK_VER
+  - export ANDROID_NDK=$HOME/android-ndk
   - "$TRAVIS_BUILD_DIR"/devscripts/import_pgp_keys.sh
   # bintray uses GeoTrust's cert ... not trusted by Travis CI's images?
   - sed -i .bak -e 's#use_bintray = True#use_bintray = False#' pybuild/env.py
