@@ -14,30 +14,3 @@ diff -Nru Python-3.4.3/setup.py Python-3.4.3-android/setup.py > Python-3.4.3-set
          build_ext.build_extensions(self)
 
 
---- Python-3.4.3/setup.py	2016-01-06 09:22:17.000000000 -0500
-+++ Python-3.4.3-android/setup.py	2016-01-06 09:30:58.000000000 -0500
-@@ -651,7 +651,9 @@
-             missing.append('spwd')
- 
-         # select(2); not on ancient System V
--        exts.append( Extension('select', ['selectmodule.c']) )
-+        # pyepoll_poll needs math_libs for ceil()
-+        exts.append( Extension('select', ['selectmodule.c'],
-+                               libraries=math_libs) )
- 
-         # Fred Drake's interface to the Python parser
-         exts.append( Extension('parser', ['parsermodule.c']) )
-@@ -675,8 +677,11 @@
-         # Operations on audio samples
-         # According to #993173, this one should actually work fine on
-         # 64-bit platforms.
-+
-+
-+        # audioop needs math_libs for floor() in multiple functions.
-         exts.append( Extension('audioop', ['audioop.c'],
--                               libraries=['m']) )
-+                               libraries=math_libs) )
- 
-         # readline
-         do_readline = self.compiler.find_library_file(lib_dirs, 'readline')
-
