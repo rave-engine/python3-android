@@ -3,13 +3,14 @@ import pathlib
 import sys
 
 from nvchecker_toolbelt import check_pkgs
+from nvchecker_toolbelt.local_version_providers import Handler
 
 from pybuild.package import import_package
 
 ROOT = pathlib.Path(__file__).parent.resolve()
 
 
-class PyBuildHandler:
+class PyBuildHandler(Handler):
     SCRIPT_NAME = 'pybuild'
 
     def get_version(self, pkgname):
