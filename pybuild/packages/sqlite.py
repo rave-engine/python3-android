@@ -4,7 +4,7 @@ from ..util import target_arch
 
 
 class SQLite(Package):
-    version = '3.23.1'
+    version = '3.24.0'
     _vernum = list(map(int, version.split('.')))
     source = URLSource(f'https://www.sqlite.org/2018/sqlite-autoconf-{_vernum[0] * 10000 + _vernum[1] * 100 + _vernum[2]}00.tar.gz')
 

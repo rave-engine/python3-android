@@ -5,9 +5,9 @@ from ..util import target_arch
 
 
 class Readline(Package):
-    _MAJOR = 7
-    _MINOR = 0
-    _PATCHLEVEL = 3
+    _MAJOR = 8
+    _MINOR = '0-alpha'
+    _PATCHLEVEL = 0
     version = f'{_MAJOR}.{_MINOR}.{_PATCHLEVEL:03d}'
 
     _common = f'https://ftp.gnu.org/gnu/readline/readline-{_MAJOR}.{_MINOR}'
@@ -27,6 +27,8 @@ class Readline(Package):
                     f'{self._common}-patches/readline{self._MAJOR}{self._MINOR}-{patch:03d}',
                     strip=0, sig_suffix='.sig')
                 for patch in range(1, self._PATCHLEVEL + 1)]
+            self._patches.append(RemotePatch(
+                'https://github.com/Homebrew/formula-patches/raw/master/readline/pkgconfigdir.patch'))
         return self._patches
 
     def prepare(self):
