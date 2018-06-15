@@ -13,7 +13,3 @@ unzip -q $NDK_ARCHIVE
 
 rm -rf $(pwd)/android-ndk
 mv $(pwd)/android-ndk-$NDK_VER $(pwd)/android-ndk
-
-"$SCRIPTPATH"/strip-ndk.sh $(pwd)/android-ndk
-
-rm -vf $NDK_ARCHIVE
