@@ -37,7 +37,7 @@ install:
       cat $(pwd)/devscripts/macports-archive-sites.conf | sudo tee -a /opt/local/etc/macports/archive_sites.conf
       echo $(pwd)/devscripts/macports-chyen-pubkey.pem | sudo tee -a /opt/local/etc/macports/pubkeys.conf
   - |
-      sudo port -Nb install python38 curl-ca-bundle
+      sudo port -Nb install python38 curl-ca-bundle gnutar
       python3.8 -m ensurepip --user
       python3.8 -m pip install --user python-gnupg
   - |

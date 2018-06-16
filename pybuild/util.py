@@ -95,3 +95,7 @@ def parse_ndk_revision(ndk_root):
             mobj = re.match(r'Pkg\.Revision\s*=\s*(.+)', line)
             if mobj:
                 return mobj.group(1)
+
+
+def tar_cmd():
+    return shutil.which('gnutar') or shutil.which('tar')

@@ -10,7 +10,14 @@ from . import env
 from .arch import arm
 from .patch import Patch
 from .source import Source, GitSource, URLSource
-from .util import BASE, run_in_dir, target_arch, _PathType, parse_ndk_revision
+from .util import (
+    _PathType,
+    BASE,
+    parse_ndk_revision,
+    run_in_dir,
+    tar_cmd,
+    target_arch,
+)
 
 
 class Package:
@@ -162,7 +169,7 @@ class Package:
     def create_tarball(self):
         print(f'Creating {self.tarball_name} in {self.DIST_PATH}...')
 
-        run_in_dir(['tar', '-jcf', self.tarball_path, '.'], cwd=self.destdir())
+        run_in_dir([tar_cmd(), '-jcf', self.tarball_path, '.'], cwd=self.destdir())
 
     @property
     def tarball_name(self):
@@ -203,7 +210,7 @@ class Package:
             f.write(req.read())
 
         run_in_dir(
-            ['tar', '-jxf', self.tarball_path],
+            [tar_cmd(), '-jxf', self.tarball_path],
             cwd=self.destdir())
 
         return True
