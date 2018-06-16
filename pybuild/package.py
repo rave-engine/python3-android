@@ -1,4 +1,3 @@
-import bz2
 import importlib
 import itertools
 import os.path
@@ -201,7 +200,7 @@ class Package:
             raise
 
         with open(self.tarball_path, 'wb') as f:
-            f.write(bz2.decompress(req.read()))
+            f.write(req.read())
 
         run_in_dir(
             ['tar', '-jxf', self.tarball_path],
