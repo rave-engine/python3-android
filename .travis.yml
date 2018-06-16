@@ -46,8 +46,6 @@ install:
       popd
   - export ANDROID_NDK=$HOME/android-ndk
   - "$TRAVIS_BUILD_DIR/devscripts/import_pgp_keys.sh"
-  # bintray uses GeoTrust's cert ... not trusted by Travis CI's images?
-  - sed -i .bak -e 's#use_bintray = True#use_bintray = False#' pybuild/env.py
 
 script:
   - python3.8 -m pybuild.clean

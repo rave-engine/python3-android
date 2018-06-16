@@ -11,7 +11,7 @@ from . import env
 from .arch import arm
 from .patch import Patch
 from .source import Source, GitSource, URLSource
-from .util import BASE, run_in_dir, target_arch, _PathType
+from .util import BASE, run_in_dir, target_arch, _PathType, parse_ndk_revision
 
 
 class Package:
@@ -28,6 +28,7 @@ class Package:
         self.name = type(self).__name__.lower()
         self.arch = target_arch().__class__.__name__
         self.env: Dict[str, _PathType] = {}
+        self._ndk = None
 
         if self.version is None and isinstance(self.source, GitSource):
             self.version = 'git'
@@ -57,17 +58,15 @@ class Package:
         if self.env:
             return False
 
-        ANDROID_NDK = self._check_ndk()
-
         HOST_OS = os.uname().sysname.lower()
 
         if HOST_OS not in ('linux', 'darwin'):
             raise Exception(f'Unsupported system {HOST_OS}')
 
-        self.TOOL_PREFIX = (ANDROID_NDK / 'toolchains' /
+        self.TOOL_PREFIX = (self.ndk / 'toolchains' /
                             target_arch().ANDROID_TOOLCHAIN /
                             'prebuilt' / f'{HOST_OS}-x86_64')
-        CLANG_PREFIX = (ANDROID_NDK / 'toolchains' /
+        CLANG_PREFIX = (self.ndk / 'toolchains' /
                         'llvm' / 'prebuilt' / f'{HOST_OS}-x86_64')
 
         LLVM_BASE_FLAGS = [
@@ -75,10 +74,10 @@ class Package:
             '-gcc-toolchain', self.TOOL_PREFIX,
         ]
 
-        ARCH_SYSROOT = (ANDROID_NDK / 'platforms' /
+        ARCH_SYSROOT = (self.ndk / 'platforms' /
                         f'android-{env.android_api_level}' /
                         f'arch-{self.arch}' / 'usr')
-        UNIFIED_SYSROOT = ANDROID_NDK / 'sysroot' / 'usr'
+        UNIFIED_SYSROOT = self.ndk / 'sysroot' / 'usr'
 
         cflags = ['-fPIC']
         if isinstance(target_arch(), arm):
@@ -146,7 +145,14 @@ class Package:
         if not (ndk / 'sysroot').exists():
             raise Exception('Requires Android NDK r14 beta1 or above')
 
-        return ndk
+        self._ndk = ndk
+
+    @property
+    def ndk(self):
+        if self._ndk is None:
+            self._check_ndk()
+
+        return self._ndk
 
     def prepare(self):
         raise NotImplementedError
@@ -160,16 +166,9 @@ class Package:
         run_in_dir(['tar', '-jcf', self.tarball_path, '.'], cwd=self.destdir())
 
     @property
-    def bintray_version(self):
-        return f'{self.arch}-{self.version}'
-
-    @property
-    def bintray_path(self):
-        return f'{env.bintray_username}/{env.bintray_repo}/{self.tarball_name}.bz2'
-
-    @property
     def tarball_name(self):
-        return f'{self.name}-{self.bintray_version}.tar.bz2'
+        ndk_revision = parse_ndk_revision(self.ndk)
+        return f'{self.name}-{self.arch}-{self.version}-ndk_{ndk_revision}.tar.bz2'
 
     @property
     def tarball_path(self):
@@ -179,28 +178,7 @@ class Package:
         if self.skip_uploading:
             print(f'Skipping uploading for package {self.name}')
             return
-
-        bintray_api_key = os.getenv('BINTRAY_API_KEY')
-        if not bintray_api_key:
-            print(f'No Bintray API key found. Skipping uploading {self.tarball_name}...')
-            return
-
-        print(f'Uploading {self.tarball_name} to Bintray...')
-
-        with open(self.tarball_path, 'rb') as pkg:
-            import requests
-            r = requests.put(
-                f'https://bintray.com/api/v1/content/{self.bintray_path}',
-                data=bz2.compress(pkg.read()),
-                auth=(env.bintray_username, bintray_api_key),
-                headers={
-                    'X-Bintray-Package': self.name,
-                    'X-Bintray-Version': self.bintray_version,
-                    'X-Bintray-Publish': '1',
-                    'X-Bintray-Override': '1',
-                })
-
-            print(f'Uploading result: {r.text}')
+        pass
 
     def fetch_tarball(self):
         if self.skip_uploading:
@@ -211,7 +189,7 @@ class Package:
             print(f'Skipping already downloaded {self.tarball_path}...')
             return True
 
-        tarball_url = f'https://dl.bintray.com/{self.bintray_path}'
+        tarball_url = f'https://dl.chyen.cc/python3-android/{self.tarball_name}'
         try:
             print(f'Downloading {tarball_url}...')
             req = urllib.request.urlopen(tarball_url)

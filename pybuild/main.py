@@ -3,7 +3,6 @@ import os
 import re
 from typing import Iterable
 
-from .env import use_bintray
 from .package import enumerate_packages, import_package
 
 built_packags: set = set()
@@ -33,7 +32,7 @@ def build_package(pkgname: str) -> None:
 
     pkg = import_package(pkgname)
 
-    if use_bintray and pkgname not in need_rebuild and pkg.fetch_tarball():
+    if pkgname not in need_rebuild and pkg.fetch_tarball():
         built_packags.add(pkgname)
         return
 

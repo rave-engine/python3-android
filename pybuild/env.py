@@ -16,9 +16,5 @@ android_api_level = 21
 #  tools - some handy utility scripts from ./devscripts
 packages = ('openssl', 'ncurses', 'readline', 'sqlite', 'bzip2', 'xz', 'gdbm', 'libffi', 'zlib', 'expat', 'tools')
 
-use_bintray = True
-bintray_username = 'yan12125'
-bintray_repo = 'cpython-bin-deps-android'
-
 # Enable GPG signature verification on source tarballs and patches?
 verify_source = True

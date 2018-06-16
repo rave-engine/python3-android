@@ -1,6 +1,7 @@
 import logging
 import os
 import pathlib
+import re
 import shlex
 import shutil
 from pathlib import Path
@@ -86,3 +87,11 @@ def gpg_verify_data(sig_filename, data, validpgpkeys):
     if verify_result.fingerprint not in validpgpkeys:
         raise VerificationFailure(f'Signing key {verify_result.fingerprint} '
                                   f'not in validpgpkeys {validpgpkeys}')
+
+
+def parse_ndk_revision(ndk_root):
+    with open(ndk_root / 'source.properties', 'r') as f:
+        for line in f:
+            mobj = re.match(r'Pkg\.Revision\s*=\s*(.+)', line)
+            if mobj:
+                return mobj.group(1)
