@@ -39,7 +39,7 @@ install:
   - |
       sudo port -Nb install python38 curl-ca-bundle
       python3.8 -m ensurepip --user
-      python3.8 -m pip install --user requests python-gnupg
+      python3.8 -m pip install --user python-gnupg
   - |
       pushd $HOME
       "$TRAVIS_BUILD_DIR/devscripts/prepare-ndk.sh"
