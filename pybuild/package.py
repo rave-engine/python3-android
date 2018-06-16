@@ -2,6 +2,7 @@ import importlib
 import itertools
 import os.path
 import pathlib
+import shutil
 from typing import Dict, Iterator, List
 import urllib.request
 import urllib.error
@@ -186,7 +187,10 @@ class Package:
         if self.skip_uploading:
             print(f'Skipping uploading for package {self.name}')
             return
-        pass
+        dest = os.getenv('PYTHON3_ANDROID_TARBALL_DEST')
+        if dest:
+            dest_path = pathlib.Path(dest)
+            shutil.copy2(self.tarball_path, dest_path / self.tarball_name)
 
     def extract_tarball(self):
         run_in_dir(
