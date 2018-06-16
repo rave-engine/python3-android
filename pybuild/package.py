@@ -23,6 +23,7 @@ from .util import (
 class Package:
     BUILDDIR = BASE / 'build'
     DIST_PATH = BUILDDIR / 'dist'
+    SYSROOT = BUILDDIR / 'sysroot'
 
     version: str = None
     source: Source = None
@@ -42,7 +43,7 @@ class Package:
         for f in itertools.chain(self.sources, self.patches):
             f.package = self
 
-        for directory in (self.DIST_PATH, self.destdir()):
+        for directory in (self.DIST_PATH, self.destdir(), self.SYSROOT):
             directory.mkdir(exist_ok=True, parents=True)
 
     @property
@@ -103,6 +104,7 @@ class Package:
 
             # Compiler flags
             'CPPFLAGS': LLVM_BASE_FLAGS + [
+                f'-I{self.SYSROOT}/usr/include',
                 f'--sysroot={ARCH_SYSROOT}',
                 '-isystem', f'{UNIFIED_SYSROOT}/include',
                 '-isystem', f'{UNIFIED_SYSROOT}/include/{target_arch().ANDROID_TARGET}',
@@ -111,15 +113,15 @@ class Package:
             'CFLAGS': cflags,
             'CXXFLAGS': cflags,
             'LDFLAGS': LLVM_BASE_FLAGS + [
+                f'-L{self.SYSROOT}/usr/lib',
                 '--sysroot=' + str(ARCH_SYSROOT),
                 '-pie',
             ],
-        })
 
-        for dep in self.dependencies:
-            dep_pkg = import_package(dep)
-            self.env['CPPFLAGS'].extend(['-I', f'{dep_pkg.destdir()}/usr/include'])
-            self.env['LDFLAGS'].extend(['-L', f'{dep_pkg.destdir()}/usr/lib'])
+            # pkg-config settings
+            'PKG_CONFIG_SYSROOT_DIR': self.SYSROOT,
+            'PKG_CONFIG_LIBDIR': self.SYSROOT / 'usr' / 'lib' / 'pkgconfig',
+        })
 
         for prog in ('ar', 'as', 'ld', 'objcopy', 'objdump', 'ranlib', 'strip', 'readelf'):
             self.env[prog.upper()] = self.TOOL_PREFIX / 'bin' / f'{target_arch().ANDROID_TARGET}-{prog}'
@@ -186,6 +188,11 @@ class Package:
             return
         pass
 
+    def extract_tarball(self):
+        run_in_dir(
+            [tar_cmd(), '-jxf', self.tarball_path],
+            cwd=self.SYSROOT)
+
     def fetch_tarball(self):
         if self.skip_uploading:
             print(f'Skipping fetching package {self.name}')
@@ -209,9 +216,7 @@ class Package:
         with open(self.tarball_path, 'wb') as f:
             f.write(req.read())
 
-        run_in_dir(
-            [tar_cmd(), '-jxf', self.tarball_path],
-            cwd=self.destdir())
+        self.extract_tarball()
 
         return True
 

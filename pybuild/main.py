@@ -59,6 +59,7 @@ def build_package(pkgname: str) -> None:
 
     pkg.create_tarball()
     pkg.upload_tarball()
+    pkg.extract_tarball()
 
     built_packags.add(pkgname)
 
