@@ -190,7 +190,10 @@ class Package:
         dest = os.getenv('PYTHON3_ANDROID_TARBALL_DEST')
         if dest:
             dest_path = pathlib.Path(dest)
-            shutil.copy2(self.tarball_path, dest_path / self.tarball_name)
+            dest_tarball_path = dest_path / self.tarball_name
+            shutil.copy2(self.tarball_path, dest_tarball_path)
+            # buildbot defaults to umask 077
+            os.chmod(dest_tarball_path, 0o644)
 
     def extract_tarball(self):
         run_in_dir(
