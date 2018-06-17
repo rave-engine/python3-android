@@ -64,7 +64,7 @@ class VerificationFailure(Exception):
     pass
 
 
-def gpg_verify_data(sig_filename, data, validpgpkeys):
+def gpg_verify_file(sig_filename, filename, validpgpkeys):
     if not verify_source:
         return
 
@@ -80,12 +80,15 @@ def gpg_verify_data(sig_filename, data, validpgpkeys):
     # strings in gpg command outputs
     gpg.encoding = 'utf-8'
 
-    verify_result = gpg.verify_data(sig_filename, data)
+    with open(filename, 'rb') as f:
+        data = f.read()
+
+    verify_result = gpg.verify_data(str(sig_filename), data)
     if verify_result.status not in ('signature good', 'signature valid'):
         raise VerificationFailure(verify_result.status)
 
-    if verify_result.fingerprint not in validpgpkeys:
-        raise VerificationFailure(f'Signing key {verify_result.fingerprint} '
+    if verify_result.pubkey_fingerprint not in validpgpkeys:
+        raise VerificationFailure(f'Signing key {verify_result.pubkey_fingerprint} '
                                   f'not in validpgpkeys {validpgpkeys}')
 
 

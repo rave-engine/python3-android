@@ -16,6 +16,7 @@ from .util import (
     _PathType,
     BASE,
     gpg_sign_file,
+    gpg_verify_file,
     parse_ndk_revision,
     run_in_dir,
     tar_cmd,
@@ -27,6 +28,7 @@ class Package:
     BUILDDIR = BASE / 'build'
     DIST_PATH = BUILDDIR / 'dist'
     SYSROOT = BUILDDIR / 'sysroot'
+    ARCHIVES_ROOT = 'https://dl.chyen.cc/python3-android/'
 
     version: str = None
     source: Source = None
@@ -184,8 +186,16 @@ class Package:
         return f'{self.name}-{self.arch}-{self.version}-ndk_{ndk_revision}.tar.bz2'
 
     @property
+    def tarball_sig_name(self):
+        return self.tarball_name + '.sig'
+
+    @property
     def tarball_path(self):
         return self.DIST_PATH / self.tarball_name
+
+    @property
+    def tarball_sig_path(self):
+        return self.DIST_PATH / self.tarball_sig_name
 
     def upload_tarball(self):
         if self.skip_uploading:
@@ -194,11 +204,13 @@ class Package:
         dest = os.getenv('PYTHON3_ANDROID_TARBALL_DEST')
         if dest:
             dest_path = pathlib.Path(dest)
-            sig_path = str(self.tarball_path) + '.sig'
-            for filepath in (self.tarball_path, sig_path):
+            for filepath in (self.tarball_path, self.tarball_sig_path):
                 shutil.copy2(filepath, dest_path)
                 # buildbot defaults to umask 077
                 os.chmod(dest_path / os.path.basename(filepath), 0o644)
+
+    def verify_tarball(self):
+        gpg_verify_file(self.tarball_sig_path, self.tarball_path, [gpg_key_id])
 
     def extract_tarball(self):
         run_in_dir(
@@ -214,20 +226,22 @@ class Package:
             print(f'Skipping already downloaded {self.tarball_path}...')
             return True
 
-        tarball_url = f'https://dl.chyen.cc/python3-android/{self.tarball_name}'
-        try:
-            print(f'Downloading {tarball_url}...')
-            req = urllib.request.urlopen(tarball_url)
-        except urllib.error.HTTPError as err:
-            if err.code == 404:
-                print(f'{tarball_url} is missing. Skipping...')
-                return False
+        for file_path in (self.tarball_path, self.tarball_sig_path):
+            url = self.ARCHIVES_ROOT + os.path.basename(file_path)
+            try:
+                print(f'Downloading {url}...')
+                req = urllib.request.urlopen(url)
+            except urllib.error.HTTPError as err:
+                if err.code == 404:
+                    print(f'{url} is missing. Skipping...')
+                    return False
 
-            raise
+                raise
 
-        with open(self.tarball_path, 'wb') as f:
-            f.write(req.read())
+            with open(file_path, 'wb') as f:
+                f.write(req.read())
 
+        self.verify_tarball()
         self.extract_tarball()
 
         return True

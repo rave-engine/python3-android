@@ -3,7 +3,7 @@ import os.path
 from pathlib import Path
 from typing import Any, Dict, List
 
-from .util import BASE, gpg_verify_data, rmtree, run_in_dir
+from .util import BASE, gpg_verify_file, rmtree, run_in_dir
 
 
 class Source:
@@ -64,9 +64,7 @@ class Source:
         if not self.sig_suffix:
             return
 
-        with open(self.target, 'rb') as f:
-            data = f.read()
-        gpg_verify_data(str(self.target) + self.sig_suffix, data,
+        gpg_verify_file(str(self.target) + self.sig_suffix, self.target,
                         self.package.validpgpkeys)
 
     def clean(self):
