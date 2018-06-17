@@ -9,11 +9,13 @@ import urllib.error
 
 from . import env
 from .arch import arm
+from .env import gpg_key_id
 from .patch import Patch
 from .source import Source, GitSource, URLSource
 from .util import (
     _PathType,
     BASE,
+    gpg_sign_file,
     parse_ndk_revision,
     run_in_dir,
     tar_cmd,
@@ -174,6 +176,8 @@ class Package:
 
         run_in_dir([tar_cmd(), '-jcf', self.tarball_path, '.'], cwd=self.destdir())
 
+        gpg_sign_file(self.tarball_path, gpg_key_id)
+
     @property
     def tarball_name(self):
         ndk_revision = parse_ndk_revision(self.ndk)
@@ -190,10 +194,11 @@ class Package:
         dest = os.getenv('PYTHON3_ANDROID_TARBALL_DEST')
         if dest:
             dest_path = pathlib.Path(dest)
-            dest_tarball_path = dest_path / self.tarball_name
-            shutil.copy2(self.tarball_path, dest_tarball_path)
-            # buildbot defaults to umask 077
-            os.chmod(dest_tarball_path, 0o644)
+            sig_path = str(self.tarball_path) + '.sig'
+            for filepath in (self.tarball_path, sig_path):
+                shutil.copy2(filepath, dest_path)
+                # buildbot defaults to umask 077
+                os.chmod(dest_path / os.path.basename(filepath), 0o644)
 
     def extract_tarball(self):
         run_in_dir(

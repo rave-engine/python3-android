@@ -89,6 +89,19 @@ def gpg_verify_data(sig_filename, data, validpgpkeys):
                                   f'not in validpgpkeys {validpgpkeys}')
 
 
+def gpg_sign_file(filename, key):
+    import gnupg
+
+    gpg = gnupg.GPG()
+    with open(filename, 'rb') as f:
+        sign_result = gpg.sign_file(f, keyid=key, detach=True, binary=False)
+
+    detached_sig = sign_result.data
+
+    with open(str(filename) + '.sig', 'wb') as f:
+        f.write(detached_sig)
+
+
 def parse_ndk_revision(ndk_root):
     with open(ndk_root / 'source.properties', 'r') as f:
         for line in f:
