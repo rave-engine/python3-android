@@ -27,8 +27,6 @@ class Readline(Package):
                     f'{self._common}-patches/readline{self._MAJOR}{self._MINOR}-{patch:03d}',
                     strip=0, sig_suffix='.sig')
                 for patch in range(1, self._PATCHLEVEL + 1)]
-            self._patches.append(RemotePatch(
-                'https://github.com/Homebrew/formula-patches/raw/master/readline/pkgconfigdir.patch'))
         return self._patches
 
     def prepare(self):
