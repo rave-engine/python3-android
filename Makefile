@@ -1,4 +1,4 @@
-PYTHON?=python3.8
+PYTHON?=python
 
 all:
 	$(PYTHON) -m pybuild

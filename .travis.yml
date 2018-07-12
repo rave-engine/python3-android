@@ -15,6 +15,7 @@ branches:
 
 env:
   global:
+    - PYTHON=python3.8
     - PYBUILD_SRC=$HOME/pybuild-src
 
   matrix:
@@ -38,8 +39,8 @@ install:
       echo $(pwd)/devscripts/macports-chyen-pubkey.pem | sudo tee -a /opt/local/etc/macports/pubkeys.conf
   - |
       sudo port -Nb install python38 curl-ca-bundle gnutar
-      python3.8 -m ensurepip --user
-      python3.8 -m pip install --user python-gnupg
+      $PYTHON -m ensurepip --user
+      $PYTHON -m pip install --user python-gnupg
   - |
       pushd $HOME
       "$TRAVIS_BUILD_DIR/devscripts/prepare-ndk.sh"
@@ -48,6 +49,6 @@ install:
   - "$TRAVIS_BUILD_DIR/devscripts/import_pgp_keys.sh"
 
 script:
-  - python3.8 -m pybuild.clean
+  - $PYTHON -m pybuild.clean
   - make
   - make test

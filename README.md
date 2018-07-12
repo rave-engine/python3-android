@@ -19,11 +19,11 @@ Building requires:
 * For other users, install 3.8 from [pyenv](https://github.com/yyuu/pyenv)
 4. (Optional yet highly recommended) Vinay Sajip's [python-gnupg](https://bitbucket.org/vinay.sajip/python-gnupg) package for verifying PGP signatures of source tarballs and patches. You can install it with the following command:
 ```
-python3.8 -m pip install --user python-gnupg
+python -m pip install --user python-gnupg
 ```
 If pip is not installed, the ensurepip module is your friend:
 ```
-python3.8 -m ensurepip --user
+python -m ensurepip --user
 ```
 
 Running requires:
