@@ -3,7 +3,8 @@ Python 3 Android
 
 This is an experimental set of build scripts that will cross-compile the latest Python 3 git master for an Android device.
 
-Build status: 
+Build status:
+
 | System            | Status        |
 | ----------------- |---------------|
 | macOS (Travis CI) | [![Build Status](https://travis-ci.org/yan12125/python3-android.svg?branch=master)](https://travis-ci.org/yan12125/python3-android) |
