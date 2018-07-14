@@ -4,7 +4,7 @@ from .source import URLSource
 
 
 class Patch:
-    def __init__(self, name: str, strip: int=1) -> None:
+    def __init__(self, name: str, strip: int = 1) -> None:
         self.name = name
         self.strip = strip
 

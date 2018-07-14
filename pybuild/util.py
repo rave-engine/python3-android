@@ -40,7 +40,7 @@ def rmtree(path: Path) -> None:
 
 
 # XXX: renamed to run? cwd is no longer required
-def run_in_dir(cmd: List[str], cwd: _PathType=None, env: Dict[str, Any]=None, mode='run'):
+def run_in_dir(cmd: List[str], cwd: _PathType = None, env: Dict[str, Any] = None, mode='run'):
     if cwd is None:
         cwd = BASE
 

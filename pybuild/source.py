@@ -9,7 +9,7 @@ from .util import BASE, gpg_verify_file, rmtree, run_in_dir
 class Source:
     _TAR_SUFFIXES = ('.tar.gz', '.tar.bz2', '.tar.xz', '.tgz')
 
-    def __init__(self, source_url: str, alias: str=None, sig_suffix: str=None) -> None:
+    def __init__(self, source_url: str, alias: str = None, sig_suffix: str = None) -> None:
         self.source_url = source_url
         self.basename = os.path.basename(self.source_url.rstrip('/'))
         self.alias = alias
@@ -48,10 +48,10 @@ class Source:
     def target(self):
         return self.src_prefix / self.basename
 
-    def run_in_source_dir(self, cmd: List[str], env: Dict[str, Any]=None, mode='run'):
+    def run_in_source_dir(self, cmd: List[str], env: Dict[str, Any] = None, mode='run'):
         return run_in_dir(cmd, self.source_dir, env, mode)
 
-    def run_globally(self, cmd: List[str], env: Dict[str, str]=None, mode='run'):
+    def run_globally(self, cmd: List[str], env: Dict[str, str] = None, mode='run'):
         return run_in_dir(cmd, self.src_prefix, env, mode)
 
     def download(self):
