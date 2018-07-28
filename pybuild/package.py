@@ -3,7 +3,7 @@ import itertools
 import os.path
 import pathlib
 import shutil
-from typing import Dict, Iterator, List
+from typing import Dict, Iterator, List, Sequence, Union
 import urllib.request
 import urllib.error
 
@@ -30,8 +30,8 @@ class Package:
     SYSROOT = BUILDDIR / 'sysroot'
     ARCHIVES_ROOT = 'https://dl.chyen.cc/python3-android/'
 
-    version: str = None
-    source: Source = None
+    version: str
+    source: Source
     patches: List[Patch] = []
     dependencies: List[str] = []
     skip_uploading: bool = False
@@ -39,7 +39,7 @@ class Package:
     def __init__(self):
         self.name = type(self).__name__.lower()
         self.arch = target_arch().__class__.__name__
-        self.env: Dict[str, _PathType] = {}
+        self.env: Dict[str, Union[_PathType, Sequence[_PathType]]] = {}
         self._ndk = None
 
         if self.version is None and isinstance(self.source, GitSource):
@@ -149,7 +149,7 @@ class Package:
         self.init_build_env()
         self.source.run_in_source_dir(cmd, env=self.env)
 
-    def _check_ndk(self) -> pathlib.Path:
+    def _check_ndk(self) -> None:
         ndk_path = os.getenv('ANDROID_NDK')
         if not ndk_path:
             raise Exception('Requires environment variable $ANDROID_NDK')
@@ -254,8 +254,7 @@ def import_package(pkgname: str) -> Package:
         if type(symbol) == type and symbol_name.lower() == pkgname:
             return symbol()
 
-    # XXX: mypy asks for an explicit `return`. Is it necessary?
-    return None
+    raise Exception(f'Package {pkgname} not found')
 
 
 def enumerate_packages() -> Iterator[str]:

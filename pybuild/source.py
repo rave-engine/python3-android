@@ -1,7 +1,7 @@
 import os
 import os.path
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from .util import BASE, gpg_verify_file, rmtree, run_in_dir
 
@@ -26,7 +26,7 @@ class Source:
         return BASE / 'src'
 
     @property
-    def dest(self) -> str:
+    def dest(self) -> Optional[str]:
         '''
         Return the name of the directory extracted from tarballs
         '''
@@ -36,7 +36,7 @@ class Source:
         return self._dest
 
     @property
-    def _dest(self) -> str:
+    def _dest(self) -> Optional[str]:
         raise NotImplementedError
 
     @property
@@ -73,7 +73,7 @@ class Source:
 
 class URLSource(Source):
     @property
-    def _dest(self) -> str:
+    def _dest(self) -> Optional[str]:
         folder = self.basename
         for suffix in self._TAR_SUFFIXES:
             if folder.endswith(suffix):
@@ -100,7 +100,7 @@ class URLSource(Source):
 
 class VCSSource(Source):
     @property
-    def _dest(self) -> str:
+    def _dest(self) -> Optional[str]:
         return self.basename
 
     @property
