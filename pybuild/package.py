@@ -31,7 +31,7 @@ class Package:
     ARCHIVES_ROOT = 'https://dl.chyen.cc/python3-android/'
 
     version: Optional[str] = None
-    source: Source
+    source: Optional[Source] = None
     patches: List[Patch] = []
     dependencies: List[str] = []
     skip_uploading: bool = False
@@ -143,9 +143,11 @@ class Package:
         return not (self.source.source_dir / 'Makefile').exists()
 
     def run(self, cmd: List[str]) -> None:
+        assert isinstance(self.source, Source)
         self.source.run_in_source_dir(cmd)
 
     def run_with_env(self, cmd: List[str]) -> None:
+        assert isinstance(self.source, Source)
         self.init_build_env()
         self.source.run_in_source_dir(cmd, env=self.env)
 
