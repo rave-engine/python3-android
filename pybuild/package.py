@@ -3,7 +3,7 @@ import itertools
 import os.path
 import pathlib
 import shutil
-from typing import Dict, Iterator, List, Sequence, Union
+from typing import Dict, Iterator, List, Optional, Sequence, Union
 import urllib.request
 import urllib.error
 
@@ -30,7 +30,7 @@ class Package:
     SYSROOT = BUILDDIR / 'sysroot'
     ARCHIVES_ROOT = 'https://dl.chyen.cc/python3-android/'
 
-    version: str
+    version: Optional[str] = None
     source: Source
     patches: List[Patch] = []
     dependencies: List[str] = []
