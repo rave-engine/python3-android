@@ -92,8 +92,6 @@ class Package:
         UNIFIED_SYSROOT = self.ndk / 'sysroot' / 'usr'
 
         cflags = ['-fPIC']
-        if isinstance(target_arch(), arm):
-            cflags += ['-fno-integrated-as']
 
         self.env.update({
             'ANDROID_API_LEVEL': str(env.android_api_level),
