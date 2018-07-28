@@ -89,6 +89,7 @@ class Package:
             'LDFLAGS': [
                 f'-L{self.SYSROOT}/usr/lib',
                 '-pie',
+                '-fuse-ld=lld',
             ],
 
             # pkg-config settings
