@@ -1,0 +1,13 @@
+diff --git a/configure.ac b/configure.ac
+index 4161523f9d..260fc07d9a 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -895,7 +895,7 @@ if $CPP $CPPFLAGS conftest.c >conftest.out 2>/dev/null; then
+   AC_MSG_RESULT([$_arm_arch])
+   if test "$_arm_arch" = 7; then
+     BASECFLAGS="${BASECFLAGS} -mfloat-abi=softfp -mfpu=vfpv3-d16"
+-    LDFLAGS="${LDFLAGS} -march=armv7-a -Wl,--fix-cortex-a8"
++    LDFLAGS="${LDFLAGS} -march=armv7-a"
+   fi
+ else
+   AC_MSG_RESULT([not Android])
