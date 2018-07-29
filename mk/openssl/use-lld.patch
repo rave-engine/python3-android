@@ -1,0 +1,13 @@
+diff --git a/Configurations/15-android.conf b/Configurations/15-android.conf
+index 9c9ceb64df..942e41b4a5 100644
+--- a/Configurations/15-android.conf
++++ b/Configurations/15-android.conf
+@@ -17,7 +17,7 @@ my %targets = (
+         # systems are perfectly capable of executing binaries targeting
+         # Froyo. Keep in mind that in the nutshell Android builds are
+         # about JNI, i.e. shared libraries, not applications.
+-        bin_cflags       => "-pie",
++        bin_cflags       => "-pie -fuse-ld=lld",
+         enable           => [ ],
+     },
+     "android-arm" => {
