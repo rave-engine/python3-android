@@ -1,0 +1,11 @@
+--- strace-4.23/linux/linux/signal.h.orig	2018-07-30 22:43:14.155654987 +0800
++++ strace-4.23/linux/linux/signal.h	2018-07-30 22:44:20.242321654 +0800
+@@ -2,4 +2,8 @@
+  * Workaround the infamous incompatibility between <linux/signal.h>
+  * and many libc headers by overriding <linux/signal.h> with <signal.h>.
+  */
++#ifndef __ANDROID_API__
+ #include <signal.h>
++#else
++#include_next <linux/signal.h>
++#endif

@@ -30,7 +30,7 @@ install:
       curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
       chmod +x ./macports-ci
       ./macports-ci install
-  - PATH="/opt/local/bin:$PATH"
+  - PATH="/opt/local/libexec/gnubin:/opt/local/bin:$PATH"
   - |
       git clone https://gitlab.com/yan12125/macports-overlay
       ./macports-ci localports $(pwd)/macports-overlay
@@ -38,7 +38,7 @@ install:
       cat $(pwd)/devscripts/macports-archive-sites.conf | sudo tee -a /opt/local/etc/macports/archive_sites.conf
       echo $(pwd)/devscripts/macports-chyen-pubkey.pem | sudo tee -a /opt/local/etc/macports/pubkeys.conf
   - |
-      sudo port -Nb install python38 curl-ca-bundle gnutar
+      sudo port -Nb install python38 curl-ca-bundle gnutar gsed
       $PYTHON -m ensurepip --user
       $PYTHON -m pip install --user python-gnupg
   - |
