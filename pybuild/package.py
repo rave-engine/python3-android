@@ -7,12 +7,12 @@ from typing import Dict, Iterator, List, Optional, Sequence, Union
 import urllib.request
 import urllib.error
 
-from . import env
 from .env import gpg_key_id
 from .patch import Patch
 from .source import Source, GitSource, URLSource
 from .util import (
     _PathType,
+    android_api_level,
     BASE,
     gpg_sign_file,
     gpg_verify_file,
@@ -86,14 +86,14 @@ class Package:
         ]
 
         ARCH_SYSROOT = (self.ndk / 'platforms' /
-                        f'android-{env.android_api_level}' /
+                        f'android-{android_api_level()}' /
                         f'arch-{self.arch}' / 'usr')
         UNIFIED_SYSROOT = self.ndk / 'sysroot' / 'usr'
 
         cflags = ['-fPIC']
 
         self.env.update({
-            'ANDROID_API_LEVEL': str(env.android_api_level),
+            'ANDROID_API_LEVEL': str(android_api_level()),
 
             # Sysroots
             'ARCH_SYSROOT': ARCH_SYSROOT,
@@ -110,7 +110,7 @@ class Package:
                 f'--sysroot={ARCH_SYSROOT}',
                 '-isystem', f'{UNIFIED_SYSROOT}/include',
                 '-isystem', f'{UNIFIED_SYSROOT}/include/{target_arch().ANDROID_TARGET}',
-                f'-D__ANDROID_API__={env.android_api_level}',
+                f'-D__ANDROID_API__={android_api_level()}',
             ],
             'CFLAGS': cflags,
             'CXXFLAGS': cflags,
@@ -182,7 +182,7 @@ class Package:
     @property
     def tarball_name(self):
         ndk_revision = parse_ndk_revision(self.ndk)
-        return f'{self.name}-{self.arch}-{self.version}-android{env.android_api_level}-ndk_{ndk_revision}.tar.bz2'
+        return f'{self.name}-{self.arch}-{self.version}-android{android_api_level()}-ndk_{ndk_revision}.tar.bz2'
 
     @property
     def tarball_sig_name(self):

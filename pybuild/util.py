@@ -8,7 +8,11 @@ from pathlib import Path
 from subprocess import check_call, check_output, run, PIPE
 from typing import Any, Dict, List, Text, Union
 
-from .env import target_arch as default_target_arch, verify_source
+from .env import (
+    android_api_level as default_android_api_level,
+    target_arch as default_target_arch,
+    verify_source,
+)
 from . import arch
 
 BASE = pathlib.Path(__file__).parents[1]
@@ -27,6 +31,13 @@ def tostring(value: Union[List[_PathType], _PathType]) -> str:
 def target_arch() -> arch.Arch:
     platform_name = os.getenv('ANDROID_PLATFORM', default_target_arch)
     return getattr(arch, platform_name)()
+
+
+def android_api_level() -> int:
+    try:
+        return int(os.environ['ANDROID_API_LEVEL'])
+    except KeyError:
+        return default_android_api_level
 
 
 def rmtree(path: Path) -> None:

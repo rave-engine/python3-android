@@ -2,10 +2,9 @@ import copy
 import logging
 import os
 
-from .. import env
 from ..package import Package
 from ..source import URLSource
-from ..util import target_arch
+from ..util import android_api_level, target_arch
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +36,7 @@ class OpenSSL(Package):
 
         self.env = {
             'PATH': newpath,
-            'CPPFLAGS': f'-D__ANDROID_API__={env.android_api_level}',
+            'CPPFLAGS': f'-D__ANDROID_API__={android_api_level()}',
         }
 
         self.env['HASHBANGPERL'] = '/system/bin/env perl'
