@@ -4,7 +4,7 @@ from ..util import target_arch
 
 
 class GDBM(Package):
-    version = '1.17'
+    version = '1.16'
     source = URLSource(f'https://ftp.gnu.org/gnu/gdbm/gdbm-{version}.tar.gz', sig_suffix='.sig')
     validpgpkeys = ['325F650C4C2B6AD58807327A3602B07F55D0C732']
 
