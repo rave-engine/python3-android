@@ -3,6 +3,7 @@ import re
 import sys
 
 from .package import import_package, Package
+from .util import android_api_level
 
 REQUIRED_MODULES = set([
     # Modules with external dependencies
@@ -23,8 +24,11 @@ REQUIRED_MODULES = set([
 PROHIBITED_MODULES = set([
     # Modules that are not applicable on Android
     '_crypt',                       # Android does not have crypt()
-    'grp',                          # Android does not have getgrent()
 ])
+
+if android_api_level() < 26:
+    # Android before 8.0 does not have getgrent()
+    PROHIBITED_MODULES.add('grp')
 
 
 def main():
