@@ -8,7 +8,6 @@ import urllib.request
 import urllib.error
 
 from . import env
-from .arch import arm
 from .env import gpg_key_id
 from .patch import Patch
 from .source import Source, GitSource, URLSource
@@ -183,7 +182,7 @@ class Package:
     @property
     def tarball_name(self):
         ndk_revision = parse_ndk_revision(self.ndk)
-        return f'{self.name}-{self.arch}-{self.version}-ndk_{ndk_revision}.tar.bz2'
+        return f'{self.name}-{self.arch}-{self.version}-android{env.android_api_level}-ndk_{ndk_revision}.tar.bz2'
 
     @property
     def tarball_sig_name(self):
