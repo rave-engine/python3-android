@@ -1,11 +1,15 @@
 from ..source import URLSource
 from ..package import Package
+from ..patch import RemotePatch
 from ..util import target_arch
 
 
 class GDBM(Package):
-    version = '1.16'
+    version = '1.17'
     source = URLSource(f'https://ftp.gnu.org/gnu/gdbm/gdbm-{version}.tar.gz', sig_suffix='.sig')
+    patches = [
+        RemotePatch('http://git.gnu.org.ua/cgit/gdbm.git/patch/?id=1059526e357da1aa92e5c020332f4b39ceb37503'),
+    ]
     validpgpkeys = ['325F650C4C2B6AD58807327A3602B07F55D0C732']
 
     def prepare(self):
