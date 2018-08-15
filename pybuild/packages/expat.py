@@ -4,8 +4,9 @@ from ..util import target_arch
 
 
 class Expat(Package):
-    version = '2.2.5'
-    source = URLSource(f'https://github.com/libexpat/libexpat/releases/download/R_{version.replace(".", "_")}/expat-{version}.tar.bz2')
+    version = '2.2.6'
+    source = URLSource(f'https://github.com/libexpat/libexpat/releases/download/R_{version.replace(".", "_")}/expat-{version}.tar.bz2', sig_suffix='.asc')
+    validpgpkeys = ['3D7E959D89FACFEE38371921B00BC66A401A1600']
 
     def prepare(self):
         self.run_with_env([
