@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class OpenSSL(Package):
-    version = '1.1.1-pre8'
+    version = '1.1.1-pre9'
     source = URLSource(f'https://www.openssl.org/source/openssl-{version}.tar.gz', sig_suffix='.asc')
     validpgpkeys = [
         '8657ABB260F056B1E5190839D9C4D26D0E604491',  # Matt Caswell
