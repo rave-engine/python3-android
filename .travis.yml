@@ -30,10 +30,8 @@ env:
 
 install:
   - |
-      export COLUMNS=80
       curl -LO https://raw.githubusercontent.com/yan12125/macports-ci/verbose-installation/macports-ci
-      chmod +x ./macports-ci
-      ./macports-ci install
+      source ./macports-ci install
   - PATH="/opt/local/libexec/gnubin:/opt/local/bin:$PATH"
   - |
       git clone https://gitlab.com/yan12125/macports-overlay
