@@ -20,7 +20,7 @@ Building requires:
 3. git and python3.8 in $PATH. It's recommended to use the latest git-master to build python3.8. Here are some ways to install the python3.8:
 * For Arch Linux users, install [python-git](https://aur.archlinux.org/packages/python-git) package from AUR
 * For Homebrew users, run ```brew install python3 --HEAD```
-* For MacPorts users, add [my MacPorts overlay](https://gitlab.com/yan12125/macports-overlay) to ``sources.conf`` and run ```sudo port install python38```
+* For MacPorts users, run ```sudo port install python38-devel```
 * For other users, install 3.8 from [pyenv](https://github.com/yyuu/pyenv)
 4. (Optional yet highly recommended) Vinay Sajip's [python-gnupg](https://bitbucket.org/vinay.sajip/python-gnupg) package for verifying PGP signatures of source tarballs and patches. You can install it with the following command:
 ```

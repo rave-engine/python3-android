@@ -4,7 +4,7 @@ os:
   - osx
 # https://github.com/travis-ci/cpython-builder/pull/3 should be resolved for better Python support on macOS
 
-osx_image: xcode9.3
+osx_image: xcode10
 
 sudo: false
 
@@ -34,13 +34,7 @@ install:
       source ./macports-ci install
   - PATH="/opt/local/libexec/gnubin:/opt/local/bin:$PATH"
   - |
-      git clone https://gitlab.com/yan12125/macports-overlay
-      source ./macports-ci localports $(pwd)/macports-overlay
-  - |
-      cat $(pwd)/devscripts/macports-archive-sites.conf | sudo tee -a /opt/local/etc/macports/archive_sites.conf
-      echo $(pwd)/devscripts/macports-chyen-pubkey.pem | sudo tee -a /opt/local/etc/macports/pubkeys.conf
-  - |
-      sudo port -Nb install python38 curl-ca-bundle gnutar gsed
+      sudo port -Nb install python38-devel curl-ca-bundle gnutar gsed
       $PYTHON -m ensurepip --user
       $PYTHON -m pip install --user python-gnupg
   - |
