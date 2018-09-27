@@ -69,54 +69,25 @@ class Package:
         if self.env:
             return False
 
-        HOST_OS = os.uname().sysname.lower()
-
-        if HOST_OS not in ('linux', 'darwin'):
-            raise Exception(f'Unsupported system {HOST_OS}')
-
-        self.TOOL_PREFIX = (self.ndk / 'toolchains' /
-                            target_arch().ANDROID_TOOLCHAIN /
-                            'prebuilt' / f'{HOST_OS}-x86_64')
-        CLANG_PREFIX = (self.ndk / 'toolchains' /
-                        'llvm' / 'prebuilt' / f'{HOST_OS}-x86_64')
-
-        LLVM_BASE_FLAGS = [
-            '-target', target_arch().LLVM_TARGET,
-            '-gcc-toolchain', self.TOOL_PREFIX,
-        ]
-
-        ARCH_SYSROOT = (self.ndk / 'platforms' /
-                        f'android-{android_api_level()}' /
-                        f'arch-{self.arch}' / 'usr')
-        UNIFIED_SYSROOT = self.ndk / 'sysroot' / 'usr'
+        CLANG_PREFIX = (self.unified_toolchain /
+                        f'{target_arch().ANDROID_TARGET}{android_api_level()}')
 
         cflags = ['-fPIC']
 
         self.env.update({
-            'ANDROID_API_LEVEL': str(android_api_level()),
-
-            # Sysroots
-            'ARCH_SYSROOT': ARCH_SYSROOT,
-            'UNIFIED_SYSROOT': UNIFIED_SYSROOT,
-
             # Compilers
-            'CC': f'{CLANG_PREFIX}/bin/clang',
-            'CXX': f'{CLANG_PREFIX}/bin/clang++',
-            'CPP': f'{CLANG_PREFIX}/bin/clang -E',
+            'CC': f'{CLANG_PREFIX}-clang',
+            'CXX': f'{CLANG_PREFIX}-clang++',
+            'CPP': f'{CLANG_PREFIX}-clang -E',
 
             # Compiler flags
-            'CPPFLAGS': LLVM_BASE_FLAGS + [
+            'CPPFLAGS': [
                 f'-I{self.SYSROOT}/usr/include',
-                f'--sysroot={ARCH_SYSROOT}',
-                '-isystem', f'{UNIFIED_SYSROOT}/include',
-                '-isystem', f'{UNIFIED_SYSROOT}/include/{target_arch().ANDROID_TARGET}',
-                f'-D__ANDROID_API__={android_api_level()}',
             ],
             'CFLAGS': cflags,
             'CXXFLAGS': cflags,
-            'LDFLAGS': LLVM_BASE_FLAGS + [
+            'LDFLAGS': [
                 f'-L{self.SYSROOT}/usr/lib',
-                '--sysroot=' + str(ARCH_SYSROOT),
                 '-pie',
             ],
 
@@ -126,7 +97,7 @@ class Package:
         })
 
         for prog in ('ar', 'as', 'ld', 'objcopy', 'objdump', 'ranlib', 'strip', 'readelf'):
-            self.env[prog.upper()] = self.TOOL_PREFIX / 'bin' / f'{target_arch().ANDROID_TARGET}-{prog}'
+            self.env[prog.upper()] = self.unified_toolchain / f'{target_arch().binutils_prefix}-{prog}'
 
         return True
 
@@ -156,8 +127,15 @@ class Package:
             raise Exception('Requires environment variable $ANDROID_NDK')
         ndk = pathlib.Path(ndk_path)
 
-        if not (ndk / 'sysroot').exists():
-            raise Exception('Requires Android NDK r14 beta1 or above')
+        HOST_OS = os.uname().sysname.lower()
+
+        if HOST_OS not in ('linux', 'darwin'):
+            raise Exception(f'Unsupported system {HOST_OS}')
+
+        self.unified_toolchain = ndk / 'toolchains' / 'llvm' / 'prebuilt' / f'{HOST_OS}-x86_64' / 'bin'
+
+        if not self.unified_toolchain.exists():
+            raise Exception('Requires Android NDK r19 or above')
 
         self._ndk = ndk
 

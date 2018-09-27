@@ -16,7 +16,7 @@ Prerequisites
 Building requires:
 
 1. Linux or macOS. Arch Linux and macOS High Sierra tested.
-2. Android NDK r17b installed and environment variable ``$ANDROID_NDK`` points to its root directory. NDK r14 to r16 may work yet not fully tested. NDk r13 or below is not supported.
+2. Android NDK r19 beta 1 or newer installed and environment variable ``$ANDROID_NDK`` points to its root directory. NDk r18 or below is not supported.
 3. git and python3.8 in $PATH. It's recommended to use the latest git-master to build python3.8. Here are some ways to install the python3.8:
 * For Arch Linux users, install [python-git](https://aur.archlinux.org/packages/python-git) package from AUR
 * For Homebrew users, run ```brew install python3 --HEAD```

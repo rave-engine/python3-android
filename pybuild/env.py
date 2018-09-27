@@ -1,4 +1,4 @@
-target_arch = 'arm64'
+target_arch = 'arm'
 android_api_level = 21
 
 # Python optional modules.
