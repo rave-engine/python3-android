@@ -30,7 +30,7 @@ env:
 
 install:
   - |
-      curl -LO https://raw.githubusercontent.com/yan12125/macports-ci/verbose-installation/macports-ci
+      curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
       source ./macports-ci install
   - PATH="/opt/local/libexec/gnubin:/opt/local/bin:$PATH"
   - |
