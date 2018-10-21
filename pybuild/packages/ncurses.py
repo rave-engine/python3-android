@@ -1,12 +1,20 @@
-from ..source import URLSource
+import re
+
+from ..source import GitSource
 from ..package import Package
 from ..util import target_arch
 
 
+class NCursesSource(GitSource):
+    def __init__(self):
+        super().__init__('https://github.com/ThomasDickey/ncurses-snapshots')
+
+    def get_version(self):
+        return re.sub(r'v(\d+)_(\d+)_(\d+)', r'\1.\2-\3', super().get_version())
+
+
 class NCurses(Package):
-    version = '6.1-20181013'
-    source = URLSource(f'https://invisible-mirror.net/archives/ncurses/current/ncurses-{version}.tgz', sig_suffix='.asc')
-    validpgpkeys = ['C52048C0C0748FEE227D47A2702353E0F7E48EDB']
+    source = NCursesSource()
 
     def prepare(self):
         self.run_with_env([

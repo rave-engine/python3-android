@@ -41,14 +41,14 @@ class Package:
         self.env: Dict[str, Union[_PathType, Sequence[_PathType]]] = {}
         self._ndk = None
 
-        if self.version is None and isinstance(self.source, GitSource):
-            self.version = 'git'
-
         for f in itertools.chain(self.sources, self.patches):
             f.package = self
 
         for directory in (self.DIST_PATH, self.destdir(), self.SYSROOT):
             directory.mkdir(exist_ok=True, parents=True)
+
+    def get_version(self):
+        return self.version or self.source.get_version()
 
     @property
     def sources(self) -> List[Source]:
@@ -139,9 +139,9 @@ class Package:
             return False
         return not (self.source.source_dir / 'Makefile').exists()
 
-    def run(self, cmd: List[str]) -> None:
+    def run(self, cmd: List[str], *args, **kwargs) -> None:
         assert isinstance(self.source, Source)
-        self.source.run_in_source_dir(cmd)
+        self.source.run_in_source_dir(cmd, *args, **kwargs)
 
     def run_with_env(self, cmd: List[str]) -> None:
         assert isinstance(self.source, Source)
@@ -182,7 +182,7 @@ class Package:
     @property
     def tarball_name(self):
         ndk_revision = parse_ndk_revision(self.ndk)
-        return f'{self.name}-{self.arch}-{self.version}-android{android_api_level()}-ndk_{ndk_revision}.tar.bz2'
+        return f'{self.name}-{self.arch}-{self.get_version()}-android{android_api_level()}-ndk_{ndk_revision}.tar.bz2'
 
     @property
     def tarball_sig_name(self):

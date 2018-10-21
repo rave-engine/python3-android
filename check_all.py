@@ -15,7 +15,7 @@ class PyBuildHandler(Handler):
 
     def get_version(self, pkgname):
         pkg = import_package(pkgname)
-        return pkg.version
+        return pkg.get_version()
 
 
 if __name__ == '__main__':

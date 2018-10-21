@@ -54,6 +54,9 @@ class Source:
     def run_globally(self, cmd: List[str], env: Dict[str, str] = None, mode='run'):
         return run_in_dir(cmd, self.src_prefix, env, mode)
 
+    def get_version(self):
+        raise NotImplementedError
+
     def download(self):
         raise NotImplementedError
 
@@ -123,6 +126,15 @@ class GitSource(VCSSource):
         super(GitSource, self).__init__(*args, **kwargs)
 
         self.branch = branch
+        self._version = None
+
+    def get_version(self):
+        if not self._version and self.source_dir.exists():
+            self._version = self.run_in_source_dir([
+                'git', 'describe', '--tags'
+            ], mode='result').strip()
+
+        return self._version
 
     def clone(self):
         cmd = [

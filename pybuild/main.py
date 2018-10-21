@@ -9,6 +9,9 @@ built_packags: set = set()
 need_rebuild: set = set()
 
 
+logger = logging.getLogger(__name__)
+
+
 def parse_packages(pkg_specs: str) -> Iterable[str]:
     for spec in pkg_specs.split(','):
         if spec == ':COMMIT_MARKER':
@@ -31,6 +34,8 @@ def build_package(pkgname: str) -> None:
         return
 
     pkg = import_package(pkgname)
+
+    logger.info(f'Building {pkgname} {pkg.get_version()}')
 
     if pkgname not in need_rebuild and pkg.fetch_tarball():
         built_packags.add(pkgname)
