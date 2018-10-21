@@ -137,11 +137,8 @@ class GitSource(VCSSource):
         return self._version
 
     def clone(self):
-        cmd = [
-            'git', 'clone', '-b', self.branch, self.source_url, self.dest]
-        if os.getenv('TRAVIS'):
-            cmd.append('--depth=1')
-        self.run_globally(cmd)
+        self.run_globally([
+            'git', 'clone', '-b', self.branch, self.source_url, self.dest])
 
     def update(self):
         self.run_in_source_dir(['git', 'fetch', '--tags', 'origin'])
