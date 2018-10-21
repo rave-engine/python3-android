@@ -10,7 +10,9 @@ class NCursesSource(GitSource):
         super().__init__('https://github.com/ThomasDickey/ncurses-snapshots')
 
     def get_version(self):
-        return re.sub(r'v(\d+)_(\d+)_(\d+)', r'\1.\2-\3', super().get_version())
+        v = super().get_version()
+        if v:
+            return re.sub(r'v(\d+)_(\d+)_(\d+)', r'\1.\2-\3', v)
 
 
 class NCurses(Package):
