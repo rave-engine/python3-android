@@ -4,7 +4,7 @@ from ..util import target_arch
 
 
 class Strace(Package):
-    version = '4.24'
+    version = '4.25'
     source = URLSource(f'https://strace.io/files/{version}/strace-{version}.tar.xz', sig_suffix='.asc')
     validpgpkeys = ['296D6F29A020808E8717A8842DB5BD89A340AEB7']
 
