@@ -5,8 +5,25 @@ from ..patch import LocalPatch, RemotePatch
 from ..util import target_arch
 
 
+class PythonSource(GitSource):
+    def __init__(self):
+        super().__init__('https://github.com/python/cpython/')
+
+    def get_version(self):
+        if not self._version and self.source_dir.exists():
+            rev_count = self.run_in_source_dir([
+                'git', 'rev-list', '--count', 'HEAD'
+            ], mode='result').strip()
+            rev = self.run_in_source_dir([
+                'git', 'rev-parse', '--short', 'HEAD'
+            ], mode='result').strip()
+            self._version = f'3.8.0a0.r{rev_count}.{rev}'
+
+        return self._version
+
+
 class Python(Package):
-    source = GitSource('https://github.com/python/cpython/')
+    source = PythonSource()
     patches = [
         # https://bugs.python.org/issue29440
         RemotePatch('https://bugs.python.org/file46517/gdbm.patch'),
@@ -15,8 +32,6 @@ class Python(Package):
     ]
 
     dependencies = list(env.packages)
-
-    skip_uploading = True
 
     def init_build_env(self) -> bool:
         if not super().init_build_env():
