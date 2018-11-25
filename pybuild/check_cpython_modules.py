@@ -41,7 +41,7 @@ def main():
                 break
 
     built_modules = set()
-    dynload_dir = Package.BUILDDIR / 'target' / 'python' / 'usr' / 'lib' / f'python{pyver}' / 'lib-dynload'
+    dynload_dir = Package.BUILDDIR / 'sysroot' / 'usr' / 'lib' / f'python{pyver}' / 'lib-dynload'
     for path, children, nodes in os.walk(dynload_dir):
         for node in nodes:
             name = node.split('.')[0]
