@@ -9,7 +9,7 @@ import urllib.error
 
 from .env import gpg_key_id
 from .patch import Patch
-from .source import Source, GitSource, URLSource
+from .source import Source, URLSource, VCSSource
 from .util import (
     _PathType,
     android_api_level,
@@ -137,6 +137,8 @@ class Package:
     def need_download(self) -> bool:
         if not self.source:
             return False
+        if isinstance(self.source, VCSSource):
+            return True
         return not (self.source.source_dir / 'Makefile').exists()
 
     def run(self, cmd: List[str], *args, **kwargs) -> None:
