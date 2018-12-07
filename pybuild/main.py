@@ -37,13 +37,6 @@ def build_package(pkgname: str) -> None:
 
     logger.info(f'Building {pkgname} {pkg.get_version()}')
 
-    if pkgname not in need_rebuild and pkg.fetch_tarball():
-        built_packags.add(pkgname)
-        return
-
-    for dep in pkg.dependencies:
-        build_package(dep)
-
     if pkg.need_download():
         for src in pkg.sources:
             src.download()
@@ -59,6 +52,13 @@ def build_package(pkgname: str) -> None:
             pkg.prepare()
         except NotImplementedError:
             print('Skipping prepare step')
+
+    if pkgname not in need_rebuild and pkg.fetch_tarball():
+        built_packags.add(pkgname)
+        return
+
+    for dep in pkg.dependencies:
+        build_package(dep)
 
     pkg.build()
 
