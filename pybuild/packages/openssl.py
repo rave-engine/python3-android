@@ -13,6 +13,7 @@ class OpenSSL(Package):
     patches = [
         LocalPatch('android'),
         LocalPatch('use-lld'),
+        LocalPatch('lld-issue32518'),
     ]
     validpgpkeys = [
         '8657ABB260F056B1E5190839D9C4D26D0E604491',  # Matt Caswell

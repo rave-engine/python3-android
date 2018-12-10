@@ -1,0 +1,12 @@
+diff --git a/crypto/chacha/asm/chacha-armv8.pl b/crypto/chacha/asm/chacha-armv8.pl
+index 4a838bc2b3..5fed9d4e47 100755
+--- a/crypto/chacha/asm/chacha-armv8.pl
++++ b/crypto/chacha/asm/chacha-armv8.pl
+@@ -125,6 +125,7 @@ $code.=<<___;
+ .text
+ 
+ .extern	OPENSSL_armcap_P
++.hidden	OPENSSL_armcap_P
+ 
+ .align	5
+ .Lsigma:
