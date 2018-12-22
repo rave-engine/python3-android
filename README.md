@@ -7,8 +7,8 @@ Build status:
 
 | System            | Status        |
 | ----------------- |---------------|
-| macOS (Travis CI) | [![Build Status](https://travis-ci.org/yan12125/python3-android.png?branch=master)](https://travis-ci.org/yan12125/python3-android) |
-| Linux (buildbot)  | ![Build Status](https://ci.chyen.cc/badges/python3-android.png) |
+| macOS (Travis CI) | [![Build Status](https://travis-ci.org/yan12125/python3-android.svg?branch=master)](https://travis-ci.org/yan12125/python3-android) |
+| Linux (buildbot)  | ![Build Status](https://ci.chyen.cc/badges/python3-android.svg) |
 
 Prerequisites
 -------------
