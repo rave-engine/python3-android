@@ -18,7 +18,3 @@ packages = ('strace', 'openssl', 'ncurses', 'readline', 'sqlite', 'bzip2', 'xz',
 
 # Enable GPG signature verification on source tarballs and patches?
 verify_source = True
-
-# The GPG key to sign prebuilt archives
-# Don't change this unless you're going to distribute your archives!
-gpg_key_id = '481C4474AF1572165AE4C6AF3FDDD575826C5C30'
