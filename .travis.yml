@@ -34,7 +34,7 @@ install:
       source ./macports-ci install
   - PATH="/opt/local/libexec/gnubin:/opt/local/bin:$PATH"
   - |
-      sudo port -Nb install python38-devel curl-ca-bundle gnutar gsed
+      sudo port -Nb install python38-devel curl-ca-bundle gnutar gsed gmake
       $PYTHON -m ensurepip --user
       $PYTHON -m pip install --user python-gnupg
   - |
