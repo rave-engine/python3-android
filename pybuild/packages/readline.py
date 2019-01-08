@@ -5,9 +5,9 @@ from ..util import target_arch
 
 
 class Readline(Package):
-    _MAJOR = 7
+    _MAJOR = 8
     _MINOR = 0
-    _PATCHLEVEL = 5
+    _PATCHLEVEL = 0
     version = f'{_MAJOR}.{_MINOR}.{_PATCHLEVEL:03d}'
 
     _common = f'https://ftp.gnu.org/gnu/readline/readline-{_MAJOR}.{_MINOR}'
