@@ -1,7 +1,6 @@
 import logging
 import os
 import pathlib
-import re
 import shlex
 import shutil
 from pathlib import Path
@@ -101,15 +100,3 @@ def gpg_verify_file(sig_filename, filename, validpgpkeys):
     if verify_result.pubkey_fingerprint not in validpgpkeys:
         raise VerificationFailure(f'Signing key {verify_result.pubkey_fingerprint} '
                                   f'not in validpgpkeys {validpgpkeys}')
-
-
-def parse_ndk_revision(ndk_root):
-    with open(ndk_root / 'source.properties', 'r') as f:
-        for line in f:
-            mobj = re.match(r'Pkg\.Revision\s*=\s*(.+)', line)
-            if mobj:
-                return mobj.group(1)
-
-
-def tar_cmd():
-    return shutil.which('gnutar') or shutil.which('tar')

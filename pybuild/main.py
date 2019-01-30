@@ -32,10 +32,6 @@ def build_package(pkgname: str) -> None:
 
         need_prepare = True
 
-    if pkg.fetch_tarball():
-        built_packags.add(pkgname)
-        return
-
     for dep in pkg.dependencies:
         build_package(dep)
 
@@ -46,10 +42,6 @@ def build_package(pkgname: str) -> None:
             print('Skipping prepare step')
 
     pkg.build()
-
-    pkg.create_tarball()
-    pkg.upload_tarball()
-    pkg.extract_tarball()
 
     built_packags.add(pkgname)
 

@@ -4,7 +4,6 @@ import tempfile
 
 import gnupg
 
-from .env import gpg_key_id
 from .package import enumerate_packages, import_package
 from .util import BASE
 
@@ -24,9 +23,6 @@ def main():
         for pkgname in target_packages:
             pkg = import_package(pkgname)
             keys_map[pkgname] = getattr(pkg, 'validpgpkeys', [])
-
-        # Also fetch my signing key for prebuilt archives
-        keys_map['yan12125'] = [gpg_key_id]
 
         result = gpg.recv_keys(GPG_SERVER, *list(itertools.chain.from_iterable(keys_map.values())))
         assert result

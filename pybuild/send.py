@@ -1,5 +1,6 @@
-from .env import packages
-from .package import import_package
+import os.path
+
+from .package import Package
 from .util import run_in_dir
 
 target_destdir = '/data/local/tmp/python3'
@@ -9,21 +10,16 @@ target_destdir = '/data/local/tmp/python3'
 
 
 def send_package(pkgname):
-    pkg = import_package(pkgname)
-
-    # Most stock Android ROM does not come with a tar that support bz2, so
-    # use the uncompressed version
-    target_tarball_path = f'/data/local/tmp/{pkg.tarball_name}'
-    run_in_dir(['adb', 'shell', 'rm', pkg.tarball_name])
-    run_in_dir(['adb', 'push', pkg.tarball_path, target_tarball_path])
-    run_in_dir(['adb', 'shell', 'busybox', 'tar', 'jxvf', target_tarball_path, '-C', target_destdir])
+    target_tarball_path = '/data/local/tmp/python3-android.tar.bz2'
+    target_tarball_name = os.path.basename(target_tarball_path)
+    run_in_dir(['tar', 'jcvf', target_tarball_name, 'sysroot'], cwd=Package.SYSROOT.parent)
+    run_in_dir(['adb', 'push', str(Package.SYSROOT.parent / target_tarball_name), target_tarball_path])
 
 
 def main():
     run_in_dir(['adb', 'shell', 'rm', '-rf', target_destdir])
     run_in_dir(['adb', 'shell', 'mkdir', target_destdir])
-    for pkgname in packages + ('python',):
-        send_package(pkgname)
+    send_package('python')
 
 
 if __name__ == '__main__':
