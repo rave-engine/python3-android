@@ -14,7 +14,7 @@ android_api_level = 21
 #  zlib - enable the zlib module
 #  expat - enable the pyexpat module
 #  tools - some handy utility scripts from ./devscripts
-packages = ('strace', 'openssl', 'ncurses', 'readline', 'sqlite', 'bzip2', 'xz', 'gdbm', 'libffi', 'zlib', 'expat', 'tools')
+packages = ('openssl', 'ncurses', 'readline', 'sqlite', 'bzip2', 'xz', 'gdbm', 'libffi', 'zlib', 'expat', 'tools')
 
 # Enable GPG signature verification on source tarballs and patches?
 verify_source = True
