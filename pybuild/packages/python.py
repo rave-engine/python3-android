@@ -1,7 +1,7 @@
 from .. import env
 from ..source import GitSource
 from ..package import Package
-from ..patch import LocalPatch, RemotePatch
+from ..patch import LocalPatch
 from ..util import target_arch
 
 
@@ -26,7 +26,7 @@ class Python(Package):
     source = PythonSource()
     patches = [
         # https://bugs.python.org/issue29440
-        RemotePatch('https://bugs.python.org/file46517/gdbm.patch'),
+        LocalPatch('gdbm'),
         LocalPatch('cppflags'),
         LocalPatch('skip-build'),
         LocalPatch('lld-compatibility'),
