@@ -14,7 +14,7 @@ class GDBM(Package):
             '--prefix=/usr',
             '--host=' + target_arch().ANDROID_TARGET,
             '--enable-libgdbm-compat',
-            '--disable-shared',
+            '--disable-static',
         ])
 
     def build(self):

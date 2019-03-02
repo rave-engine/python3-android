@@ -25,8 +25,6 @@ class PythonSource(GitSource):
 class Python(Package):
     source = PythonSource()
     patches = [
-        # https://bugs.python.org/issue29440
-        LocalPatch('gdbm'),
         LocalPatch('cppflags'),
         LocalPatch('skip-build'),
         LocalPatch('lld-compatibility'),
