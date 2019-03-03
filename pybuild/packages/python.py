@@ -38,6 +38,10 @@ class Python(Package):
 
         self.env['CONFIG_SITE'] = self.filesdir / 'config.site'
 
+        ldflags = list(self.env['LDFLAGS'])
+        ldflags.pop(ldflags.index('-pie'))
+        self.env['LDFLAGS'] = list(ldflags)
+
         return True
 
     def prepare(self):
