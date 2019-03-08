@@ -1,8 +1,11 @@
+import copy
 import logging
+import os
 
 from ..package import Package
 from ..patch import LocalPatch
 from ..source import URLSource
+from ..util import android_api_level, target_arch
 
 logger = logging.getLogger(__name__)
 
@@ -11,9 +14,7 @@ class OpenSSL(Package):
     version = '1.1.1a'
     source = URLSource(f'https://www.openssl.org/source/openssl-{version}.tar.gz', sig_suffix='.asc')
     patches = [
-        LocalPatch('android'),
         LocalPatch('use-lld'),
-        LocalPatch('lld-issue32518'),
     ]
     validpgpkeys = [
         '8657ABB260F056B1E5190839D9C4D26D0E604491',  # Matt Caswell
@@ -23,6 +24,24 @@ class OpenSSL(Package):
     def init_build_env(self) -> bool:
         if not super().init_build_env():
             return False
+
+        # OpenSSL handles NDK internal paths by itself, so don't use CC, CFLAGS, ...
+        # from pybuild
+        old_env = copy.deepcopy(self.env)
+        newpath = os.pathsep.join((
+            # OpenSSL requires NDK's clang in $PATH to enable usage of clang
+            os.path.dirname(old_env['CC']),
+            # and it requires unprefixed binutils, too
+            str(self.unified_toolchain.parent / target_arch().ANDROID_TARGET / 'bin'),
+            os.environ['PATH'],
+        ))
+
+        logger.debug(f'$PATH for OpenSSL: {newpath}')
+
+        self.env = {
+            'PATH': newpath,
+            'CPPFLAGS': f'-D__ANDROID_API__={android_api_level()}',
+        }
 
         self.env['HASHBANGPERL'] = '/system/bin/env perl'
 
