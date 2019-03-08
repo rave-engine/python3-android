@@ -15,6 +15,7 @@ class OpenSSL(Package):
     source = URLSource(f'https://www.openssl.org/source/openssl-{version}.tar.gz', sig_suffix='.asc')
     patches = [
         LocalPatch('use-lld'),
+        LocalPatch('lld-issue32518'),
     ]
     validpgpkeys = [
         '8657ABB260F056B1E5190839D9C4D26D0E604491',  # Matt Caswell
