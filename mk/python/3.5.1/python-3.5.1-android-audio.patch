@@ -1,0 +1,14 @@
+--- Python-3.3.5/Modules/ossaudiodev.c	2014-03-09 09:40:13.000000000 +0100
++++ Python-3.3.5-android/Modules/ossaudiodev.c	2014-08-04 22:19:36.000000000 +0200
+@@ -31,7 +31,11 @@
+ #endif
+ 
+ #include <sys/ioctl.h>
++#ifdef __ANDROID__
++#include <linux/soundcard.h>
++#else
+ #include <sys/soundcard.h>
++#endif
+ 
+ #if defined(linux)
+
