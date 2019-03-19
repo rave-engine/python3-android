@@ -15,8 +15,8 @@ export NDK_ROOT="${BASE}/sdk/${NDK_REL}"
 # This should give us darwin or linux
 export BUILD_OS="$(uname | tr '[A-Z]' '[a-z'])"
 
-export TOOL_PREFIX="${NDK_ROOT}/toolchains/llvm/prebuilt/linux-x86_64"
-export CLANG_PREFIX="${NDK_ROOT}/toolchains/llvm/prebuilt/linux-x86_64"
+export TOOL_PREFIX="${NDK_ROOT}/toolchains/llvm/prebuilt/${BUILD_OS}-x86_64"
+export CLANG_PREFIX="${NDK_ROOT}/toolchains/llvm/prebuilt/${BUILD_OS}-x86_64"
 export LLVM_BASE_FLAGS="-target ${LLVM_TARGET} -gcc-toolchain ${TOOL_PREFIX}"
 export ARCH_SYSROOT="${NDK_ROOT}/platforms/android-${ANDROID_API_LEVEL}/arch-${ANDROID_PLATFORM}/usr"
 export UNIFIED_SYSROOT="${NDK_ROOT}/sysroot/usr"
