@@ -7,3 +7,14 @@
 +#ifndef SIZE_T_MAX
  #define SIZE_T_MAX ((size_t)-1)
 +#endif
+--- gdbm-1.18.1/src/gdbmtool.c.orig	2019-03-29 22:58:05.888766018 +0800
++++ gdbm-1.18.1/src/gdbmtool.c	2019-03-29 22:58:15.682077046 +0800
+@@ -38,8 +38,6 @@
+ datum return_data;            /* Current data */
+ int open_mode;                /* Default open mode */
+ 
+-#define SIZE_T_MAX ((size_t)-1)
+-
+ unsigned input_line;
+ 
+ 
