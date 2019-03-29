@@ -1,0 +1,9 @@
+--- gdbm-1.18.1/src/gdbmconst.h.orig	2019-03-29 22:30:12.890856233 +0800
++++ gdbm-1.18.1/src/gdbmconst.h	2019-03-29 22:30:30.264175151 +0800
+@@ -55,4 +55,6 @@
+ #define DEFAULT_CACHESIZE  100
+ 
+ /* Maximum size representable by a size_t variable */
++#ifndef SIZE_T_MAX
+ #define SIZE_T_MAX ((size_t)-1)
++#endif
