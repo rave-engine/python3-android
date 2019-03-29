@@ -10,6 +10,7 @@ class GDBM(Package):
     validpgpkeys = ['325F650C4C2B6AD58807327A3602B07F55D0C732']
     patches = [
         LocalPatch('SIZE_T_MAX'),
+        LocalPatch('missing-return'),
     ]
 
     def prepare(self):

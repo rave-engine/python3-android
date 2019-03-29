@@ -1,0 +1,10 @@
+--- gdbm-1.18.1/src/proto.h.orig	2019-03-29 23:15:48.980251923 +0800
++++ gdbm-1.18.1/src/proto.h	2019-03-29 23:17:10.893466614 +0800
+@@ -128,6 +128,7 @@
+       GDBM_SET_ERRNO (dbf, GDBM_FILE_SYNC_ERROR, TRUE);
+       return 1;
+     }
++  return 0;
+ #else
+   sync ();
+   sync ();
