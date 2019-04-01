@@ -17,6 +17,7 @@ REQUIRED_MODULES = set([
     '_ctypes', '_ctypes_test',      # depends on libffi
     'zlib',                         # depends on zlib
     'pyexpat',                      # depends on expat
+    '_uuid',                        # depends on libuuid
     # fragile modules
     '_decimal'
 ])
