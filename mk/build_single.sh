@@ -17,7 +17,7 @@ export BUILD_OS="$(uname | tr '[A-Z]' '[a-z'])"
 
 export TOOL_PREFIX="${NDK_ROOT}/toolchains/llvm/prebuilt/${BUILD_OS}-x86_64"
 export CLANG_PREFIX="${NDK_ROOT}/toolchains/llvm/prebuilt/${BUILD_OS}-x86_64"
-export LLVM_BASE_FLAGS="-target ${LLVM_TARGET} -gcc-toolchain ${TOOL_PREFIX}"
+export LLVM_BASE_FLAGS="-target ${LLVM_TARGET}"
 export ARCH_SYSROOT="${NDK_ROOT}/platforms/android-${ANDROID_API_LEVEL}/arch-${ANDROID_PLATFORM}/usr"
 export UNIFIED_SYSROOT="${NDK_ROOT}/sysroot/usr"
 
@@ -34,7 +34,7 @@ export CPP="${CC} -E"
 
 chmod +x "${CC}" "${CXX}"
 
-export CPPFLAGS="${LLVM_BASE_FLAGS} --sysroot=${ARCH_SYSROOT} -isystem ${UNIFIED_SYSROOT}/include -isystem ${UNIFIED_SYSROOT}/include/${ANDROID_TARGET} -D__ANDROID_API__=${ANDROID_API_LEVEL}"
+export CPPFLAGS="${LLVM_BASE_FLAGS}"
 
 export CFLAGS="-fPIC"
 
@@ -48,7 +48,7 @@ export CFLAGS="-fPIC"
 
 export CXXFLAGS="${CFLAGS}"
 ##export LDFLAGS="${LLVM_BASE_FLAGS} --sysroot=${ARCH_SYSROOT} -pie"
-export LDFLAGS="${LLVM_BASE_FLAGS} --sysroot=${ARCH_SYSROOT} -fuse-ld=lld"
+export LDFLAGS="${LLVM_BASE_FLAGS} -fuse-ld=lld"
 
 
 #?????

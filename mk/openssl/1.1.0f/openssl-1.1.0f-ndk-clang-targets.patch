@@ -18,7 +18,7 @@ diff U3 openssl-1.1.0/Configurations/10-main.conf openssl-1.1.0-android/Configur
          # about JNI, i.e. shared libraries, not applications.
 -        cflags           => add(picker(default => "-mandroid -fPIC --sysroot=\$(CROSS_SYSROOT) -Wa,--noexecstack")),
 -        bin_cflags       => "-pie",
-+        cflags           => add(picker(default => "-fPIC --sysroot=\$(CROSS_SYSROOT) -Wa,--noexecstack")),
++        cflags           => add(picker(default => "-fPIC -Wa,--noexecstack")),
 +        lflags           => "-pie",
      },
 -    "android-x86" => {
@@ -46,7 +46,7 @@ diff U3 openssl-1.1.0/Configurations/10-main.conf openssl-1.1.0-android/Configur
 +    "android64-base" => {
 +        inherit_from     => [ "linux-generic64" ],
 +        template         => 1,
-+        cflags           => add(picker(default => "-fPIC --sysroot=\$(CROSS_SYSROOT) -Wa,--noexecstack")),
++        cflags           => add(picker(default => "-fPIC -Wa,--noexecstack")),
 +        lflags           => "-pie",
 +    },
 +    "android64-aarch64-base" => {
@@ -92,37 +92,37 @@ diff U3 openssl-1.1.0/Configurations/10-main.conf openssl-1.1.0-android/Configur
 +        inherit_from     => [ "android-base" ],
 +        cc               => "clang",
 +        cxx              => "clang++",
-+        cflags           => add(picker(default => "-gcc-toolchain \$(GCC_TOOLCHAIN) -D__ANDROID_API__=\$(ANDROID_API_LEVEL)")),
-+        lflags           => add(picker(default => "-gcc-toolchain \$(GCC_TOOLCHAIN) --sysroot=\$(ARCH_SYSROOT)")),
-+        shared_ldflag    => add(picker(default => "-pie --sysroot=\$(ARCH_SYSROOT)")),
++        cflags           => add(picker(default => "")),
++        lflags           => add(picker(default => "")),
++        shared_ldflag    => add(picker(default => "-pie")),
 +    },
 +    "android-x86-clang" => {
 +        inherit_from     => [ "android-clang", "android-x86-base" ],
-+        cflags           => add(picker(default => "-target i686-none-linux-android -I\$(CROSS_SYSROOT)/include/i686-linux-android -fno-integrated-as")),
-+        lflags           => add(picker(default => "-target i686-none-linux-android")),
++        cflags           => add(picker(default => "-target i686-none-linux-android22 -fno-integrated-as")),
++        lflags           => add(picker(default => "-target i686-none-linux-android22")),
 +    },
 +    "arm-linux-androideabi-clang" => {
 +        inherit_from     => [ "android-clang", "android-armeabi-base" ],
-+        cflags           => add(picker(default => "-target armv7-none-linux-androideabi -I\$(CROSS_SYSROOT)/include/arm-linux-androideabi -fno-integrated-as")),
-+        lflags           => add(picker(default => "-target armv7-none-linux-androideabi")),
++        cflags           => add(picker(default => "-target armv7-none-linux-androideabi22 -fno-integrated-as")),
++        lflags           => add(picker(default => "-target armv7-none-linux-androideabi22")),
 +    },
 +    "android64-clang" => {
 +        inherit_from     => [ "android64-base" ],
 +        cc               => "clang",
 +        cxx              => "clang++",
-+        cflags           => add(picker(default => "-gcc-toolchain \$(GCC_TOOLCHAIN) -D__ANDROID_API__=\$(ANDROID_API_LEVEL)")),
-+        lflags           => add(picker(default => "-gcc-toolchain \$(GCC_TOOLCHAIN) --sysroot=\$(ARCH_SYSROOT)")),
-+        shared_ldflag    => add(picker(default => "-pie --sysroot=\$(ARCH_SYSROOT)")),
++        cflags           => add(picker(default => "")),
++        lflags           => add(picker(default => "")),
++        shared_ldflag    => add(picker(default => "-pie")),
 +    },
 +    "aarch64-linux-android-clang" => {
 +        inherit_from     => [ "android64-clang", "android64-aarch64-base" ],
-+        cflags           => add(picker(default => "-target aarch64-none-linux-android -I\$(CROSS_SYSROOT)/include/aarch64-linux-android -fno-integrated-as")),
-+        lflags           => add(picker(default => "-target aarch64-none-linux-android")),
++        cflags           => add(picker(default => "-target aarch64-none-linux-android22 -fno-integrated-as")),
++        lflags           => add(picker(default => "-target aarch64-none-linux-android22")),
 +    },
 +    "android64-x86_64-clang" => {
 +        inherit_from     => [ "android64-clang", "android64-x86_64-base" ],
-+        cflags           => add(picker(default => "-target x86_64-none-linux-android -I\$(CROSS_SYSROOT)/include/x86_64-linux-android")),
-+        lflags           => add(picker(default => "-target x86_64-none-linux-android")),
++        cflags           => add(picker(default => "-target x86_64-none-linux-android22")),
++        lflags           => add(picker(default => "-target x86_64-none-linux-android22")),
 +    },
 +    
  #### *BSD
