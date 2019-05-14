@@ -61,7 +61,7 @@ export PYTHON_OPTIONAL_MODULES="bz2 lzma ssl"
 case "${ANDROID_PLATFORM}" in
   arm)
       export ANDROID_TARGET=arm-linux-androideabi
-      export LLVM_TARGET=armv7-none-linux-androideabi
+      export LLVM_TARGET=armv7-none-linux-androideabi${ANDROID_API_LEVEL}
       export ANDROID_TOOLCHAIN="arm-linux-androideabi-${ANDROID_COMPILER}"
       ;;
   arm64)
