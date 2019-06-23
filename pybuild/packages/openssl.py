@@ -23,6 +23,8 @@ class OpenSSL(BasePackage):
     ]
 
     def init_build_env(self):
+        super().init_build_env()
+
         # OpenSSL handles NDK internal paths by itself, so don't use CC, CFLAGS, ...
         # from pybuild
         path = os.pathsep.join((
@@ -35,11 +37,11 @@ class OpenSSL(BasePackage):
 
         logger.debug(f'$PATH for OpenSSL: {path}')
 
-        self.env = {
+        self.env.update({
             'PATH': path,
-            'CPPFLAGS': f'-D__ANDROID_API__={android_api_level()}',
             'HASHBANGPERL': '/system/bin/env perl',
-        }
+        })
+        self.env['CPPFLAGS'].append(f'-D__ANDROID_API__={android_api_level()}')
 
     def prepare(self):
         openssl_target = 'android-' + self.arch

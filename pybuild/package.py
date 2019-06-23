@@ -57,7 +57,20 @@ class BasePackage:
         return cls.SYSROOT
 
     def init_build_env(self):
-        raise NotImplementedError
+        self.env = {
+            # Compiler flags
+            'CPPFLAGS': [
+                f'-I{self.SYSROOT}/usr/include',
+            ],
+            'LDFLAGS': [
+                f'-L{self.SYSROOT}/usr/lib',
+                '-fuse-ld=lld',
+            ],
+
+            # pkg-config settings
+            'PKG_CONFIG_SYSROOT_DIR': self.SYSROOT,
+            'PKG_CONFIG_LIBDIR': self.SYSROOT / 'usr' / 'lib' / 'pkgconfig',
+        }
 
     @property
     def filesdir(self) -> pathlib.Path:
@@ -87,33 +100,23 @@ class BasePackage:
 
 class Package(BasePackage):
     def init_build_env(self):
+        super().init_build_env()
+
         CLANG_PREFIX = (ndk.unified_toolchain /
                         f'{target_arch().ANDROID_TARGET}{android_api_level()}')
-
-        cflags = ['-fPIC']
 
         self.env.update({
             # Compilers
             'CC': f'{CLANG_PREFIX}-clang',
             'CXX': f'{CLANG_PREFIX}-clang++',
             'CPP': f'{CLANG_PREFIX}-clang -E',
-
-            # Compiler flags
-            'CPPFLAGS': [
-                f'-I{self.SYSROOT}/usr/include',
-            ],
-            'CFLAGS': cflags,
-            'CXXFLAGS': cflags,
-            'LDFLAGS': [
-                f'-L{self.SYSROOT}/usr/lib',
-                '-pie',
-                '-fuse-ld=lld',
-            ],
-
-            # pkg-config settings
-            'PKG_CONFIG_SYSROOT_DIR': self.SYSROOT,
-            'PKG_CONFIG_LIBDIR': self.SYSROOT / 'usr' / 'lib' / 'pkgconfig',
         })
+
+        # Compiler flags
+        cflags = ['-fPIC']
+        self.env.setdefault('CFLAGS', []).extend(cflags)
+        self.env.setdefault('CXXFLAGS', []).extend(cflags)
+        self.env.setdefault('LDFLAGS', []).append('-pie')
 
         for prog in ('ar', 'as', 'ld', 'objcopy', 'objdump', 'ranlib', 'strip', 'readelf'):
             self.env[prog.upper()] = ndk.unified_toolchain / f'{target_arch().binutils_prefix}-{prog}'

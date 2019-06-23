@@ -24,9 +24,6 @@ class BZip2Source(GitSource):
 class BZip2(BasePackage):
     source = BZip2Source()
 
-    def init_build_env(self):
-        pass
-
     def prepare(self):
         self.run_with_env([
             'cmake',
