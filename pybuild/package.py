@@ -15,7 +15,7 @@ from .util import (
 )
 
 
-class Package:
+class BasePackage:
     BUILDDIR = BASE / 'build'
     SYSROOT = BUILDDIR / 'sysroot'
 
@@ -57,6 +57,36 @@ class Package:
         return cls.SYSROOT
 
     def init_build_env(self):
+        raise NotImplementedError
+
+    @property
+    def filesdir(self) -> pathlib.Path:
+        return BASE / 'mk' / self.name
+
+    def need_download(self) -> bool:
+        if not self.source:
+            return False
+        if isinstance(self.source, VCSSource):
+            return True
+        return not (self.source.source_dir / 'Makefile').exists()
+
+    def run(self, cmd: List[str], *args, **kwargs) -> None:
+        assert isinstance(self.source, Source)
+        self.source.run_in_source_dir(cmd, *args, **kwargs)
+
+    def run_with_env(self, cmd: List[str]) -> None:
+        assert isinstance(self.source, Source)
+        self.source.run_in_source_dir(cmd, env=self.env)
+
+    def prepare(self):
+        raise NotImplementedError
+
+    def build(self):
+        raise NotImplementedError
+
+
+class Package(BasePackage):
+    def init_build_env(self):
         CLANG_PREFIX = (ndk.unified_toolchain /
                         f'{target_arch().ANDROID_TARGET}{android_api_level()}')
 
@@ -87,31 +117,6 @@ class Package:
 
         for prog in ('ar', 'as', 'ld', 'objcopy', 'objdump', 'ranlib', 'strip', 'readelf'):
             self.env[prog.upper()] = ndk.unified_toolchain / f'{target_arch().binutils_prefix}-{prog}'
-
-    @property
-    def filesdir(self) -> pathlib.Path:
-        return BASE / 'mk' / self.name
-
-    def need_download(self) -> bool:
-        if not self.source:
-            return False
-        if isinstance(self.source, VCSSource):
-            return True
-        return not (self.source.source_dir / 'Makefile').exists()
-
-    def run(self, cmd: List[str], *args, **kwargs) -> None:
-        assert isinstance(self.source, Source)
-        self.source.run_in_source_dir(cmd, *args, **kwargs)
-
-    def run_with_env(self, cmd: List[str]) -> None:
-        assert isinstance(self.source, Source)
-        self.source.run_in_source_dir(cmd, env=self.env)
-
-    def prepare(self):
-        raise NotImplementedError
-
-    def build(self):
-        raise NotImplementedError
 
 
 def import_package(pkgname: str) -> Package:
