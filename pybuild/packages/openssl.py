@@ -2,6 +2,7 @@ import copy
 import logging
 import os
 
+from ..ndk import ndk
 from ..package import Package
 from ..patch import LocalPatch
 from ..source import URLSource
@@ -33,7 +34,7 @@ class OpenSSL(Package):
             # OpenSSL requires NDK's clang in $PATH to enable usage of clang
             os.path.dirname(old_env['CC']),
             # and it requires unprefixed binutils, too
-            str(self.unified_toolchain.parent / target_arch().ANDROID_TARGET / 'bin'),
+            str(ndk.unified_toolchain.parent / target_arch().ANDROID_TARGET / 'bin'),
             os.environ['PATH'],
         ))
 

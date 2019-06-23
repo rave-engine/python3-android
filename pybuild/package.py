@@ -4,6 +4,7 @@ import os.path
 import pathlib
 from typing import Dict, Iterator, List, Optional, Sequence, Union
 
+from .ndk import ndk
 from .patch import Patch
 from .source import Source, URLSource, VCSSource
 from .util import (
@@ -57,9 +58,7 @@ class Package:
         if self.env:
             return False
 
-        self._check_ndk()
-
-        CLANG_PREFIX = (self.unified_toolchain /
+        CLANG_PREFIX = (ndk.unified_toolchain /
                         f'{target_arch().ANDROID_TARGET}{android_api_level()}')
 
         cflags = ['-fPIC']
@@ -88,7 +87,7 @@ class Package:
         })
 
         for prog in ('ar', 'as', 'ld', 'objcopy', 'objdump', 'ranlib', 'strip', 'readelf'):
-            self.env[prog.upper()] = self.unified_toolchain / f'{target_arch().binutils_prefix}-{prog}'
+            self.env[prog.upper()] = ndk.unified_toolchain / f'{target_arch().binutils_prefix}-{prog}'
 
         return True
 
@@ -111,22 +110,6 @@ class Package:
         assert isinstance(self.source, Source)
         self.init_build_env()
         self.source.run_in_source_dir(cmd, env=self.env)
-
-    def _check_ndk(self) -> None:
-        ndk_path = os.getenv('ANDROID_NDK')
-        if not ndk_path:
-            raise Exception('Requires environment variable $ANDROID_NDK')
-        ndk = pathlib.Path(ndk_path)
-
-        HOST_OS = os.uname().sysname.lower()
-
-        if HOST_OS not in ('linux', 'darwin'):
-            raise Exception(f'Unsupported system {HOST_OS}')
-
-        self.unified_toolchain = ndk / 'toolchains' / 'llvm' / 'prebuilt' / f'{HOST_OS}-x86_64' / 'bin'
-
-        if not self.unified_toolchain.exists():
-            raise Exception('Requires Android NDK r19 or above')
 
     def prepare(self):
         raise NotImplementedError
