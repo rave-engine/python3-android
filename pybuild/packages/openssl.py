@@ -23,9 +23,8 @@ class OpenSSL(Package):
         '7953AC1FBC3DC8B3B292393ED5E9E43F7DF9EE8C',  # Richard Levitte
     ]
 
-    def init_build_env(self) -> bool:
-        if not super().init_build_env():
-            return False
+    def init_build_env(self):
+        super().init_build_env()
 
         # OpenSSL handles NDK internal paths by itself, so don't use CC, CFLAGS, ...
         # from pybuild
@@ -46,8 +45,6 @@ class OpenSSL(Package):
         }
 
         self.env['HASHBANGPERL'] = '/system/bin/env perl'
-
-        return True
 
     def prepare(self):
         openssl_target = 'android-' + self.arch

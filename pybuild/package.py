@@ -36,6 +36,8 @@ class Package:
         for directory in (self.SYSROOT,):
             directory.mkdir(exist_ok=True, parents=True)
 
+        self.init_build_env()
+
     def get_version(self):
         return self.version or self.source.get_version()
 
@@ -54,10 +56,7 @@ class Package:
     def destdir(cls) -> pathlib.Path:
         return cls.SYSROOT
 
-    def init_build_env(self) -> bool:
-        if self.env:
-            return False
-
+    def init_build_env(self):
         CLANG_PREFIX = (ndk.unified_toolchain /
                         f'{target_arch().ANDROID_TARGET}{android_api_level()}')
 
@@ -89,8 +88,6 @@ class Package:
         for prog in ('ar', 'as', 'ld', 'objcopy', 'objdump', 'ranlib', 'strip', 'readelf'):
             self.env[prog.upper()] = ndk.unified_toolchain / f'{target_arch().binutils_prefix}-{prog}'
 
-        return True
-
     @property
     def filesdir(self) -> pathlib.Path:
         return BASE / 'mk' / self.name
@@ -108,7 +105,6 @@ class Package:
 
     def run_with_env(self, cmd: List[str]) -> None:
         assert isinstance(self.source, Source)
-        self.init_build_env()
         self.source.run_in_source_dir(cmd, env=self.env)
 
     def prepare(self):

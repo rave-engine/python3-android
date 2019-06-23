@@ -32,17 +32,14 @@ class Python(Package):
 
     dependencies = list(env.packages)
 
-    def init_build_env(self) -> bool:
-        if not super().init_build_env():
-            return False
+    def init_build_env(self):
+        super().init_build_env()
 
         self.env['CONFIG_SITE'] = self.filesdir / 'config.site'
 
         ldflags = list(self.env['LDFLAGS'])
         ldflags.pop(ldflags.index('-pie'))
         self.env['LDFLAGS'] = list(ldflags)
-
-        return True
 
     def prepare(self):
         self.run(['autoreconf', '--install', '--verbose', '--force'])

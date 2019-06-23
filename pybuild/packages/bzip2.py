@@ -11,12 +11,9 @@ class BZip2(Package):
     ]
 
     def init_build_env(self) -> bool:
-        if not super().init_build_env():
-            return False
+        super().init_build_env()
 
         self.env['CFLAGS'] = self.env['CPPFLAGS'] + self.env['CFLAGS']
-
-        return True
 
     def build(self):
         self.run_with_env(['make', 'libbz2.a', 'bzip2', 'bzip2recover'])
