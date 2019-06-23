@@ -19,5 +19,7 @@ class NDK():
         if not self.unified_toolchain.exists():
             raise Exception('Requires Android NDK r19 or above')
 
+        self.cmake_toolchain = ndk / 'build' / 'cmake' / 'android.toolchain.cmake'
+
 
 ndk = NDK()

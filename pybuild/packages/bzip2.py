@@ -1,20 +1,44 @@
-from ..patch import LocalPatch
-from ..source import URLSource
-from ..package import Package
+from ..ndk import ndk
+from ..source import GitSource
+from ..package import BasePackage
+from ..util import android_api_level, target_arch
 
 
-class BZip2(Package):
-    version = '1.0.6'
-    source = URLSource(f'https://fossies.org/linux/misc/bzip2-{version}.tar.gz')
-    patches = [
-        LocalPatch('makefiles'),
-    ]
+class BZip2Source(GitSource):
+    def __init__(self):
+        super().__init__('https://gitlab.com/federicomenaquintero/bzip2')
 
-    def init_build_env(self) -> bool:
-        super().init_build_env()
+    def get_version(self):
+        if not self._version and self.source_dir.exists():
+            rev_count = self.run_in_source_dir([
+                'git', 'rev-list', '--count', 'HEAD'
+            ], mode='result').strip()
+            rev = self.run_in_source_dir([
+                'git', 'rev-parse', '--short', 'HEAD'
+            ], mode='result').strip()
+            self._version = f'r{rev_count}.{rev}'
 
-        self.env['CFLAGS'] = self.env['CPPFLAGS'] + self.env['CFLAGS']
+        return self._version
+
+
+class BZip2(BasePackage):
+    source = BZip2Source()
+
+    def init_build_env(self):
+        pass
+
+    def prepare(self):
+        self.run_with_env([
+            'cmake',
+            f'-DCMAKE_TOOLCHAIN_FILE={ndk.cmake_toolchain}',
+            f'-DANDROID_ABI={target_arch().CMAKE_ANDROID_ABI}',
+            f'-DANDROID_PLATFORM=android-{android_api_level()}',
+            '-DENABLE_STATIC_LIB=ON',
+            '-DENABLE_SHARED_LIB=OFF',
+            '-DCMAKE_INSTALL_PREFIX=/usr',
+            '.'
+        ])
 
     def build(self):
-        self.run_with_env(['make', 'libbz2.a', 'bzip2', 'bzip2recover'])
-        self.run_with_env(['make', 'install', f'PREFIX={self.destdir()}/usr'])
+        self.run_with_env(['make'])
+        self.run_with_env(['make', 'install', f'DESTDIR={self.destdir()}'])
