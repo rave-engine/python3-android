@@ -5,7 +5,7 @@ from ..util import target_arch
 
 
 class LibUUID(Package):
-    version = '2.33.1'
+    version = '2.34'
     _version_without_patch = '.'.join(version.split('.')[:2])
     # TODO: enable PGP signature checking
     source = URLSource(f'https://www.kernel.org/pub/linux/utils/util-linux/v{_version_without_patch}/util-linux-{version}.tar.xz')
