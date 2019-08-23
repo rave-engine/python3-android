@@ -42,6 +42,12 @@ Build
    * Edit `pybuild/env.py` to match your (desired) configuration.
    * `make` to build everything!
 
+Build using Docker
+------------------
+
+```
+docker run --rm -it --user $(id -u):$(id -g) -v $(pwd):/python3-android yan12125/python3-android-base
+```
 
 Installation
 ------------
