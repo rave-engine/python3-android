@@ -1,0 +1,52 @@
+image: yan12125/python3-android-base:latest
+
+build_arm_api_21:
+  variables:
+    ANDROID_PLATFORM: arm
+    ANDROID_API_LEVEL: 21
+  script: &scripts
+  - ./devscripts/import_pgp_keys.sh
+  - make
+  - make test
+
+build_arm_api_29:
+  variables:
+    ANDROID_PLATFORM: arm
+    ANDROID_API_LEVEL: 29
+  script: *scripts
+
+build_arm64_api_21:
+  variables:
+    ANDROID_PLATFORM: arm64
+    ANDROID_API_LEVEL: 21
+  script: *scripts
+
+build_arm64_api_29:
+  variables:
+    ANDROID_PLATFORM: arm64
+    ANDROID_API_LEVEL: 29
+  script: *scripts
+
+build_x86_api_21:
+  variables:
+    ANDROID_PLATFORM: x86
+    ANDROID_API_LEVEL: 21
+  script: *scripts
+
+build_x86_api_29:
+  variables:
+    ANDROID_PLATFORM: x86
+    ANDROID_API_LEVEL: 29
+  script: *scripts
+
+build_x86_64_api_21:
+  variables:
+    ANDROID_PLATFORM: x86_64
+    ANDROID_API_LEVEL: 21
+  script: *scripts
+
+build_x86_64_api_29:
+  variables:
+    ANDROID_PLATFORM: x86_64
+    ANDROID_API_LEVEL: 29
+  script: *scripts
