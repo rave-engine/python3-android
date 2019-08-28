@@ -17,7 +17,7 @@ class PythonSource(GitSource):
             rev = self.run_in_source_dir([
                 'git', 'rev-parse', '--short', 'HEAD'
             ], mode='result').strip()
-            self._version = f'3.8.0a0.r{rev_count}.{rev}'
+            self._version = f'3.9.0a0.r{rev_count}.{rev}'
 
         return self._version
 

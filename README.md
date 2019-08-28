@@ -16,9 +16,9 @@ Building requires:
 
 1. Linux. This project might work on other Unix-like systems but no guarantee.
 2. Android NDK r19 beta 1 or newer installed and environment variable ``$ANDROID_NDK`` points to its root directory. NDk r18 or below is not supported.
-3. git and python3.8 in $PATH. It's recommended to use the latest git-master to build python3.8. Here are some ways to install the python3.8:
+3. git and python3.9 in $PATH. It's recommended to use the latest git-master to build python3.9. Here are some ways to install the python3.9:
 * For Arch Linux users, install [python-git](https://aur.archlinux.org/packages/python-git) package from AUR
-* For other users, install 3.8 from [pyenv](https://github.com/yyuu/pyenv)
+* For other users, install 3.9 from [pyenv](https://github.com/yyuu/pyenv)
 4. (Optional yet highly recommended) Vinay Sajip's [python-gnupg](https://bitbucket.org/vinay.sajip/python-gnupg) package for verifying PGP signatures of source tarballs and patches. You can install it with the following command:
 ```
 python -m pip install --user python-gnupg
@@ -58,7 +58,7 @@ Installation
 <pre>
 cd /data/local/tmp
 . ./python3/tools/env.sh
-python3.8m
+python3.9
 </pre>
    And have fun!
 
@@ -66,11 +66,11 @@ SSL/TLS
 -------
 SSL certificates have old and new naming schemes. Android uses the old scheme yet the latest OpenSSL uses the new one. If you got ```CERTIFICATE_VERIFY_FAILED``` when using SSL/TLS in Python, you need to generating certificate names of the new scheme:
 ```
-python3.8m ./python3/tools/c_rehash.py
+python3.9 ./python3/tools/c_rehash.py
 ```
 Check SSL/TLS functionality with:
 ```
-python3.8m ./python3/tools/ssl_test.py
+python3.9 ./python3/tools/ssl_test.py
 ```
 
 
