@@ -7,7 +7,7 @@ Build status:
 
 | System            | Status        |
 | ----------------- |---------------|
-| Linux (buildbot)  | [![Build Status](https://ci.chyen.cc/badges/python3-android.svg)](https://ci.chyen.cc/#/builders/python3-android) |
+| Linux (GitLab)    | [![Build Status](https://gitlab.com/yan12125/python3-android/badges/master/pipeline.svg)](https://gitlab.com/yan12125/python3-android/pipelines) |
 
 Prerequisites
 -------------
