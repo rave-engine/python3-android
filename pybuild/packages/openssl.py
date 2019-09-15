@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 class OpenSSL(BasePackage):
-    version = '1.1.1c'
+    version = '1.1.1d'
     source = URLSource(f'https://www.openssl.org/source/openssl-{version}.tar.gz', sig_suffix='.asc')
     patches = [
         LocalPatch('use-lld'),
