@@ -21,7 +21,7 @@ def main():
 
         target_packages = enumerate_packages()
         for pkgname in target_packages:
-            pkg = import_package(pkgname)
+            pkg = import_package(pkgname, will_build=False)
             keys_map[pkgname] = getattr(pkg, 'validpgpkeys', [])
 
         result = gpg.recv_keys(GPG_SERVER, *list(itertools.chain.from_iterable(keys_map.values())))

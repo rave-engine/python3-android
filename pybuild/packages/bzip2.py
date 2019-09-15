@@ -1,4 +1,3 @@
-from ..ndk import ndk
 from ..source import GitSource
 from ..package import BasePackage
 from ..util import android_api_level, target_arch
@@ -25,6 +24,8 @@ class BZip2(BasePackage):
     source = BZip2Source()
 
     def prepare(self):
+        from ..ndk import ndk
+
         self.run_with_env([
             'cmake',
             f'-DCMAKE_TOOLCHAIN_FILE={ndk.cmake_toolchain}',

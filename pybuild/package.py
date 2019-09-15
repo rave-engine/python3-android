@@ -4,7 +4,6 @@ import os.path
 import pathlib
 from typing import Dict, Iterator, List, Optional, Sequence, Union
 
-from .ndk import ndk
 from .patch import Patch
 from .source import Source, URLSource, VCSSource
 from .util import (
@@ -25,7 +24,7 @@ class BasePackage:
     dependencies: List[str] = []
     skip_uploading: bool = False
 
-    def __init__(self):
+    def __init__(self, will_build: bool = True):
         self.name = type(self).__name__.lower()
         self.arch = target_arch().__class__.__name__
         self.env: Dict[str, Union[_PathType, Sequence[_PathType]]] = {}
@@ -36,7 +35,8 @@ class BasePackage:
         for directory in (self.SYSROOT,):
             directory.mkdir(exist_ok=True, parents=True)
 
-        self.init_build_env()
+        if will_build:
+            self.init_build_env()
 
     def get_version(self):
         return self.version or self.source.get_version()
@@ -100,6 +100,8 @@ class BasePackage:
 
 class Package(BasePackage):
     def init_build_env(self):
+        from .ndk import ndk
+
         super().init_build_env()
 
         CLANG_PREFIX = (ndk.unified_toolchain /
@@ -122,12 +124,12 @@ class Package(BasePackage):
             self.env[prog.upper()] = ndk.unified_toolchain / f'{target_arch().binutils_prefix}-{prog}'
 
 
-def import_package(pkgname: str) -> Package:
+def import_package(pkgname: str, will_build: bool = True) -> Package:
     pkgmod = importlib.import_module(f'pybuild.packages.{pkgname}')
     for symbol_name in dir(pkgmod):
         symbol = getattr(pkgmod, symbol_name)
         if type(symbol) == type and symbol_name.lower() == pkgname:
-            return symbol()
+            return symbol(will_build=will_build)
 
     raise Exception(f'Package {pkgname} not found')
 

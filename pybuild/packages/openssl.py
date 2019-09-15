@@ -1,7 +1,6 @@
 import logging
 import os
 
-from ..ndk import ndk
 from ..package import BasePackage
 from ..patch import LocalPatch
 from ..source import URLSource
@@ -23,6 +22,8 @@ class OpenSSL(BasePackage):
     ]
 
     def init_build_env(self):
+        from ..ndk import ndk
+
         super().init_build_env()
 
         # OpenSSL handles NDK internal paths by itself, so don't use CC, CFLAGS, ...
