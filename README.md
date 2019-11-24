@@ -53,7 +53,7 @@ Installation
 ------------
 
 1. Make sure `adb shell` works fine
-2. ```bash ./devscript/send.sh``` copies all files to ```/data/local/tmp/python3``` on the device
+2. Copy all files in `build/sysroot` to a folder on the device (e.g., ```/data/local/tmp/python3```). Note that on most devices `/sdcard` is not on a POSIX-compliant filesystem, so the python binary will not run from there.
 3. In adb shell:
 <pre>
 cd /data/local/tmp
