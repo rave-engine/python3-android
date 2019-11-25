@@ -4,7 +4,7 @@ from ..util import target_arch
 
 
 class LibFFI(Package):
-    version = '3.3-rc0'
+    version = '3.3'
     source = URLSource(f'https://github.com/libffi/libffi/releases/download/v{version}/libffi-{version}.tar.gz')
 
     def prepare(self):
