@@ -32,7 +32,7 @@ class Readline(Package):
         if self._patches is None:
             self._patches = [
                 RemotePatch(
-                    self._common_url() + f'-patches/readline{self._major}{self._minor}-{patch}',
+                    self._common_url() + f'-patches/readline{self._major}{self._minor}-{patch:03d}',
                     strip=0, sig_suffix='.sig')
                 for patch in range(1, int(self._patchlevel) + 1)]
         return self._patches
