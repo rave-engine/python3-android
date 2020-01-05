@@ -12,10 +12,9 @@ android_api_level = 21
 #  gdbm - enable the dbm/gdbm modules
 #  libffi - enable the ctypes module
 #  zlib - enable the zlib module
-#  expat - enable the pyexpat module
 #  libuuid - enable the _uuid module
 #  tools - some handy utility scripts from ./devscripts
-packages = ('openssl', 'ncurses', 'readline', 'sqlite', 'bzip2', 'xz', 'gdbm', 'libffi', 'zlib', 'expat', 'libuuid', 'tools')
+packages = ('openssl', 'ncurses', 'readline', 'sqlite', 'bzip2', 'xz', 'gdbm', 'libffi', 'zlib', 'libuuid', 'tools')
 
 # Enable GPG signature verification on source tarballs and patches?
 verify_source = True

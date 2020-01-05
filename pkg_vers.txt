@@ -1,4 +1,3 @@
-expat 2.2.9
 gdbm 1.18.1
 libuuid 2.34
 readline 8.0.001
