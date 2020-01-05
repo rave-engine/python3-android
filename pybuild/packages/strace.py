@@ -4,9 +4,11 @@ from ..util import target_arch
 
 
 class Strace(Package):
-    version = '5.1'
-    source = URLSource(f'https://strace.io/files/{version}/strace-{version}.tar.xz', sig_suffix='.asc')
     validpgpkeys = ['296D6F29A020808E8717A8842DB5BD89A340AEB7']
+
+    @property
+    def source(self):
+        return URLSource(f'https://strace.io/files/{self.version}/strace-{self.version}.tar.xz', sig_suffix='.asc')
 
     def prepare(self):
         self.run_with_env([

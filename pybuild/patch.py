@@ -17,8 +17,8 @@ class Patch:
 
 
 class LocalPatch(Patch):
-    def apply(self, source):
-        self.apply_file(self.package.filesdir / self.name, self.package.source)
+    def apply(self, source, package):
+        self.apply_file(package.filesdir / self.name, source)
 
 
 class RemotePatch(Patch, URLSource):
@@ -29,5 +29,5 @@ class RemotePatch(Patch, URLSource):
         Patch.__init__(self, name, *args, **kwargs)
         URLSource.__init__(self, url, sig_suffix=sig_suffix)
 
-    def apply(self, source):
-        self.apply_file(self.package.source.src_prefix / self.name, self.package.source)
+    def apply(self, source, package):
+        self.apply_file(source.src_prefix / self.name, source)

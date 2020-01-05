@@ -4,9 +4,13 @@ from ..util import target_arch
 
 
 class XZ(Package):
-    version = '5.2.4'
-    source = URLSource(f'https://tukaani.org/xz/xz-{version}.tar.gz', sig_suffix='.sig')
     validpgpkeys = ['3690C240CE51B4670D30AD1C38EE757D69184620']
+
+    @property
+    def source(self):
+        return URLSource(
+            f'https://tukaani.org/xz/xz-{self.version}.tar.gz',
+            sig_suffix='.sig')
 
     def prepare(self):
         self.run_with_env([

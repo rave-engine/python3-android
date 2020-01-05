@@ -24,11 +24,11 @@ def build_package(pkgname: str) -> None:
 
         # All signatures should be downloaded first so that sources can be verified
         for src in pkg.sources:
-            src.verify()
+            src.verify(pkg.validpgpkeys)
             src.extract()
 
         for patch in getattr(pkg, 'patches', []):
-            patch.apply(pkg.source)
+            patch.apply(pkg.source, pkg)
 
         need_prepare = True
 

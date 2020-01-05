@@ -63,12 +63,12 @@ class Source:
     def extract(self):
         raise NotImplementedError
 
-    def verify(self):
+    def verify(self, validpgpkeys: List[str]):
         if not self.sig_suffix:
             return
 
         gpg_verify_file(str(self.target) + self.sig_suffix, self.target,
-                        self.package.validpgpkeys)
+                        validpgpkeys)
 
     def clean(self):
         raise NotImplementedError

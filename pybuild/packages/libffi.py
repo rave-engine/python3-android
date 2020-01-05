@@ -4,8 +4,10 @@ from ..util import target_arch
 
 
 class LibFFI(Package):
-    version = '3.3'
-    source = URLSource(f'https://github.com/libffi/libffi/releases/download/v{version}/libffi-{version}.tar.gz')
+    @property
+    def source(self):
+        return URLSource(
+            f'https://github.com/libffi/libffi/releases/download/v{self.version}/libffi-{self.version}.tar.gz')
 
     def prepare(self):
         self.run_with_env([

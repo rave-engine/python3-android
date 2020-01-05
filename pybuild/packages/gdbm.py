@@ -5,13 +5,17 @@ from ..util import target_arch
 
 
 class GDBM(Package):
-    version = '1.18.1'
-    source = URLSource(f'https://ftp.gnu.org/gnu/gdbm/gdbm-{version}.tar.gz', sig_suffix='.sig')
     validpgpkeys = ['325F650C4C2B6AD58807327A3602B07F55D0C732']
     patches = [
         LocalPatch('SIZE_T_MAX'),
         LocalPatch('missing-return'),
     ]
+
+    @property
+    def source(self):
+        return URLSource(
+            f'https://ftp.gnu.org/gnu/gdbm/gdbm-{self.version}.tar.gz',
+            sig_suffix='.sig')
 
     def prepare(self):
         self.run_with_env([

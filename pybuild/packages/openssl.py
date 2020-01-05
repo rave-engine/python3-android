@@ -10,8 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 class OpenSSL(BasePackage):
-    version = '1.1.1d'
-    source = URLSource(f'https://www.openssl.org/source/openssl-{version}.tar.gz', sig_suffix='.asc')
     patches = [
         LocalPatch('use-lld'),
         LocalPatch('lld-issue32518'),
@@ -20,6 +18,10 @@ class OpenSSL(BasePackage):
         '8657ABB260F056B1E5190839D9C4D26D0E604491',  # Matt Caswell
         '7953AC1FBC3DC8B3B292393ED5E9E43F7DF9EE8C',  # Richard Levitte
     ]
+
+    @property
+    def source(self):
+        return URLSource(f'https://www.openssl.org/source/openssl-{self.version}.tar.gz', sig_suffix='.asc')
 
     def init_build_env(self):
         from ..ndk import ndk

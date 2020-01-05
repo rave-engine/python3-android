@@ -18,25 +18,34 @@ class BasePackage:
     BUILDDIR = BASE / 'build'
     SYSROOT = BUILDDIR / 'sysroot'
 
-    version: Optional[str] = None
+    _VERSIONS: Dict[str, str] = {}
+
     source: Optional[Source] = None
     patches: List[Patch] = []
     dependencies: List[str] = []
     skip_uploading: bool = False
+    validpgpkeys: List[str] = []
 
     def __init__(self, will_build: bool = True):
         self.name = type(self).__name__.lower()
         self.arch = target_arch().__class__.__name__
         self.env: Dict[str, Union[_PathType, Sequence[_PathType]]] = {}
 
-        for f in itertools.chain(self.sources, self.patches):
-            f.package = self
-
         for directory in (self.SYSROOT,):
             directory.mkdir(exist_ok=True, parents=True)
 
         if will_build:
             self.init_build_env()
+
+    @property
+    def version(self) -> Optional[str]:
+        if not BasePackage._VERSIONS:
+            with open(BASE / 'pkg_vers.txt') as f:
+                for line in f:
+                    name, ver = line.strip().split(' ')
+                    BasePackage._VERSIONS[name] = ver
+
+        return BasePackage._VERSIONS.get(self.name)
 
     def get_version(self):
         return self.version or self.source.get_version()

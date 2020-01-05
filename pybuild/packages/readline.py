@@ -1,3 +1,5 @@
+import re
+
 from ..source import URLSource
 from ..package import Package
 from ..patch import RemotePatch
@@ -5,13 +7,6 @@ from ..util import target_arch
 
 
 class Readline(Package):
-    _MAJOR = 8
-    _MINOR = 0
-    _PATCHLEVEL = 0
-    version = f'{_MAJOR}.{_MINOR}.{_PATCHLEVEL:03d}'
-
-    _common = f'https://ftp.gnu.org/gnu/readline/readline-{_MAJOR}.{_MINOR}'
-    source = URLSource(f'{_common}.tar.gz', sig_suffix='.sig')
     validpgpkeys = ['7C0135FB088AAF6C66C650B9BB5869F064EA74AB']
     dependencies = ['ncurses']
 
@@ -19,14 +14,27 @@ class Readline(Package):
     # the class scope
     _patches = None
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        mobj = re.match('(\d).(\d).(\d+)', self.version)
+        self._major, self._minor, self._patchlevel = mobj.groups()
+
+    def _common_url(self):
+        return f'https://ftp.gnu.org/gnu/readline/readline-{self._major}.{self._minor}'
+
+    @property
+    def source(self):
+        return URLSource(self._common_url() + '.tar.gz', sig_suffix='.sig')
+
     @property
     def patches(self):
         if self._patches is None:
             self._patches = [
                 RemotePatch(
-                    f'{self._common}-patches/readline{self._MAJOR}{self._MINOR}-{patch:03d}',
+                    self._common_url() + f'-patches/readline{self._major}{self._minor}-{patch}',
                     strip=0, sig_suffix='.sig')
-                for patch in range(1, self._PATCHLEVEL + 1)]
+                for patch in range(1, int(self._patchlevel) + 1)]
         return self._patches
 
     def prepare(self):

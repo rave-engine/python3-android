@@ -1,0 +1,9 @@
+expat 2.2.9
+gdbm 1.18.1
+libffi 3.3
+libuuid 2.34
+openssl 1.1.1d
+readline 8.0.001
+sqlite 3.30.1
+xz 5.2.4
+zlib 1.2.11
