@@ -1,4 +1,4 @@
-from ..source import URLSource
+from ..source import CPythonSourceDeps
 from ..package import Package
 from ..util import target_arch
 
@@ -6,10 +6,11 @@ from ..util import target_arch
 class LibFFI(Package):
     @property
     def source(self):
-        return URLSource(
-            f'https://github.com/libffi/libffi/releases/download/v{self.version}/libffi-{self.version}.tar.gz')
+        return CPythonSourceDeps(branch='libffi')
 
     def prepare(self):
+        self.run(['autoreconf', '--install', '--verbose', '--force'])
+
         self.run_with_env([
             './configure',
             '--prefix=/usr',

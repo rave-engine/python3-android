@@ -138,10 +138,10 @@ class GitSource(VCSSource):
 
     def clone(self):
         self.run_globally([
-            'git', 'clone', '-b', self.branch, self.source_url, self.dest])
+            'git', 'clone', '--single-branch', '-b', self.branch, self.source_url, self.dest])
 
     def update(self):
-        self.run_in_source_dir(['git', 'fetch', '--tags', 'origin'])
+        self.run_in_source_dir(['git', 'fetch', '--no-tags', 'origin', self.branch])
         self.run_in_source_dir([
             'git', 'merge', '--ff-only', f'origin/{self.branch}'])
 
@@ -157,3 +157,11 @@ class GitSource(VCSSource):
         self.run_in_source_dir(['git', 'checkout', self.branch])
         self.run_in_source_dir(['git', 'reset', '.'])
         self.run_in_source_dir(['git', 'checkout', '.'])
+
+
+class CPythonSourceDeps(GitSource):
+    def __init__(self, *args, branch: str, **kwargs):
+        super().__init__(
+            source_url='https://github.com/python/cpython-source-deps',
+            branch=branch)
+        self.basename = branch

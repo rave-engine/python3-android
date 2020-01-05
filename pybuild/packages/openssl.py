@@ -3,7 +3,7 @@ import os
 
 from ..package import BasePackage
 from ..patch import LocalPatch
-from ..source import URLSource
+from ..source import CPythonSourceDeps
 from ..util import android_api_level, target_arch
 
 logger = logging.getLogger(__name__)
@@ -14,14 +14,10 @@ class OpenSSL(BasePackage):
         LocalPatch('use-lld'),
         LocalPatch('lld-issue32518'),
     ]
-    validpgpkeys = [
-        '8657ABB260F056B1E5190839D9C4D26D0E604491',  # Matt Caswell
-        '7953AC1FBC3DC8B3B292393ED5E9E43F7DF9EE8C',  # Richard Levitte
-    ]
 
     @property
     def source(self):
-        return URLSource(f'https://www.openssl.org/source/openssl-{self.version}.tar.gz', sig_suffix='.asc')
+        return CPythonSourceDeps(branch='openssl-1.1.1')
 
     def init_build_env(self):
         from ..ndk import ndk
@@ -49,7 +45,7 @@ class OpenSSL(BasePackage):
     def prepare(self):
         openssl_target = 'android-' + self.arch
 
-        self.run_with_env(['./Configure', '--prefix=/usr', '--openssldir=/etc/ssl', openssl_target, 'no-shared'])
+        self.run_with_env(['perl', './Configure', '--prefix=/usr', '--openssldir=/etc/ssl', openssl_target, 'no-shared'])
 
     def build(self):
         self.run_with_env(['make'])
