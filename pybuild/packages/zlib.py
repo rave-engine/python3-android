@@ -1,14 +1,9 @@
 from ..source import CPythonSourceDeps
 from ..package import Package
-from ..patch import LocalPatch
 from ..util import target_arch
 
 
 class ZLib(Package):
-    patches = [
-        LocalPatch('fix-ldflags'),
-    ]
-
     @property
     def source(self):
         return CPythonSourceDeps(branch='zlib')
@@ -29,5 +24,5 @@ class ZLib(Package):
         ])
 
     def build(self):
-        self.run(['make'])
+        self.run(['make', 'libz.a'])
         self.run(['make', 'install', f'DESTDIR={self.destdir()}'])
