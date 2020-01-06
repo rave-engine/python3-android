@@ -16,7 +16,7 @@ class LibUUID(Package):
         return URLSource(
             f'https://www.kernel.org/pub/linux/utils/util-linux/v{_version_without_patch}/util-linux-{self.version}.tar.xz')
 
-    def prepare(self):
+    def build(self):
         self.run_with_env([
             './configure',
             '--prefix=/usr',
@@ -28,6 +28,5 @@ class LibUUID(Package):
             '--enable-libuuid',
         ])
 
-    def build(self):
         self.run(['make'])
         self.run(['make', 'install', f'DESTDIR={self.destdir()}'])

@@ -42,11 +42,10 @@ class OpenSSL(BasePackage):
         })
         self.env['CPPFLAGS'].append(f'-D__ANDROID_API__={android_api_level()}')
 
-    def prepare(self):
+    def build(self):
         openssl_target = 'android-' + self.arch
 
         self.run_with_env(['perl', './Configure', '--prefix=/usr', '--openssldir=/etc/ssl', openssl_target, 'no-shared'])
 
-    def build(self):
         self.run_with_env(['make'])
         self.run_with_env(['make', 'install_sw', 'install_ssldirs', f'DESTDIR={self.destdir()}'])

@@ -8,7 +8,7 @@ class XZ(Package):
     def source(self):
         return CPythonSourceDeps(branch='xz')
 
-    def prepare(self):
+    def build(self):
         self.run(['autoreconf', '--install', '--verbose', '--force'])
 
         self.run_with_env([
@@ -18,6 +18,5 @@ class XZ(Package):
             '--disable-shared',
         ])
 
-    def build(self):
         self.run(['make'])
         self.run(['make', 'install', f'DESTDIR={self.destdir()}'])

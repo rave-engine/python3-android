@@ -17,7 +17,7 @@ class GDBM(Package):
             f'https://ftp.gnu.org/gnu/gdbm/gdbm-{self.version}.tar.gz',
             sig_suffix='.sig')
 
-    def prepare(self):
+    def build(self):
         self.run_with_env([
             './configure',
             '--prefix=/usr',
@@ -26,6 +26,5 @@ class GDBM(Package):
             '--disable-static',
         ])
 
-    def build(self):
         self.run(['make', 'V=1'])
         self.run(['make', 'install', f'DESTDIR={self.destdir()}'])

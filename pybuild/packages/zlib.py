@@ -16,13 +16,12 @@ class ZLib(Package):
             'CFLAGS': self.env['CPPFLAGS'] + self.env['CFLAGS'],
         })
 
-    def prepare(self):
+    def build(self):
         self.run_with_env([
             './configure',
             '--prefix=/usr',
             '--static',
         ])
 
-    def build(self):
         self.run(['make', 'libz.a'])
         self.run(['make', 'install', f'DESTDIR={self.destdir()}'])

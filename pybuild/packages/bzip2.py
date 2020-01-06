@@ -23,7 +23,7 @@ class BZip2Source(GitSource):
 class BZip2(BasePackage):
     source = BZip2Source()
 
-    def prepare(self):
+    def build(self):
         from ..ndk import ndk
 
         self.run_with_env([
@@ -37,6 +37,5 @@ class BZip2(BasePackage):
             '.'
         ])
 
-    def build(self):
         self.run_with_env(['make'])
         self.run_with_env(['make', 'install', f'DESTDIR={self.destdir()}'])

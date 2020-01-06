@@ -37,7 +37,7 @@ class Readline(Package):
                 for patch in range(1, int(self._patchlevel) + 1)]
         return self._patches
 
-    def prepare(self):
+    def build(self):
         # See the wcwidth() test in aclocal.m4. Tested on Android 6.0 and it's broken
         # XXX: wcwidth() is implemented in [1], which may be in Android P
         # Need a conditional configuration then?
@@ -50,6 +50,5 @@ class Readline(Package):
             '--disable-shared',
         ])
 
-    def build(self):
         self.run(['make'])
         self.run(['make', 'install', f'DESTDIR={self.destdir()}'])

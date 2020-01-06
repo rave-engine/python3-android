@@ -18,7 +18,7 @@ class NCursesSource(GitSource):
 class NCurses(Package):
     source = NCursesSource()
 
-    def prepare(self):
+    def build(self):
         self.run_with_env([
             './configure',
             '--prefix=/usr',
@@ -33,6 +33,5 @@ class NCurses(Package):
             '--disable-stripping',
         ])
 
-    def build(self):
         self.run(['make'])
         self.run(['make', 'install', f'DESTDIR={self.destdir()}'])

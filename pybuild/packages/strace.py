@@ -10,7 +10,7 @@ class Strace(Package):
     def source(self):
         return URLSource(f'https://strace.io/files/{self.version}/strace-{self.version}.tar.xz', sig_suffix='.asc')
 
-    def prepare(self):
+    def build(self):
         self.run_with_env([
             './configure',
             '--prefix=/usr',
@@ -19,6 +19,5 @@ class Strace(Package):
             '--enable-mpers=no',
         ])
 
-    def build(self):
         self.run(['make'])
         self.run(['make', 'install', f'DESTDIR={self.destdir()}'])

@@ -9,7 +9,7 @@ class SQLite(Package):
         _vernum = list(map(int, self.version.split('.')))
         return URLSource(f'https://www.sqlite.org/2019/sqlite-autoconf-{_vernum[0] * 10000 + _vernum[1] * 100 + _vernum[2]}00.tar.gz')
 
-    def prepare(self):
+    def build(self):
         self.run_with_env([
             './configure',
             '--prefix=/usr',
@@ -17,6 +17,5 @@ class SQLite(Package):
             '--disable-shared',
         ])
 
-    def build(self):
         self.run(['make'])
         self.run(['make', 'install', f'DESTDIR={self.destdir()}'])

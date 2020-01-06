@@ -41,7 +41,7 @@ class Python(Package):
         ldflags.pop(ldflags.index('-pie'))
         self.env['LDFLAGS'] = list(ldflags)
 
-    def prepare(self):
+    def build(self):
         self.run(['autoreconf', '--install', '--verbose', '--force'])
 
         self.run_with_env([
@@ -55,6 +55,5 @@ class Python(Package):
             '--without-ensurepip',
         ])
 
-    def build(self):
         self.run(['make'])
         self.run(['make', 'altinstall', f'DESTDIR={self.destdir()}'])

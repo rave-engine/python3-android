@@ -100,9 +100,6 @@ class BasePackage:
         assert isinstance(self.source, Source)
         self.source.run_in_source_dir(cmd, env=self.env)
 
-    def prepare(self):
-        raise NotImplementedError
-
     def build(self):
         raise NotImplementedError
 
