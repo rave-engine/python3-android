@@ -70,9 +70,6 @@ class Source:
         gpg_verify_file(str(self.target) + self.sig_suffix, self.target,
                         validpgpkeys)
 
-    def clean(self):
-        raise NotImplementedError
-
 
 class URLSource(Source):
     @property
@@ -95,10 +92,6 @@ class URLSource(Source):
             if self.basename.endswith(suffix):
                 self.run_globally(['tar', '-xvf', self.basename])
                 break
-
-    def clean(self):
-        if self.source_dir:  # Don't remove standalone files (patches, etc.)
-            rmtree(self.source_dir)
 
 
 class VCSSource(Source):
@@ -144,14 +137,6 @@ class GitSource(VCSSource):
         self.run_in_source_dir(['git', 'fetch', '--no-tags', 'origin', self.branch])
         self.run_in_source_dir([
             'git', 'merge', '--ff-only', f'origin/{self.branch}'])
-
-    def clean(self):
-        if not self.already_cloned:
-            print(f'{self.dest} not cloned yet, skipping...')
-            return
-
-        self.checkout()
-        self.run_in_source_dir(['git', 'clean', '-dfx'])
 
     def checkout(self):
         self.run_in_source_dir(['git', 'checkout', self.branch])

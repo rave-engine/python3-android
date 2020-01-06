@@ -4,7 +4,7 @@ all:
 	$(PYTHON) -m pybuild
 
 clean:
-	$(PYTHON) -m pybuild.clean
+	rm -rvf build src/*
 
 test:
 	$(PYTHON) -m pybuild.check_cpython_modules
