@@ -8,7 +8,7 @@ RUN echo 'Server = https://mirror.pkgbuild.com/$repo/os/$arch' > /etc/pacman.d/m
     pacman-key --init && pacman-key --populate archlinux && \
     pacman -Syu --noconfirm && \
     pacman -S --noconfirm archlinuxcn-keyring && \
-    pacman -S --noconfirm --needed android-ndk-beta autoconf automake cmake gawk git gcc make patch pkgconf python-git which && \
+    pacman -S --noconfirm --needed android-ndk-beta autoconf automake cmake gawk gettext git gcc make patch pkgconf python-git which && \
     pip3.9 install python-gnupg
 
 WORKDIR /python3-android

@@ -46,7 +46,8 @@ Build using Docker
 ------------------
 
 ```
-docker run --rm -it --user $(id -u):$(id -g) -v $(pwd):/python3-android yan12125/python3-android-base
+pushd docker && docker build -t python3-android-base . && popd
+docker run --rm -it --user $(id -u):$(id -g) -v $(pwd):/python3-android python3-android-base
 ```
 
 Installation
