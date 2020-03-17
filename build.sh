@@ -1,3 +1,4 @@
+#!/bin/sh
 THIS_DIR="$PWD"
 
 COMMON_ARGS="--arch ${ARCH:-arm} --api ${ANDROID_API:-21}"
@@ -12,4 +13,4 @@ make
 make install DESTDIR="$THIS_DIR/build"
 popd
 cp -r src/cpython/Android/sysroot/usr/share/terminfo build/usr/share/
-cp devscripts/env.sh build
+cp devscripts/env.sh build/
