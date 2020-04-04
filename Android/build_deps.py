@@ -80,7 +80,7 @@ class NCurses(Package):
     configure_args = ['--without-ada', '--enable-widec', '--without-debug', '--without-cxx-binding', '--disable-stripping']
 
 class OpenSSL(Package):
-    source = 'https://www.openssl.org/source/openssl-1.1.1d.tar.gz'
+    source = 'https://www.openssl.org/source/openssl-1.1.1f.tar.gz'
 
     def configure(self):
         # OpenSSL handles NDK internal paths by itself
@@ -95,11 +95,11 @@ class OpenSSL(Package):
         logger.debug(f'$PATH for OpenSSL: {path}')
 
         os.environ['PATH'] = path
-        os.environ['CPPFLAGS'] += f' -D__ANDROID_API__={self.android_api_level}'
 
         openssl_target = 'android-' + self.target_arch_name
 
-        self.run(['./Configure', '--prefix=/usr', '--openssldir=/etc/ssl', openssl_target, 'no-shared', 'no-tests'])
+        self.run(['./Configure', '--prefix=/usr', '--openssldir=/etc/ssl', openssl_target,
+                  'no-shared', 'no-tests', f'-D__ANDROID_API__={self.android_api_level}'])
 
     def make_install(self):
         self.run(['make', 'install_sw', 'install_ssldirs', f'DESTDIR={SYSROOT}'])
@@ -117,7 +117,7 @@ class SQLite(Package):
     source = 'https://sqlite.org/2020/sqlite-autoconf-3310100.tar.gz'
 
 class XZ(Package):
-    source = 'https://tukaani.org/xz/xz-5.2.4.tar.xz'
+    source = 'https://tukaani.org/xz/xz-5.2.5.tar.xz'
 
 class ZLib(Package):
     source = 'https://www.zlib.net/zlib-1.2.11.tar.gz'
@@ -138,8 +138,8 @@ class ZLib(Package):
         self.run(['make', 'libz.a'])
 
 def build_package(pkg: Package):
-    subprocess.call(['curl', '-LO', pkg.source], cwd=BASE / 'deps')
-    subprocess.call(['tar', 'xf', os.path.basename(pkg.source)], cwd=BASE / 'deps')
+    subprocess.check_call(['curl', '-fLO', pkg.source], cwd=BASE / 'deps')
+    subprocess.check_call(['tar', 'xf', os.path.basename(pkg.source)], cwd=BASE / 'deps')
 
     try:
         saved_env = os.environ.copy()
