@@ -1,11 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import shlex
 import logging
 import os
 import re
 import subprocess
 from typing import List
-import sys
 
 from util import ARCHITECTURES, BASE, SYSROOT, env_vars, ndk_unified_toolchain, parse_args
 
@@ -80,7 +79,7 @@ class NCurses(Package):
     configure_args = ['--without-ada', '--enable-widec', '--without-debug', '--without-cxx-binding', '--disable-stripping']
 
 class OpenSSL(Package):
-    source = 'https://www.openssl.org/source/openssl-1.1.1f.tar.gz'
+    source = 'https://www.openssl.org/source/openssl-1.1.1g.tar.gz'
 
     def configure(self):
         # OpenSSL handles NDK internal paths by itself

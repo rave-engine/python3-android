@@ -1,3 +1,2 @@
-#!/bin/sh
-[ -d src/cpython ] && pushd src/cpython && git clean -dfx && git checkout && popd
-rm -rf build
+#!/bin/bash
+rm -rf src/* build
