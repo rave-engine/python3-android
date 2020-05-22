@@ -1,7 +1,7 @@
 Python 3 Android
 ================
 
-This is an experimental set of build scripts that will cross-compile Python 3.9.0a6 for an Android device.
+This is an experimental set of build scripts that will cross-compile Python 3.9.0b1 for an Android device.
 
 Prerequisites
 -------------
@@ -10,7 +10,7 @@ Building requires:
 
 1. Linux. This project might work on other systems supported by NDK but no guarantee.
 2. Android NDK r21 installed and environment variable ``$ANDROID_NDK`` points to its root directory. Older NDK may not work and NDK <= r18 is known to be incompatible.
-3. `python3.9` binary from Python 3.9.0a6 on the building host. It's recommended to use exactly that Python version, which can be installed via [pyenv](https://github.com/yyuu/pyenv). Don't forget to check that `python3.9` is available in $PATH.
+3. `python3.9` binary from Python 3.9.0b1 on the building host. It's recommended to use exactly that Python version, which can be installed via [pyenv](https://github.com/yyuu/pyenv). Don't forget to check that `python3.9` is available in $PATH.
 4. `tic` binary from ncurses 6.2 on the building host. Slightly newer or older version may also work but no guarantee.
 
 Running requires:

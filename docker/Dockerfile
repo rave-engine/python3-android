@@ -1,4 +1,4 @@
-FROM python:3.9.0a6-buster
+FROM python:3.9.0b1-buster
 
 ARG NDK_VER=r21b
 

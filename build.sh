@@ -5,7 +5,7 @@ set -x
 
 THIS_DIR="$PWD"
 
-PYVER=3.9.0a6
+PYVER=3.9.0b1
 PYVER_SHORT=3.9.0
 SRCDIR=src/Python-$PYVER
 
