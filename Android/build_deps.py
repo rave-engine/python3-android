@@ -68,6 +68,8 @@ class GDBM(Package):
 
 class LibFFI(Package):
     source = 'https://github.com/libffi/libffi/releases/download/v3.3/libffi-3.3.tar.gz'
+    # libffi may fail to configure with Docker on WSL2 (#33)
+    configure_args = ['--disable-builddir']
 
 class LibUUID(Package):
     source = 'https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v2.35/util-linux-2.35.tar.xz'
