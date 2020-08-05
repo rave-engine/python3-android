@@ -11,13 +11,6 @@
 extern "C" {
 #endif
 
-#ifndef Py_LIMITED_API
-PyAPI_FUNC(void *) PyMem_RawMalloc(size_t size);
-PyAPI_FUNC(void *) PyMem_RawRealloc(void *ptr, size_t new_size);
-PyAPI_FUNC(void) PyMem_RawFree(void *ptr);
-#endif
-
-
 /* BEWARE:
 
    Each interface exports both functions and macros.  Extension modules should
@@ -60,11 +53,6 @@ PyAPI_FUNC(void *) PyMem_Malloc(size_t size);
 PyAPI_FUNC(void *) PyMem_Realloc(void *ptr, size_t new_size);
 PyAPI_FUNC(void) PyMem_Free(void *ptr);
 
-#ifndef Py_LIMITED_API
-PyAPI_FUNC(char *) _PyMem_RawStrdup(const char *str);
-PyAPI_FUNC(char *) _PyMem_Strdup(const char *str);
-#endif
-
 /* Macros. */
 
 /* PyMem_MALLOC(0) means malloc(1). Some systems would return NULL
@@ -88,11 +76,11 @@ PyAPI_FUNC(char *) _PyMem_Strdup(const char *str);
  */
 
 #define PyMem_New(type, n) \
-  ( ((size_t)(n) > PY_SSIZE_T_MAX / sizeof(type)) ? NULL :	\
-	( (type *) PyMem_Malloc((n) * sizeof(type)) ) )
+  ( ((size_t)(n) > PY_SSIZE_T_MAX / sizeof(type)) ? NULL :      \
+        ( (type *) PyMem_Malloc((n) * sizeof(type)) ) )
 #define PyMem_NEW(type, n) \
-  ( ((size_t)(n) > PY_SSIZE_T_MAX / sizeof(type)) ? NULL :	\
-	( (type *) PyMem_MALLOC((n) * sizeof(type)) ) )
+  ( ((size_t)(n) > PY_SSIZE_T_MAX / sizeof(type)) ? NULL :      \
+        ( (type *) PyMem_MALLOC((n) * sizeof(type)) ) )
 
 /*
  * The value of (p) is always clobbered by this macro regardless of success.
@@ -101,79 +89,23 @@ PyAPI_FUNC(char *) _PyMem_Strdup(const char *str);
  * caller's memory error handler to not lose track of it.
  */
 #define PyMem_Resize(p, type, n) \
-  ( (p) = ((size_t)(n) > PY_SSIZE_T_MAX / sizeof(type)) ? NULL :	\
-	(type *) PyMem_Realloc((p), (n) * sizeof(type)) )
+  ( (p) = ((size_t)(n) > PY_SSIZE_T_MAX / sizeof(type)) ? NULL :        \
+        (type *) PyMem_Realloc((p), (n) * sizeof(type)) )
 #define PyMem_RESIZE(p, type, n) \
-  ( (p) = ((size_t)(n) > PY_SSIZE_T_MAX / sizeof(type)) ? NULL :	\
-	(type *) PyMem_REALLOC((p), (n) * sizeof(type)) )
+  ( (p) = ((size_t)(n) > PY_SSIZE_T_MAX / sizeof(type)) ? NULL :        \
+        (type *) PyMem_REALLOC((p), (n) * sizeof(type)) )
 
 /* PyMem{Del,DEL} are left over from ancient days, and shouldn't be used
  * anymore.  They're just confusing aliases for PyMem_{Free,FREE} now.
  */
-#define PyMem_Del		PyMem_Free
-#define PyMem_DEL		PyMem_FREE
+#define PyMem_Del               PyMem_Free
+#define PyMem_DEL               PyMem_FREE
+
 
 #ifndef Py_LIMITED_API
-typedef enum {
-    /* PyMem_RawMalloc(), PyMem_RawRealloc() and PyMem_RawFree() */
-    PYMEM_DOMAIN_RAW,
-
-    /* PyMem_Malloc(), PyMem_Realloc() and PyMem_Free() */
-    PYMEM_DOMAIN_MEM,
-
-    /* PyObject_Malloc(), PyObject_Realloc() and PyObject_Free() */
-    PYMEM_DOMAIN_OBJ
-} PyMemAllocatorDomain;
-
-typedef struct {
-    /* user context passed as the first argument to the 3 functions */
-    void *ctx;
-
-    /* allocate a memory block */
-    void* (*malloc) (void *ctx, size_t size);
-
-    /* allocate or resize a memory block */
-    void* (*realloc) (void *ctx, void *ptr, size_t new_size);
-
-    /* release a memory block */
-    void (*free) (void *ctx, void *ptr);
-} PyMemAllocator;
-
-/* Get the memory block allocator of the specified domain. */
-PyAPI_FUNC(void) PyMem_GetAllocator(PyMemAllocatorDomain domain,
-                                    PyMemAllocator *allocator);
-
-/* Set the memory block allocator of the specified domain.
-
-   The new allocator must return a distinct non-NULL pointer when requesting
-   zero bytes.
-
-   For the PYMEM_DOMAIN_RAW domain, the allocator must be thread-safe: the GIL
-   is not held when the allocator is called.
-
-   If the new allocator is not a hook (don't call the previous allocator), the
-   PyMem_SetupDebugHooks() function must be called to reinstall the debug hooks
-   on top on the new allocator. */
-PyAPI_FUNC(void) PyMem_SetAllocator(PyMemAllocatorDomain domain,
-                                    PyMemAllocator *allocator);
-
-/* Setup hooks to detect bugs in the following Python memory allocator
-   functions:
-
-   - PyMem_RawMalloc(), PyMem_RawRealloc(), PyMem_RawFree()
-   - PyMem_Malloc(), PyMem_Realloc(), PyMem_Free()
-   - PyObject_Malloc(), PyObject_Realloc() and PyObject_Free()
-
-   Newly allocated memory is filled with the byte 0xCB, freed memory is filled
-   with the byte 0xDB. Additionnal checks:
-
-   - detect API violations, ex: PyObject_Free() called on a buffer allocated
-     by PyMem_Malloc()
-   - detect write before the start of the buffer (buffer underflow)
-   - detect write after the end of the buffer (buffer overflow)
-
-   The function does nothing if Python is not compiled is debug mode. */
-PyAPI_FUNC(void) PyMem_SetupDebugHooks(void);
+#  define Py_CPYTHON_PYMEM_H
+#  include  "cpython/pymem.h"
+#  undef Py_CPYTHON_PYMEM_H
 #endif
 
 #ifdef __cplusplus
