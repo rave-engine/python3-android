@@ -66,8 +66,9 @@ def env_vars(target_arch_name: str, android_api_level: int) -> Dict[str, str]:
         'PYTHONPATH': str(BASE),
     }
 
-    for prog in ('ar', 'as', 'ld', 'objcopy', 'objdump', 'ranlib', 'strip', 'readelf'):
-        env[prog.upper()] = str(ndk_unified_toolchain() / f'{target_arch.binutils_prefix}-{prog}')
+    for prog in ('ar', 'as', 'nm', 'objcopy', 'objdump', 'ranlib', 'readelf', 'strip'):
+        env[prog.upper()] = str(ndk_unified_toolchain() / f'llvm-{prog}')
+    env['ld'] = str(ndk_unified_toolchain() / 'lld')
 
     return env
 
