@@ -24,7 +24,7 @@ pushd $SRCDIR
 patch -Np1 -i ./Android/unversioned-libpython.patch
 autoreconf -ifv
 ./Android/build_deps.py $COMMON_ARGS
-./Android/configure.py $COMMON_ARGS --prefix=/usr
+./Android/configure.py $COMMON_ARGS --prefix=/usr "$@"
 make
 make install DESTDIR="$THIS_DIR/build"
 popd

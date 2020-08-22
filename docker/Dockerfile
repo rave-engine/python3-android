@@ -12,4 +12,4 @@ RUN unzip android-ndk-${NDK_VER}-linux-x86_64.zip
 WORKDIR /python3-android
 ENV ANDROID_NDK=/android-ndk-${NDK_VER}
 
-CMD ["/python3-android/build.sh"]
+ENTRYPOINT ["/python3-android/build.sh"]
