@@ -11,6 +11,8 @@
 #include <pthread.h>
 
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmissing-noreturn"
 static std::string mPythonDirectory = "";
 static std::string mSetupDirectory = "";
 //
@@ -23,6 +25,16 @@ static py_helper::PythonProcessing mPyProcess;
 // This flag tells us if we have initialized PyGIL
 static bool mPyGIL_Init = false;
 PyThreadState* mPyThreadState = nullptr;
+
+void startStdErrLogging();
+void startStdOutLogging();
+
+static int mErrFile[2];
+static int mOutFile[2];
+static pthread_t mErrThread = -1;
+static pthread_t mOutThread = -1;
+static void* out_thread_func(void*);
+static void* err_thread_func(void*);
 
 long setupEnvironment();
 int setupAndroidSetupFile(std::string aPythonPath, std::string aSetupPath);
@@ -98,6 +110,10 @@ JNIEXPORT jint JNICALL Java_com_example_pythontest_PythonThread_initPython
    // Call the setup initialize stuff for Android Setup
    setupEnvironment();
 
+   // Startup the Error logging
+   startStdErrLogging();
+   startStdOutLogging();
+
    __android_log_write(ANDROID_LOG_VERBOSE, __FUNCTION__, "Leaving initPython");
    return 0;
 }
@@ -146,7 +162,6 @@ JNIEXPORT jint JNICALL Java_com_example_pythontest_PythonThread_runPython
    if (!mPyGIL_Init)
    {
       mPyGIL_Init = true;
-      PyEval_InitThreads();
       mPyThreadState = PyEval_SaveThread();
    }
 
@@ -211,3 +226,141 @@ long setupEnvironment()
 
     return lReturnValue;
 }
+
+// Start up our Standard Error Thread
+void startStdErrLogging()
+{
+
+   // This will make our stderr buffer wake on newline
+   setvbuf(stderr, nullptr, _IOLBF, 0);
+
+   /* create the pipe and redirect stdout */
+   pipe(mErrFile);
+   dup2(mErrFile[1], STDERR_FILENO);
+
+   /* spawn the logging thread */
+   if (pthread_create(&mErrThread, nullptr, err_thread_func, nullptr) == -1)
+   {
+      return;
+   }
+
+}
+
+void startStdOutLogging()
+{
+
+   // This will make our stderr buffer wake on newline _IOLBF instead of Nonbuffered _IONBF
+   setvbuf(stdout, nullptr, _IOLBF, 0);
+
+   /* create the pipe and redirect stdout */
+   pipe(mOutFile);
+   dup2(mOutFile[1], STDOUT_FILENO);
+
+   /* spawn the logging thread */
+   if (pthread_create(&mOutThread, nullptr, out_thread_func, nullptr) == -1)
+   {
+      return;
+   }
+}
+
+static void* out_thread_func(void*)
+{
+   ssize_t lReadSize;
+   char lReadBuffer[2048];
+
+   // This is what we have left to send
+   std::string lUnProcessedBuffer;
+
+   lReadBuffer[0] = '\0';
+
+   std::size_t lPos(0);                // the position of our \n
+   std::string lWriteBuffer;       // What we plan to store the stuff to write out in
+
+   // Set this read non-blocking
+   fcntl(mOutFile[0], F_SETFL, fcntl(mOutFile[0], F_GETFL) | O_NONBLOCK); // NOLINT(hicpp-signed-bitwise)
+
+   // Stay running until someone sets this flag to tell us to die
+   while (1)
+   {
+      lReadSize = read(mOutFile[0], lReadBuffer, sizeof lReadBuffer - 1);
+
+      if (lReadSize <= 0)
+      {
+         // We found nothing, wait to keep the CPU usage down
+         usleep(250000); // 250ms
+         continue;
+      }
+
+      // Find the position of the \n in our string
+      lUnProcessedBuffer.append(lReadBuffer);
+
+      // now we have a buffer, might be more then 1 line, keep writing until we have
+      // written each line
+      while (( lPos = lUnProcessedBuffer.find_first_of('\n')) != std::string::npos)
+      {
+         // We know where it is.
+         lWriteBuffer = lUnProcessedBuffer.substr(0, ++lPos);
+         lUnProcessedBuffer = lUnProcessedBuffer.substr(lPos);
+         __android_log_write(ANDROID_LOG_DEBUG, __FUNCTION__, lWriteBuffer.c_str());
+      }
+   }
+
+   // Close the files, we are about to terminate.  This is big, else you get broken pipe
+   close(mOutFile[0]);
+   close(mOutFile[1]);
+
+   return nullptr;
+}
+
+static void* err_thread_func(void*)
+{
+   ssize_t lReadSize;
+   char lReadBuffer[2048];
+
+   // This is what we have left to send
+   std::string lUnProcessedBuffer;
+
+   lReadBuffer[0] = '\0';
+
+
+   std::size_t lPos(0);                // the position of our \n
+   std::string lWriteBuffer;       // What we plan to store the stuff to write out in
+
+   // Set this read non-blocking
+   fcntl(mErrFile[0], F_SETFL, fcntl(mErrFile[0], F_GETFL) | O_NONBLOCK); // NOLINT(hicpp-signed-bitwise)
+
+   // Stay running until someone sets this flag to tell us to die
+   while (1)
+   {
+      lReadSize = read(mErrFile[0], lReadBuffer, sizeof lReadBuffer - 1);
+
+      if (lReadSize <= 0)
+      {
+         // We found nothing, wait a bit to keep the CPU usage down
+         usleep(250000); // 250ms
+         continue;
+      }
+
+      // Find the position of the \n in our string
+      lUnProcessedBuffer.append(lReadBuffer);
+
+      // now we have a buffer, might be more then 1 line, keep writing until we have
+      // written each line
+      while (( lPos = lUnProcessedBuffer.find_first_of('\n')) != std::string::npos)
+      {
+         // We know where it is.
+         lWriteBuffer = lUnProcessedBuffer.substr(0, ++lPos);
+         lUnProcessedBuffer = lUnProcessedBuffer.substr(lPos);
+
+         __android_log_write(ANDROID_LOG_ERROR, __FUNCTION__, lWriteBuffer.c_str());
+
+      }
+   }
+
+   // Close the files, we are about to terminate
+   close(mErrFile[0]);
+   close(mErrFile[1]);
+
+   return nullptr;
+}
+#pragma clang diagnostic pop

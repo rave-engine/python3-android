@@ -14,9 +14,15 @@ else()
     include_directories(${jni_src_dir}/python64)
 endif()
 
+if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "4")
+    include_directories(${jni_src_dir}/python32/python3.9)
+else()
+    include_directories(${jni_src_dir}/python64/python3.9)
+endif()
+
+
 # set all our include directories (header locations)
-include_directories(${jni_src_dir}/python
-                    ${jni_src_dir}/py_helpers
+include_directories(${jni_src_dir}/py_helpers
                     ${jni_src_dir}
 )
 
@@ -42,6 +48,6 @@ SET_TARGET_PROPERTIES (pythonthread PROPERTIES LINKER_LANGUAGE CXX)
 
 # lastly, set to link against the 3rd party libs above
 target_link_libraries(pythonthread
-                      python39
+                      python3.9
                       log
                       atomic)
