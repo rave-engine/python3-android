@@ -10,6 +10,10 @@ def main():
     import decimal
     with open(out_file, 'a') as the_file:
         the_file.write('It Still works!\n')
+        
+    import sys
+    print(sys.version)
+    print(sys.version_info)
 
 
 if __name__ == '__main__':
