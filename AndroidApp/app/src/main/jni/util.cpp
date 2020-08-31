@@ -1,7 +1,7 @@
 
 
 #include "util.hpp"
-#include "python/Python.h"
+#include "Python.h"
 
 const char *cDirectorySlash = "/";
 const char *cPythonPathSeperator = ":";

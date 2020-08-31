@@ -2,8 +2,8 @@
 #include "util.hpp"
 
 #include "py_helpers/python_processing.hpp"
-#include "python/Python.h"
-#include "python/pythonrun.h"
+#include "Python.h"
+#include "pythonrun.h"
 
 #include <android/log.h>
 #include <stdio.h>

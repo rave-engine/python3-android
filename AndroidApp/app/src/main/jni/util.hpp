@@ -10,7 +10,7 @@
 
 #include <algorithm>  // transform
 
-#include "python/Python.h"
+#include "Python.h"
 
 
 

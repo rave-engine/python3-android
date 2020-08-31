@@ -2,7 +2,7 @@
 
 #include "python_helpers.hpp"
 
-#include <python/Python.h>
+#include <Python.h>
 
 namespace py_helper
 {
