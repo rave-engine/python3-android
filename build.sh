@@ -5,8 +5,7 @@ set -x
 
 THIS_DIR="$PWD"
 
-PYVER=3.9.0b1
-PYVER_SHORT=3.9.0
+PYVER=3.9.0
 SRCDIR=src/Python-$PYVER
 
 COMMON_ARGS="--arch ${ARCH:-arm} --api ${ANDROID_API:-21}"
@@ -14,8 +13,10 @@ COMMON_ARGS="--arch ${ARCH:-arm} --api ${ANDROID_API:-21}"
 if [ ! -d $SRCDIR ]; then
     mkdir -p src
     pushd src
-    curl -vLO https://www.python.org/ftp/python/$PYVER_SHORT/Python-$PYVER.tar.xz
-    tar xf Python-$PYVER.tar.xz
+    curl -vLO https://www.python.org/ftp/python/$PYVER/Python-$PYVER.tar.xz
+    # Use --no-same-owner so that files extracted are still owned by the
+    # running user in a rootless container
+    tar --no-same-owner -xf Python-$PYVER.tar.xz
     popd
 fi
 

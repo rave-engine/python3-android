@@ -63,7 +63,7 @@ class BZip2(Package):
         self.run(['install', '-Dm644', 'bzlib.h', '-t', str(SYSROOT / 'usr' / 'include')])
 
 class GDBM(Package):
-    source = 'https://ftp.gnu.org/gnu/gdbm/gdbm-1.18.tar.gz'
+    source = 'https://ftp.gnu.org/gnu/gdbm/gdbm-1.18.1.tar.gz'
     configure_args = ['--enable-libgdbm-compat']
 
 class LibFFI(Package):
@@ -72,7 +72,7 @@ class LibFFI(Package):
     configure_args = ['--disable-builddir']
 
 class LibUUID(Package):
-    source = 'https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v2.35/util-linux-2.35.tar.xz'
+    source = 'https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v2.36/util-linux-2.36.tar.xz'
     configure_args = ['--disable-all-programs', '--enable-libuuid']
 
 class NCurses(Package):
@@ -81,7 +81,7 @@ class NCurses(Package):
     configure_args = ['--without-ada', '--enable-widec', '--without-debug', '--without-cxx-binding', '--disable-stripping']
 
 class OpenSSL(Package):
-    source = 'https://www.openssl.org/source/openssl-1.1.1g.tar.gz'
+    source = 'https://www.openssl.org/source/openssl-1.1.1h.tar.gz'
 
     def configure(self):
         # OpenSSL handles NDK internal paths by itself
@@ -115,7 +115,7 @@ class Readline(Package):
     configure_args = ['bash_cv_wcwidth_broken=yes']
 
 class SQLite(Package):
-    source = 'https://sqlite.org/2020/sqlite-autoconf-3310100.tar.gz'
+    source = 'https://sqlite.org/2020/sqlite-autoconf-3330000.tar.gz'
 
 class XZ(Package):
     source = 'https://tukaani.org/xz/xz-5.2.5.tar.xz'
@@ -140,7 +140,7 @@ class ZLib(Package):
 
 def build_package(pkg: Package):
     subprocess.check_call(['curl', '-fLO', pkg.source], cwd=BASE / 'deps')
-    subprocess.check_call(['tar', 'xf', os.path.basename(pkg.source)], cwd=BASE / 'deps')
+    subprocess.check_call(['tar', '--no-same-owner', '-xf', os.path.basename(pkg.source)], cwd=BASE / 'deps')
 
     try:
         saved_env = os.environ.copy()

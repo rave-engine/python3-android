@@ -1,0 +1,78 @@
+name: Testing
+
+on: push
+
+# Release-related code borrowed from
+# https://github.com/actions/create-release/issues/14#issuecomment-555379810
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: contains(github.ref, '-android')
+    steps:
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1.0.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: true
+        prerelease: true
+    - name: Output Release URL File
+      run: echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
+    - name: Save Release URL File for publish
+      uses: actions/upload-artifact@v1
+      with:
+        name: release_url
+        path: release_url.txt
+
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        env:
+          - { ARCH: arm,     API: 21 }
+          - { ARCH: arm64,   API: 21 }
+          - { ARCH: x86,     API: 21 }
+          - { ARCH: x86_64,  API: 21 }
+    env:
+      PYVER: 3.9.0
+    steps:
+    - name: Checkout main repo
+      uses: actions/checkout@v2
+    - name: Building
+      run: |
+        docker run --rm -v $(pwd):/python3-android \
+            --env ARCH=${{ matrix.env.ARCH }} \
+            --env ANDROID_API=${{ matrix.env.API }} \
+            python:$PYVER-slim /python3-android/docker-build.sh
+    - name: Create package
+      id: create_package
+      run: |
+        sudo apt-get -y update && sudo apt-get -y install libarchive-tools xz-utils
+        package_filename=python3-android-$PYVER-${{ matrix.env.ARCH }}-${{ matrix.env.API }}.tar.xz
+        # sudo needed as files created by docker may not be readable by the current user
+        cd build && sudo bsdtar --xz -cf $package_filename *
+        echo ::set-output name=package_filename::$package_filename
+    - name: Load Release URL File from release job
+      uses: actions/download-artifact@v1
+      if: contains(github.ref, '-android')
+      with:
+        name: release_url
+    - name: Get Release File Name & Upload URL
+      id: get_release_info
+      if: contains(github.ref, '-android')
+      run: |
+        value=`cat release_url/release_url.txt`
+        echo ::set-output name=upload_url::$value
+    - name: Upload Release Asset
+      if: contains(github.ref, '-android')
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_release_info.outputs.upload_url }}
+        asset_path: build/${{ steps.create_package.outputs.package_filename }}
+        asset_name: ${{ steps.create_package.outputs.package_filename }}
+        asset_content_type: application/x-xz
