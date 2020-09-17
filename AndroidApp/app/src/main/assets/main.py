@@ -15,6 +15,14 @@ def main():
     print(sys.version)
     print(sys.version_info)
 
+    print('You should see this #1')
+    try:
+        import requests
+    except:
+        print('You should NOT see this!!!!')
+    finally:
+        print('You should see this #2')
+
 
 if __name__ == '__main__':
     main()
