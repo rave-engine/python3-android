@@ -20,4 +20,4 @@ fi
 
 cd /python3-android
 
-./build.sh
+./build.sh "$@"
