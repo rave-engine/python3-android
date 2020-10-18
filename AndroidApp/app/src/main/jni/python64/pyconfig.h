@@ -39,9 +39,6 @@
 /* Define if --enable-ipv6 is specified */
 #define ENABLE_IPV6 1
 
-/* Better isolate subinterpreters, experimental build mode. */
-/* #undef EXPERIMENTAL_ISOLATED_SUBINTERPRETERS */
-
 /* Define to 1 if your system stores words within floats with the most
    significant word first */
 /* #undef FLOAT_WORDS_BIGENDIAN */
