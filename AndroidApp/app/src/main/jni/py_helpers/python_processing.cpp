@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "hicpp-signed-bitwise"
 #include "python_processing.hpp"
 #include <string>
 #include "util.hpp"
@@ -7,14 +9,14 @@
 namespace py_helper
 {
 
-   PythonProcessing::PythonProcessing(void)
+   PythonProcessing::PythonProcessing()
    {
       mPythonModule = nullptr;
 
       __android_log_write(ANDROID_LOG_VERBOSE, __FUNCTION__, "PythonProcessing Initialized");
    }
 
-   PythonProcessing::~PythonProcessing(void)
+   PythonProcessing::~PythonProcessing()
    {
       __android_log_write(ANDROID_LOG_DEBUG, __FUNCTION__, "We are unloading our PythonProcessing Object");
       // This closes the connection to the Python file
@@ -41,14 +43,6 @@ namespace py_helper
       {
          __android_log_write(ANDROID_LOG_WARN, __FUNCTION__, "Python module has already been loaded, no need to load again.");
          return 0;
-      }
-
-      int lReturn = verifyPythonPath(aFileName);
-
-      // Did we have an error during the verify?
-      if (lReturn != 0)
-      {
-         return lReturn;
       }
 
       // A place holder for the file we are going to call.  We need to strip
@@ -80,7 +74,7 @@ namespace py_helper
 
       // Ok, we parsed off any path info, now we need to remove any file
       // suffix if it exists.
-      std::size_t lSuffixPos = lRawFileName.find(".");
+      std::size_t lSuffixPos = lRawFileName.find('.');
 
       // Did we find a suffix
       if (lSuffixPos != std::string::npos)
@@ -107,100 +101,19 @@ namespace py_helper
       return 0;
    }
 
-   int PythonProcessing::verifyPythonPath(const std::string &aFileName)
-   {
-      // No path, we can't do anything at all, fail
-      if (mPythonPath.empty())
-      {
-         __android_log_print(ANDROID_LOG_ERROR, __FUNCTION__, "Unable to initialize Python. Error=Python Path is not defined");
-         return -2;
-      }
-         // If we were not passed a file name, we can't load anything
-      else if (aFileName.empty())
-      {
-         __android_log_print(ANDROID_LOG_ERROR, __FUNCTION__, "Python script file was not passed. Python cannot be initialized.");
-         return -3;
-      }
-
-      // If we can't find the python script files, we can't do anything.  Make sure we can and keep
-      // track of when we found it with this
-      bool lFoundPython(false);
-
-      // Try to verify that we have the Python stuff in our path.  If we don't Python
-      // will abort the app.
-      if (mPythonPath.find(cDirectorySlash) != std::string::npos)
-      {
-         // For code simplicity, we have a vector of strings, which is the list of paths we
-         // need to check for existence.
-         std::vector <std::string> lPathArray;
-
-         // Ok, we have a directory.  Now check to see if we have to split
-         if (mPythonPath.find(cPythonPathSeperator) != std::string::npos)
-         {
-            // We have multiple to check.  Great
-            Utilities::split_trim(mPythonPath, cPythonPathSeperator, lPathArray);
-         }
-            // We only have one, put it in the list
-         else
-         {
-            lPathArray.push_back(mPythonPath);
-         }
-
-         std::string lFileToFind(
-               "filecmp.py");         // Just a random file I picked out of the Python scripts
-         std::string lFullPath;
-
-         // Iterate through the vector and just try to find 1 of them that
-         // has our file to find
-         for (auto &lPath:lPathArray)
-         {
-            // Check to see if the path already has the directory slash
-            if (lPath.find_last_of(cDirectorySlash) != (lPath.size() - 1))
-            {
-               // No slash, add it and the file
-               lFullPath = lPath + cDirectorySlash + lFileToFind;
-            }
-            else
-            {
-               // Just add the file, we have the slash
-               lFullPath = lPath + lFileToFind;
-            }
-
-            // Finally, does this file exist?
-            if (Utilities::fileExists(lFullPath))
-            {
-               lFoundPython = true;
-               break;               // Good job, we found it, should be good to go.
-            } // Directory Exists
-         } // Loop through path items
-      }  // Directory Slash find
-
-      // If we never found the python file, chances are Python will fail to initialize and abort
-      if (!lFoundPython)
-      {
-         __android_log_print(ANDROID_LOG_ERROR, __FUNCTION__, "Unable to find Python distributed core scripts. Python cannot be initialized.");
-         return -8;
-      }
-
-      // We get this far, we are good to go
-      return 0;
-   }
-
-   int PythonProcessing::unloadFile(void)
+   int PythonProcessing::unloadFile()
    {
       if (mPythonModule != nullptr)
       {
          Py_CLEAR(mPythonModule);
       }
 
-      //Py_Finalize();
-
       return 0;
    }
 
    long PythonProcessing::executeFunction(const std::string &aFunctionName)
    {
-      long lReturn(0);
+      long lReturn;
 
       // Verify we were able to create the module
       lReturn = checkModule();
@@ -235,11 +148,13 @@ namespace py_helper
 
       return lReturn;
    }
-// Pass aMessage.m_MessageBase.mField as aParameters
-    long PythonProcessing::executeFunction(const std::string &aFunctionName,
+
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "UnusedGlobalDeclarationInspection"
+   long PythonProcessing::executeFunction(const std::string &aFunctionName,
                                            AutoPyDict::Dict_Map &aParameters)
    {
-      long lReturn(0);
+      long lReturn;
 
       // Verify we were able to create the module
       lReturn = checkModule();
@@ -279,10 +194,11 @@ namespace py_helper
 
       return lReturn;
    }
+#pragma clang diagnostic pop
 
    long PythonProcessing::executeFunction(PyObject * aFunction, PyObject * aParameters)
    {
-      long lReturn(0);
+      long lReturn;
 
       // Verify we were able to create the module
       lReturn = checkModule();
@@ -346,7 +262,7 @@ namespace py_helper
    {
       // Tried to implement https://github.com/Kozea/Multicorn/blob/master/src/errors.c
 
-      int lReturn(0);
+      int lReturn;
 
       AutoPyObject lType, lValue, lTraceback;
       PyErr_Fetch(&lType.mPyObject, &lValue.mPyObject, &lTraceback.mPyObject);
@@ -511,3 +427,5 @@ namespace py_helper
       return lReturn;
    }
 } // end of namespace
+
+#pragma clang diagnostic pop

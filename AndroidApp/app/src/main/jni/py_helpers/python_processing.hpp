@@ -65,7 +65,9 @@ public:
    long executeFunction( const std::string& aFunctionName);
 
    /////////////////////////////////////////////////////////////////////
-   /** 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "UnusedGlobalDeclarationInspection"
+   /**
       * \brief executeFunction is used to call a python function passing a map
       * by reference so that the values of the map may be updated.
       *
@@ -76,6 +78,7 @@ public:
       *  \retval Non 0 - Errors occurred, Do error checking.
       */
    long executeFunction( const std::string& aFunctionName, AutoPyDict::Dict_Map& aParameters );
+#pragma clang diagnostic pop
 
    /////////////////////////////////////////////////////////////////////
    /** 
@@ -88,20 +91,6 @@ public:
       *  \retval Non 0 - Module is not initialized, abort
       */
    int checkModule();
-
-   /////////////////////////////////////////////////////////////////////
-   /**
-      * \brief verifyPythonPath will *TRY* to make sure that Python has
-      * everything it needs to run. Python is not forgiving, it has a
-      * huge library of scripts it expects, and is also real persnickety
-      * about where they need to be.
-      *
-      *  \param const std::string& aFileName -- The file to load
-      *  \return int
-      *  \retval 0 - Function processed successfully
-      *  \retval Non 0 - Errors occurred, Do error checking.
-      */
-   int verifyPythonPath(const std::string& aFileName);
 
    /////////////////////////////////////////////////////////////////////
    /** 
@@ -143,7 +132,9 @@ public:
    int getMapFromPyObject(PyObject* aPyObject, AutoPyDict::Dict_Map& aItems);
 
    /////////////////////////////////////////////////////////////////////
-   /** 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "UnusedGlobalDeclarationInspection"
+   /**
       * \brief getVectorFromPyList will convert a Python Dictionary into a
       * map
       *
@@ -156,6 +147,7 @@ public:
    int getVectorFromPyObject(PyObject* aPyObject, AutoPyList::List_Array& aItems);
 
    int setPyPath( const std::string& aPythonPath );
+#pragma clang diagnostic pop
 
 private:
 

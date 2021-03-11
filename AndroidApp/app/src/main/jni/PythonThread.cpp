@@ -6,15 +6,12 @@
 #include "pythonrun.h"
 
 #include <android/log.h>
-#include <stdio.h>
+#include <cstdio>
 #include <fcntl.h>
 #include <pthread.h>
 
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wmissing-noreturn"
-static std::string mPythonDirectory = "";
-static std::string mSetupDirectory = "";
+static std::string mPythonDirectory;
+static std::string mSetupDirectory;
 //
 static std::string mSetupFunctionName("setupEnvironment");
 
@@ -23,8 +20,6 @@ static std::string mSetupFunctionName("setupEnvironment");
 static py_helper::PythonProcessing mPyProcess;
 
 // This flag tells us if we have initialized PyGIL
-static bool mPyGIL_Init = false;
-PyThreadState* mPyThreadState = nullptr;
 
 void startStdErrLogging();
 void startStdOutLogging();
@@ -36,12 +31,8 @@ static pthread_t mOutThread = -1;
 static void* out_thread_func(void*);
 static void* err_thread_func(void*);
 
-long setupEnvironment();
-int setupAndroidSetupFile(std::string aPythonPath, std::string aSetupPath);
+long setupAndroidSetupFile(std::string aPythonPath, std::string aSetupPath);
 
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-parameter"
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
    __android_log_write(ANDROID_LOG_VERBOSE, __FUNCTION__, "JNI_OnLoad");
 
@@ -52,8 +43,6 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
 JNIEXPORT jint JNICALL Java_com_example_pythontest_PythonThread_initPython
       (JNIEnv* env, jobject obj, jstring aPath, jstring aSetupDirectory)
 {
-   // We need to set this here so that when we restart it keeps running
-   mPyGIL_Init = false;
 
    std::wstring lPassedPath = Utilities::getWStringFromJava(env, aPath);
    mSetupDirectory = Utilities::getStringFromJava(env, aSetupDirectory);
@@ -86,29 +75,14 @@ JNIEXPORT jint JNICALL Java_com_example_pythontest_PythonThread_initPython
 
    // Tell Python our path
    Py_SetPath(lPyPath.c_str());
+
    __android_log_write(ANDROID_LOG_VERBOSE, __FUNCTION__, "initPython - PyPath");
-
-   // Initialize Python, we only want to do this once!
-   Py_Initialize();
-
-
-   //If we can't init, handle it
-   if (!Py_IsInitialized())
-   {
-      __android_log_write(ANDROID_LOG_WARN, __FUNCTION__, "Python was unable to initialize");
-      return -4;
-   }
-
-   __android_log_write(ANDROID_LOG_VERBOSE, __FUNCTION__, "initPython - WF Python Engine has been initialized");
 
    // The Python Directory needs to be a wide char, convert our path
    mPythonDirectory = Utilities::convertWChar(lPyPath);
 
    // Setup our Python module for Android Setup
    setupAndroidSetupFile(mPythonDirectory, mSetupDirectory);
-
-   // Call the setup initialize stuff for Android Setup
-   setupEnvironment();
 
    // Startup the Error logging
    startStdErrLogging();
@@ -134,14 +108,6 @@ JNIEXPORT jint JNICALL Java_com_example_pythontest_PythonThread_cleanupPython
       return -4;
    }
 
-   // If we saved off our thread, we need to release it
-   if (mPyGIL_Init)
-   {
-      __android_log_write(ANDROID_LOG_VERBOSE, __FUNCTION__, "We have cleared out GIL flag");
-      mPyGIL_Init = false;
-      PyEval_RestoreThread(mPyThreadState);  // This needs to be done if we did a PyEval_SaveThread
-   }
-
    // Just call Finalize and be done
    __android_log_write(ANDROID_LOG_INFO, __FUNCTION__, "About to call finalize in Cleanup Python");
    Py_Finalize();
@@ -155,19 +121,7 @@ JNIEXPORT jint JNICALL Java_com_example_pythontest_PythonThread_runPython
 {
    __android_log_write(ANDROID_LOG_VERBOSE, __FUNCTION__, "We are in Run Python");
 
-//   char sendData[500];
-//   char messageType[100];
-
-   // Only initialize the Global Interpreter Lock once.
-   if (!mPyGIL_Init)
-   {
-      mPyGIL_Init = true;
-      mPyThreadState = PyEval_SaveThread();
-   }
-
    std::string lPythonFile = Utilities::getStringFromJava(env, filename);
-
-   FILE* file = nullptr;
 
    if (!Utilities::fileExists(lPythonFile))
    {
@@ -183,54 +137,63 @@ JNIEXPORT jint JNICALL Java_com_example_pythontest_PythonThread_runPython
       return -4;
    }
 
-   __android_log_write(ANDROID_LOG_VERBOSE, __FUNCTION__, "WfEngine process is starting");
+    // Execute the python script.
+    long lLoadReturn = mPyProcess.loadFile(lPythonFile);
 
-   file = (FILE*) _Py_fopen(lPythonFile.c_str(), "r+");
+    if (lLoadReturn != 0)
+    {
+        __android_log_write(ANDROID_LOG_INFO, __FUNCTION__, "Failed to load main file");
+        return lLoadReturn;
+    }
 
-   if (file != nullptr)
-   {
-      __android_log_write(ANDROID_LOG_VERBOSE, __FUNCTION__, "About to call SimpleFile with the following PY file");
-      // Execute the python script.  A return of 0 is success, -1 is failure
+    long lExecuteReturn = mPyProcess.executeFunction("main");
 
-      PyGILState_STATE lGILState = PyGILState_Ensure();                   // Make sure we are set thread safe
-      int lPyReturn = PyRun_SimpleFile(file, lPythonFile.c_str());
+    mPyProcess.unloadFile();
 
-      __android_log_write(ANDROID_LOG_INFO, __FUNCTION__, "After PyRun_SimpleFile ");
-      PyGILState_Release(lGILState);                                      // Release our ensure
-   }
-   else
-   {
-      __android_log_write(ANDROID_LOG_WARN, __FUNCTION__, "Python was unable to open main.py");
-   }
 
    __android_log_write(ANDROID_LOG_INFO, __FUNCTION__, "We are leaving run Python");
 
-   return 0;
+   return lExecuteReturn;
 }
 
-int setupAndroidSetupFile(std::string aPythonPath, std::string aSetupPath)
-{
+long setupAndroidSetupFile(std::string aPythonPath, std::string aSetupPath) {
    std::string lPythonFile(aSetupPath + "android_setup.py");
 
+   // This sets our base path we use for each file we call.
    mPyProcess.setPyPath(aPythonPath);
 
+   // Initialize Python, we only want to do this once!
+   Py_Initialize();
+
+   //If we can't init, handle it
+   if (!Py_IsInitialized()) {
+      __android_log_write(ANDROID_LOG_WARN, __FUNCTION__, "Python was unable to initialize");
+      return -9;
+   }
+   else
+   {
+      __android_log_write(ANDROID_LOG_VERBOSE, __FUNCTION__, "Python Engine has been initialized");
+   }
+
    // So after a few checks, we should have just the file name, nothing else
-   int lReturn = mPyProcess.loadFile(lPythonFile);
+   long lReturn = mPyProcess.loadFile(lPythonFile);
 
-   return lReturn;
-}
+   if (lReturn != 0)
+   {
+      __android_log_write(ANDROID_LOG_WARN, __FUNCTION__, "Python was unable to load file android setup");
+      return lReturn;
+   }
 
-long setupEnvironment()
-{
-    long lReturnValue = mPyProcess.executeFunction(mSetupFunctionName.c_str());
+   long lReturnValue = mPyProcess.executeFunction(mSetupFunctionName);
 
-    return lReturnValue;
+   mPyProcess.unloadFile();
+
+   return lReturnValue;
 }
 
 // Start up our Standard Error Thread
 void startStdErrLogging()
 {
-
    // This will make our stderr buffer wake on newline
    setvbuf(stderr, nullptr, _IOLBF, 0);
 
@@ -239,11 +202,10 @@ void startStdErrLogging()
    dup2(mErrFile[1], STDERR_FILENO);
 
    /* spawn the logging thread */
-   if (pthread_create(&mErrThread, nullptr, err_thread_func, nullptr) == -1)
+   if (pthread_create(&mErrThread, nullptr, err_thread_func, nullptr) != 0)
    {
       return;
    }
-
 }
 
 void startStdOutLogging()
@@ -257,7 +219,7 @@ void startStdOutLogging()
    dup2(mOutFile[1], STDOUT_FILENO);
 
    /* spawn the logging thread */
-   if (pthread_create(&mOutThread, nullptr, out_thread_func, nullptr) == -1)
+   if (pthread_create(&mOutThread, nullptr, out_thread_func, nullptr) != 0)
    {
       return;
    }
@@ -280,7 +242,9 @@ static void* out_thread_func(void*)
    fcntl(mOutFile[0], F_SETFL, fcntl(mOutFile[0], F_GETFL) | O_NONBLOCK); // NOLINT(hicpp-signed-bitwise)
 
    // Stay running until someone sets this flag to tell us to die
-   while (1)
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "EndlessLoop"
+   while (true)
    {
       lReadSize = read(mOutFile[0], lReadBuffer, sizeof lReadBuffer - 1);
 
@@ -304,6 +268,7 @@ static void* out_thread_func(void*)
          __android_log_write(ANDROID_LOG_DEBUG, __FUNCTION__, lWriteBuffer.c_str());
       }
    }
+#pragma clang diagnostic pop
 
    // Close the files, we are about to terminate.  This is big, else you get broken pipe
    close(mOutFile[0]);
@@ -330,7 +295,9 @@ static void* err_thread_func(void*)
    fcntl(mErrFile[0], F_SETFL, fcntl(mErrFile[0], F_GETFL) | O_NONBLOCK); // NOLINT(hicpp-signed-bitwise)
 
    // Stay running until someone sets this flag to tell us to die
-   while (1)
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "EndlessLoop"
+   while (true)
    {
       lReadSize = read(mErrFile[0], lReadBuffer, sizeof lReadBuffer - 1);
 
@@ -356,6 +323,7 @@ static void* err_thread_func(void*)
 
       }
    }
+#pragma clang diagnostic pop
 
    // Close the files, we are about to terminate
    close(mErrFile[0]);
@@ -363,4 +331,3 @@ static void* err_thread_func(void*)
 
    return nullptr;
 }
-#pragma clang diagnostic pop
