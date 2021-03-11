@@ -37,7 +37,7 @@ jobs:
           - { ARCH: x86,     API: 21 }
           - { ARCH: x86_64,  API: 21 }
     env:
-      PYVER: 3.9.0
+      PYVER: 3.9.1
     steps:
     - name: Checkout main repo
       uses: actions/checkout@v2
