@@ -3,9 +3,6 @@ Python 3 Android
 
 This is an experimental set of build scripts that will cross-compile Python 3.9.0 for an Android device.
 
-Prerequisites
--------------
-
 Building requires:
 
 1. Linux. This project might work on other systems supported by NDK but no guarantee.
