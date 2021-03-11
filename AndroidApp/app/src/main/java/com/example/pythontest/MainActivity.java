@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity
         // load library to ensure we have access to native layer
         // we do this because if the service isn't running yet, we don't have access to setLMSParameters
         System.loadLibrary("pythonthread");
-        System.loadLibrary("python3.5m");
+        System.loadLibrary("python3.9");
 
 
         FloatingActionButton fab = findViewById(R.id.fab);

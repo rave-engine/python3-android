@@ -55,7 +55,7 @@ public class PythonThread extends Thread
         }
         else
         {
-            unzipFileFromAssets("Python32");
+            unzipFileFromAssets("Python32.zip");
             lTempPath += "Python32";
         }
 

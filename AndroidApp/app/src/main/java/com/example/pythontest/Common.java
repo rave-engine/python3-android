@@ -10,7 +10,9 @@ class Common
 
     static String getEngineRootDirectory(Context aContext)
     {
-        return Common.ensureStringEndsWithForwardslash((Objects.requireNonNull(aContext.getExternalFilesDir(null))).getAbsolutePath());
+        //return Common.ensureStringEndsWithForwardslash((Objects.requireNonNull(aContext.getExternalFilesDir(null))).getAbsolutePath());
+        return Common.ensureStringEndsWithForwardslash(aContext.getFilesDir().getPath());
+
     }
 
     static boolean is64bitProcessor()

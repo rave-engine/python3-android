@@ -8,15 +8,21 @@ set(CMAKE_SYSTEM_VERSION 23)
 set(distribution_dir ${CMAKE_SOURCE_DIR}/../jniLibs)
 set(jni_src_dir ${CMAKE_SOURCE_DIR}/../jni)
 
+if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "4")
+    include_directories(${jni_src_dir}/python32)
+else()
+    include_directories(${jni_src_dir}/python64)
+endif()
+
 # set all our include directories (header locations)
-include_directories(${jni_src_dir}/python
-                    ${jni_src_dir}/py_helpers
+include_directories(${jni_src_dir}/py_helpers
                     ${jni_src_dir}
 )
 
 # define the 3rd party libraries to include in this project
-add_library(libpython35m SHARED IMPORTED)
-set_target_properties(libpython35m PROPERTIES IMPORTED_LOCATION ${distribution_dir}/${ANDROID_ABI}/libpython3.5m.so)
+#add_library(python39 SHARED IMPORTED)
+#set_target_properties(python39 PROPERTIES IMPORTED_LOCATION ${distribution_dir}/${ANDROID_ABI}/libpython3.9.so)
+link_directories(${distribution_dir}/${ANDROID_ABI})
 
 # set various C and CXX(++) flags
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DNDEBUG")
@@ -35,6 +41,6 @@ SET_TARGET_PROPERTIES (pythonthread PROPERTIES LINKER_LANGUAGE CXX)
 
 # lastly, set to link against the 3rd party libs above
 target_link_libraries(pythonthread
-                      libpython35m
+                      python3.9
                       log
                       atomic)
