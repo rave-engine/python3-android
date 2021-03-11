@@ -1,3 +1,6 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "UnusedLocalVariable"
+#pragma ide diagnostic ignored "cert-err58-cpp"
 #include "PythonThread.hpp"
 #include "util.hpp"
 
@@ -19,8 +22,6 @@ static std::string mSetupFunctionName("setupEnvironment");
 // Currently we only support 1 file, and that is android_setup.py
 static py_helper::PythonProcessing mPyProcess;
 
-// This flag tells us if we have initialized PyGIL
-
 void startStdErrLogging();
 void startStdOutLogging();
 
@@ -38,7 +39,6 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
 
    return JNI_VERSION_1_6;
 }
-#pragma clang diagnostic pop
 
 JNIEXPORT jint JNICALL Java_com_example_pythontest_PythonThread_initPython
       (JNIEnv* env, jobject obj, jstring aPath, jstring aSetupDirectory)
@@ -123,6 +123,8 @@ JNIEXPORT jint JNICALL Java_com_example_pythontest_PythonThread_runPython
 
    std::string lPythonFile = Utilities::getStringFromJava(env, filename);
 
+   FILE* file;
+
    if (!Utilities::fileExists(lPythonFile))
    {
       // The file does not exist, log a message and bail
@@ -137,26 +139,33 @@ JNIEXPORT jint JNICALL Java_com_example_pythontest_PythonThread_runPython
       return -4;
    }
 
-    // Execute the python script.
-    long lLoadReturn = mPyProcess.loadFile(lPythonFile);
+    file = (FILE*) _Py_fopen(lPythonFile.c_str(), "r+");
 
-    if (lLoadReturn != 0)
+    if (file != nullptr)
     {
-        __android_log_write(ANDROID_LOG_INFO, __FUNCTION__, "Failed to load main file");
-        return lLoadReturn;
+        __android_log_write(ANDROID_LOG_VERBOSE, __FUNCTION__,
+                            "About to call SimpleFile with the following PY file");
+        // Execute the python script.  A return of 0 is success, -1 is failure
+        int lPyReturn = PyRun_SimpleFile(file, lPythonFile.c_str());
+
+        if (lPyReturn != 0)
+        {
+            __android_log_write(ANDROID_LOG_ERROR, __FUNCTION__, "Execution of Python main file failed");
+            return lPyReturn;
+        }
     }
-
-    long lExecuteReturn = mPyProcess.executeFunction("main");
-
-    mPyProcess.unloadFile();
-
+    else
+    {
+        __android_log_write(ANDROID_LOG_ERROR, __FUNCTION__, "Python was unable to open main.py");
+    }
 
    __android_log_write(ANDROID_LOG_INFO, __FUNCTION__, "We are leaving run Python");
 
-   return lExecuteReturn;
+   return 0;
 }
 
-long setupAndroidSetupFile(std::string aPythonPath, std::string aSetupPath) {
+long setupAndroidSetupFile(std::string aPythonPath, std::string aSetupPath)
+{
    std::string lPythonFile(aSetupPath + "android_setup.py");
 
    // This sets our base path we use for each file we call.
@@ -235,7 +244,7 @@ static void* out_thread_func(void*)
 
    lReadBuffer[0] = '\0';
 
-   std::size_t lPos(0);                // the position of our \n
+   std::size_t lPos;               // the position of our \n
    std::string lWriteBuffer;       // What we plan to store the stuff to write out in
 
    // Set this read non-blocking
@@ -270,11 +279,12 @@ static void* out_thread_func(void*)
    }
 #pragma clang diagnostic pop
 
-   // Close the files, we are about to terminate.  This is big, else you get broken pipe
-   close(mOutFile[0]);
-   close(mOutFile[1]);
-
-   return nullptr;
+// For the sake of this demo we have no condition to stop the logging, but if you did, put this back
+//   // Close the files, we are about to terminate.  This is big, else you get broken pipe
+//   close(mOutFile[0]);
+//   close(mOutFile[1]);
+//
+//   return nullptr;
 }
 
 static void* err_thread_func(void*)
@@ -288,7 +298,7 @@ static void* err_thread_func(void*)
    lReadBuffer[0] = '\0';
 
 
-   std::size_t lPos(0);                // the position of our \n
+   std::size_t lPos;               // the position of our \n
    std::string lWriteBuffer;       // What we plan to store the stuff to write out in
 
    // Set this read non-blocking
@@ -325,9 +335,12 @@ static void* err_thread_func(void*)
    }
 #pragma clang diagnostic pop
 
-   // Close the files, we are about to terminate
-   close(mErrFile[0]);
-   close(mErrFile[1]);
-
-   return nullptr;
+// For the sake of this demo we have no condition to stop the logging, but if you did, put this back
+//   // Close the files, we are about to terminate
+//   close(mErrFile[0]);
+//   close(mErrFile[1]);
+//
+//   return nullptr;
 }
+
+#pragma clang diagnostic pop
