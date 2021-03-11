@@ -37,7 +37,7 @@
 #define DOUBLE_IS_LITTLE_ENDIAN_IEEE754 1
 
 /* Define if --enable-ipv6 is specified */
-#define ENABLE_IPV6 1
+/* #undef ENABLE_IPV6 */
 
 /* Define to 1 if your system stores words within floats with the most
    significant word first */
@@ -281,6 +281,9 @@
 
 /* Define to 1 if you have the `dup3' function. */
 #define HAVE_DUP3 1
+
+/* Define if you have the '_dyld_shared_cache_contains_path' function. */
+/* #undef HAVE_DYLD_SHARED_CACHE_CONTAINS_PATH */
 
 /* Defined when any dynamic module loading is enabled. */
 #define HAVE_DYNAMIC_LOADING 1
