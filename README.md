@@ -25,6 +25,9 @@ Build
 1. Run `./clean.sh` for good measure.
 2. For every API Level/architecture combination you wish to build for:
    * `ARCH=arm ANDROID_API=21 ./build.sh` to build everything!
+3. Here are a couple of examples to buidld a static version of the library
+   * Build 64 bit `sudo docker run --rm -it -v $(pwd):/python3-android -v ${NDK_PATH}:/android-ndk:ro --env ARCH=arm64 --env ANDROID_API=23 python:3.9.1-slim /python3-android/docker-build.sh --enable-shared --without-ensurepip --disable-ipv6`
+   * Build 32 bit `sudo docker run --rm -it -v $(pwd):/python3-android -v ${NDK_PATH}:/android-ndk:ro --env ARCH=arm --env ANDROID_API=23 python:3.9.1-slim /python3-android/docker-build.sh --enable-shared --without-ensurepip --disable-ipv6`
 
 Build using Docker/Podman
 ------------------

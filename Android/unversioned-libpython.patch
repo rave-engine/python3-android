@@ -14,3 +14,18 @@ index 73ee71c6d2..a62edaebae 100644
  	  if test "$with_pydebug" != yes
            then
  	      PY3LIBRARY=libpython3.so
+
+diff --git a/configure.ac b/configure.ac
+index 73ee71c6d2..a62edaebae 100644
+--- configure.ac	2020-09-03 13:02:27.847717033 -0700
++++ configure.ac.brian	2020-09-03 13:14:11.101958236 -0700
+@@ -890,8 +890,9 @@
+ AC_SUBST(MULTIARCH_CPPFLAGS)
+ 
+ AC_MSG_CHECKING([for -Wl,--no-as-needed])
++LDFLAGS="$LDFLAGS -Wl,-soname,libpython3.9.so"
+ save_LDFLAGS="$LDFLAGS"
+ LDFLAGS="$LDFLAGS -Wl,--no-as-needed"
+ AC_LINK_IFELSE([AC_LANG_PROGRAM([[]], [[]])],
+   [NO_AS_NEEDED="-Wl,--no-as-needed"
+    AC_MSG_RESULT([yes])],
