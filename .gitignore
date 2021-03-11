@@ -1,9 +1,9 @@
-/mk/env.mk
 /build
-/build-tools
-/build-vm
 /src/*
 !/src/.keep
+*.pyc
+.mypy_cache/
+.gnupg/
 /sdk/*
 !/sdk/.keep
 AndroidApp/.idea

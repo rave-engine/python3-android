@@ -1,1 +1,0 @@
-http://anduin.linuxfromscratch.org/LFS/bzip2-1.0.6.tar.gz

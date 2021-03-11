@@ -1,1 +1,0 @@
-http://artifactory.ops.cld/artifactory/ThirdParty/COTS/ncurses/5.9/ncurses-5.9.tar.gz
